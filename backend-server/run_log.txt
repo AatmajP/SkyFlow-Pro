@@ -1,0 +1,90 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.skyflow:backend-server >---------------------
+[INFO] Building backend-server 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot-maven-plugin:3.2.1:run (default-cli) > test-compile @ backend-server >>>
+[INFO] 
+[INFO] --- maven-resources-plugin:3.3.1:resources (default-resources) @ backend-server ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.11.0:compile (default-compile) @ backend-server ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:3.3.1:testResources (default-testResources) @ backend-server ---
+[INFO] skip non existing resourceDirectory E:\Airline-reservation-system-java-master\backend-server\src\test\resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.11.0:testCompile (default-testCompile) @ backend-server ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot-maven-plugin:3.2.1:run (default-cli) < test-compile @ backend-server <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:3.2.1:run (default-cli) @ backend-server ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.1)
+
+2026-02-07T20:27:20.090+05:30  INFO 24852 --- [skyflow-backend] [           main] com.skyflow.SkyflowApplication           : Starting SkyflowApplication using Java 17.0.10 with PID 24852 (E:\Airline-reservation-system-java-master\backend-server\target\classes started by AATMAJ PATRO in E:\Airline-reservation-system-java-master\backend-server)
+2026-02-07T20:27:20.092+05:30  INFO 24852 --- [skyflow-backend] [           main] com.skyflow.SkyflowApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-02-07T20:27:20.780+05:30  INFO 24852 --- [skyflow-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-07T20:27:20.874+05:30  INFO 24852 --- [skyflow-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 67 ms. Found 7 JPA repository interfaces.
+2026-02-07T20:27:21.521+05:30  INFO 24852 --- [skyflow-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-02-07T20:27:21.540+05:30  INFO 24852 --- [skyflow-backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-07T20:27:21.540+05:30  INFO 24852 --- [skyflow-backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.17]
+2026-02-07T20:27:21.617+05:30  INFO 24852 --- [skyflow-backend] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-02-07T20:27:21.618+05:30  INFO 24852 --- [skyflow-backend] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1478 ms
+2026-02-07T20:27:21.712+05:30  INFO 24852 --- [skyflow-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-07T20:27:21.922+05:30  INFO 24852 --- [skyflow-backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:fdacca06-c316-485d-8874-babc462dd0eb user=SA
+2026-02-07T20:27:21.923+05:30  INFO 24852 --- [skyflow-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-07T20:27:21.964+05:30  INFO 24852 --- [skyflow-backend] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-07T20:27:22.040+05:30  INFO 24852 --- [skyflow-backend] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.1.Final
+2026-02-07T20:27:22.079+05:30  INFO 24852 --- [skyflow-backend] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-02-07T20:27:22.293+05:30  INFO 24852 --- [skyflow-backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-07T20:27:23.161+05:30  INFO 24852 --- [skyflow-backend] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-07T20:27:23.218+05:30  INFO 24852 --- [skyflow-backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-07T20:27:23.595+05:30  INFO 24852 --- [skyflow-backend] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-07T20:27:24.024+05:30  WARN 24852 --- [skyflow-backend] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-07T20:27:24.264+05:30  INFO 24852 --- [skyflow-backend] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1bce19db, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4c1f4817, org.springframework.security.web.context.SecurityContextHolderFilter@6c8b6782, org.springframework.security.web.header.HeaderWriterFilter@4870d2e1, org.springframework.web.filter.CorsFilter@5d3c0735, org.springframework.security.web.authentication.logout.LogoutFilter@150963fe, com.skyflow.security.AuthTokenFilter@5cb6b81b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@598f065f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@21f48f6c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7a68818c, org.springframework.security.web.session.SessionManagementFilter@5acf51d7, org.springframework.security.web.access.ExceptionTranslationFilter@70b437bb, org.springframework.security.web.access.intercept.AuthorizationFilter@5de15ce1]
+2026-02-07T20:27:24.463+05:30  WARN 24852 --- [skyflow-backend] [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-02-07T20:27:24.464+05:30  INFO 24852 --- [skyflow-backend] [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-07T20:27:24.475+05:30  INFO 24852 --- [skyflow-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-07T20:27:24.477+05:30  INFO 24852 --- [skyflow-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-02-07T20:27:24.488+05:30  INFO 24852 --- [skyflow-backend] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-02-07T20:27:24.501+05:30 ERROR 24852 --- [skyflow-backend] [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8081 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8081 or configure this application to listen on another port.
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.429 s
+[INFO] Finished at: 2026-02-07T20:27:24+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.2.1:run (default-cli) on project backend-server: Process terminated with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
