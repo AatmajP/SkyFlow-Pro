@@ -1,7 +1,8 @@
-import { Search, ArrowRightLeft, Calendar, Users, Briefcase, Info } from 'lucide-react'
-import { useState } from 'react'
+import { Search, ArrowRightLeft, Calendar, Users, Briefcase, Info, MapPin } from 'lucide-react'
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FlexDateStrip } from '../calendar/FlexDateStrip'
+import { AIRPORTS } from '../../mocks/mockSearchResults'
 
 type TripType = 'oneway' | 'roundtrip' | 'multicity'
 type CabinClass = 'economy' | 'premium' | 'business' | 'first'
@@ -24,12 +25,88 @@ const cabinLabels: Record<CabinClass, string> = {
   first: 'First Class',
 }
 
+// Today's date string for min attribute
+function getTodayStr() {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+// ─── Airport Autocomplete Dropdown ──────────────────────────────────
+function AirportDropdown({
+  query,
+  onSelect,
+  isOpen,
+  onClose,
+}: {
+  query: string
+  onSelect: (code: string) => void
+  isOpen: boolean
+  onClose: () => void
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        onClose()
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [onClose])
+
+  const filtered = useMemo(() => {
+    if (!query || query.length < 1) return AIRPORTS.slice(0, 10)
+    const q = query.toLowerCase()
+    return AIRPORTS.filter(
+      (a) =>
+        a.code.toLowerCase().includes(q) ||
+        a.city.toLowerCase().includes(q) ||
+        a.country.toLowerCase().includes(q),
+    ).slice(0, 8)
+  }, [query])
+
+  if (!isOpen || filtered.length === 0) return null
+
+  return (
+    <div
+      ref={ref}
+      className="absolute left-0 right-0 top-full mt-1 z-50 rounded-xl bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 shadow-2xl shadow-black/40 overflow-hidden"
+    >
+      {filtered.map((airport) => (
+        <button
+          key={airport.code}
+          type="button"
+          className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-sky-500/10 transition-colors"
+          onClick={() => {
+            onSelect(airport.code)
+            onClose()
+          }}
+        >
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-xs font-bold text-sky-400">
+            {airport.code}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-slate-200 truncate">{airport.city}</p>
+            <p className="text-xs text-slate-500">{airport.country}</p>
+          </div>
+          <MapPin className="h-3.5 w-3.5 text-slate-600 shrink-0" />
+        </button>
+      ))}
+    </div>
+  )
+}
+
 export function GlobalSearchHeader() {
   const navigate = useNavigate()
   const [isSearching, setIsSearching] = useState(false)
+  const [fromDropdownOpen, setFromDropdownOpen] = useState(false)
+  const [toDropdownOpen, setToDropdownOpen] = useState(false)
+  const today = getTodayStr()
+
   const [form, setForm] = useState<GlobalSearchForm>({
-    from: 'JFK',
-    to: 'LAX',
+    from: 'DEL',
+    to: 'BOM',
     departureDate: '',
     returnDate: '',
     tripType: 'roundtrip',
@@ -42,12 +119,22 @@ export function GlobalSearchHeader() {
     key: K,
     value: GlobalSearchForm[K],
   ) => {
-    setForm((prev) => ({ ...prev, [key]: value }))
+    setForm((prev) => {
+      const next = { ...prev, [key]: value }
+      // If departure date changes and return date is before it, clear return
+      if (key === 'departureDate' && next.returnDate && next.returnDate < String(value)) {
+        next.returnDate = ''
+      }
+      return next
+    })
   }
 
   const swapLocations = () => {
     setForm((prev) => ({ ...prev, from: prev.to, to: prev.from }))
   }
+
+  const handleFromClose = useCallback(() => setFromDropdownOpen(false), [])
+  const handleToClose = useCallback(() => setToDropdownOpen(false), [])
 
   const handleSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault()
@@ -71,6 +158,12 @@ export function GlobalSearchHeader() {
     setIsSearching(false)
   }
 
+  // Get display name for airport
+  const getAirportLabel = (code: string) => {
+    const airport = AIRPORTS.find((a) => a.code === code)
+    return airport ? `${airport.city} (${airport.code})` : code
+  }
+
   return (
     <section
       aria-label="Flight search"
@@ -84,7 +177,7 @@ export function GlobalSearchHeader() {
         {/* Trip Type Selector */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="inline-flex rounded-2xl bg-slate-900/80 p-1 ring-1 ring-slate-800">
-            {(['oneway', 'roundtrip', 'multicity'] as TripType[]).map((type) => (
+            {(['oneway', 'roundtrip'] as TripType[]).map((type) => (
               <button
                 key={type}
                 type="button"
@@ -95,7 +188,7 @@ export function GlobalSearchHeader() {
                   }`}
                 aria-pressed={form.tripType === type}
               >
-                {type === 'multicity' ? 'Multi-city' : type === 'oneway' ? 'One Way' : 'Round Trip'}
+                {type === 'oneway' ? 'One Way' : 'Round Trip'}
               </button>
             ))}
           </div>
@@ -119,13 +212,27 @@ export function GlobalSearchHeader() {
             <input
               required
               value={form.from}
-              onChange={(e) => handleChange('from', e.target.value.toUpperCase())}
+              onChange={(e) => {
+                handleChange('from', e.target.value.toUpperCase())
+                setFromDropdownOpen(true)
+              }}
+              onFocus={() => setFromDropdownOpen(true)}
               placeholder="City or airport code"
               className="input-premium pr-12"
+              autoComplete="off"
             />
             <div className="absolute bottom-3 right-3 text-slate-500">
               <Briefcase className="h-5 w-5" />
             </div>
+            {form.from && (
+              <p className="text-xs text-slate-500 mt-1">{getAirportLabel(form.from)}</p>
+            )}
+            <AirportDropdown
+              query={form.from}
+              isOpen={fromDropdownOpen}
+              onSelect={(code) => handleChange('from', code)}
+              onClose={handleFromClose}
+            />
           </div>
 
           {/* Swap Button */}
@@ -148,13 +255,27 @@ export function GlobalSearchHeader() {
             <input
               required
               value={form.to}
-              onChange={(e) => handleChange('to', e.target.value.toUpperCase())}
+              onChange={(e) => {
+                handleChange('to', e.target.value.toUpperCase())
+                setToDropdownOpen(true)
+              }}
+              onFocus={() => setToDropdownOpen(true)}
               placeholder="City or airport code"
               className="input-premium pr-12"
+              autoComplete="off"
             />
             <div className="absolute bottom-3 right-3 text-slate-500">
               <Briefcase className="h-5 w-5" />
             </div>
+            {form.to && (
+              <p className="text-xs text-slate-500 mt-1">{getAirportLabel(form.to)}</p>
+            )}
+            <AirportDropdown
+              query={form.to}
+              isOpen={toDropdownOpen}
+              onSelect={(code) => handleChange('to', code)}
+              onClose={handleToClose}
+            />
           </div>
         </div>
 
@@ -169,6 +290,7 @@ export function GlobalSearchHeader() {
             <input
               type="date"
               required
+              min={today}
               value={form.departureDate}
               onChange={(e) => handleChange('departureDate', e.target.value)}
               className="input-premium"
@@ -184,6 +306,7 @@ export function GlobalSearchHeader() {
               </label>
               <input
                 type="date"
+                min={form.departureDate || today}
                 value={form.returnDate}
                 onChange={(e) => handleChange('returnDate', e.target.value)}
                 className="input-premium"

@@ -1,4 +1,5 @@
 import { GlobalSearchHeader } from '../components/global-search/GlobalSearchHeader'
+import { DestinationDiscovery } from '../components/search/DestinationDiscovery'
 import { Plane, Shield, Tag, Clock, Star, Users, Zap, Globe } from 'lucide-react'
 
 const features = [
@@ -29,15 +30,15 @@ const features = [
 ]
 
 const stats = [
-  { value: '500+', label: 'Airlines', icon: Plane },
-  { value: '10M+', label: 'Happy Travelers', icon: Users },
-  { value: '150+', label: 'Countries', icon: Globe },
+  { value: '50+', label: 'Destinations', icon: Plane },
+  { value: '6', label: 'Airlines', icon: Users },
+  { value: '20+', label: 'Daily Flights', icon: Globe },
   { value: '4.9', label: 'User Rating', icon: Star },
 ]
 
 const airlines = [
-  'Emirates', 'Qatar Airways', 'Singapore Airlines', 'Lufthansa',
-  'Air France', 'British Airways', 'Delta', 'United', 'American Airlines'
+  'IndiGo', 'Air India', 'Vistara', 'SpiceJet', 'Akasa Air', 'Patro Airlines',
+  'Emirates', 'British Airways', 'Lufthansa', 'Singapore Airlines',
 ]
 
 export function SearchPage() {
@@ -74,7 +75,7 @@ export function SearchPage() {
           </h1>
 
           <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400 sm:text-lg">
-            Enterprise-grade flight search with complete transparency.
+            Search 50+ destinations across India and beyond.
             Every fee itemized, every seat guaranteed.
           </p>
         </header>
@@ -98,6 +99,11 @@ export function SearchPage() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Destination Discovery — Novelty Feature */}
+        <section className="mb-16">
+          <DestinationDiscovery />
         </section>
 
         {/* Features Grid */}
@@ -129,13 +135,17 @@ export function SearchPage() {
         {/* Trusted Airlines */}
         <section className="mb-16 glass rounded-2xl p-8 animate-fade-in">
           <p className="text-center text-sm font-medium text-slate-400 mb-6">
-            Trusted by travelers worldwide with access to
+            Trusted by travelers worldwide · Fly with India's best airlines
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6">
             {airlines.map((airline, idx) => (
               <span
                 key={idx}
-                className="px-4 py-2 text-sm font-medium text-slate-500 hover:text-sky-400 transition-colors duration-300 cursor-default"
+                className={`px-4 py-2 text-sm font-medium transition-colors duration-300 cursor-default ${
+                  airline === 'Patro Airlines'
+                    ? 'text-sky-400 font-semibold'
+                    : 'text-slate-500 hover:text-sky-400'
+                }`}
               >
                 {airline}
               </span>
@@ -153,7 +163,7 @@ export function SearchPage() {
               <span className="text-sm font-semibold gradient-text">SkyFlow Pro</span>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500">
-              <span>Prototype · Demo data only · v1.0</span>
+              <span>v2.0 · Enhanced Edition</span>
               <span>•</span>
               <span>Built for transparency</span>
               <span>•</span>

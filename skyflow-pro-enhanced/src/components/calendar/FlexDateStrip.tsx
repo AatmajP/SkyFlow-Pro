@@ -7,9 +7,9 @@ interface FlexDateStripProps {
   onSelect: (dateStr: string) => void
 }
 
-const priceFormatter = new Intl.NumberFormat('en-US', {
+const priceFormatter = new Intl.NumberFormat('en-IN', {
   style: 'currency',
-  currency: 'USD',
+  currency: 'INR',
   maximumFractionDigits: 0,
 })
 
@@ -17,12 +17,12 @@ function demoPrice(dateStr: string): number {
   // deterministic-ish demo pricing to support cheapest-day highlighting
   let hash = 0
   for (let i = 0; i < dateStr.length; i++) hash = (hash * 31 + dateStr.charCodeAt(i)) >>> 0
-  const base = 260 + (hash % 210) // 260..469
+  const base = 3200 + (hash % 4500) // ₹3200..₹7700
   const weekendBump = (() => {
     const dt = parseISODate(dateStr)
     if (!dt) return 0
     const day = dt.getDay()
-    return day === 0 || day === 6 ? 35 : 0
+    return day === 0 || day === 6 ? 800 : 0
   })()
   return base + weekendBump
 }
@@ -31,7 +31,15 @@ export function FlexDateStrip({ selectedDate, flexDays, onSelect }: FlexDateStri
   const selected = parseISODate(selectedDate)
   if (!selected) return null
 
-  const days = Array.from({ length: flexDays * 2 + 1 }, (_, idx) => addDays(selected, idx - flexDays))
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  // Generate days but filter out past dates
+  const allDays = Array.from({ length: flexDays * 2 + 1 }, (_, idx) => addDays(selected, idx - flexDays))
+  const days = allDays.filter((d) => d >= today)
+
+  if (days.length === 0) return null
+
   const prices = days.map((d) => demoPrice(toISODate(d)))
   const min = Math.min(...prices)
   const max = Math.max(...prices)
@@ -64,14 +72,16 @@ export function FlexDateStrip({ selectedDate, flexDays, onSelect }: FlexDateStri
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-2 mt-4">
+      {/* Responsive: horizontal scroll on mobile, grid on desktop */}
+      <div className="flex gap-2 mt-4 overflow-x-auto pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-7 sm:overflow-visible sm:pb-0">
         {days.map((date, idx) => {
           const iso = toISODate(date)
           const price = prices[idx]
           const isSelected = iso === selectedDate
           const isCheapest = price === min
           const isExpensive = price === max
-          const priceTrend = price < avg ? 'low' : price > avg + 30 ? 'high' : 'normal'
+          const priceTrend = price < avg ? 'low' : price > avg + 500 ? 'high' : 'normal'
+          const isToday = iso === toISODate(today)
 
           return (
             <button
@@ -80,6 +90,7 @@ export function FlexDateStrip({ selectedDate, flexDays, onSelect }: FlexDateStri
               onClick={() => onSelect(iso)}
               className={`
                 group relative rounded-xl border p-3 text-left transition-all duration-300
+                snap-center shrink-0 w-[110px] sm:w-auto
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950
                 ${isSelected
                   ? 'border-sky-400 bg-sky-500/15 ring-1 ring-sky-400/30 shadow-lg shadow-sky-500/10'
@@ -91,8 +102,8 @@ export function FlexDateStrip({ selectedDate, flexDays, onSelect }: FlexDateStri
               aria-pressed={isSelected}
             >
               {/* Day name */}
-              <p className={`text-xs font-medium ${isSelected ? 'text-sky-300' : 'text-slate-400'}`}>
-                {formatWeekdayShort(date)}
+              <p className={`text-xs font-medium ${isSelected ? 'text-sky-300' : isToday ? 'text-amber-400' : 'text-slate-400'}`}>
+                {isToday ? 'Today' : formatWeekdayShort(date)}
               </p>
 
               {/* Date */}
@@ -132,7 +143,7 @@ export function FlexDateStrip({ selectedDate, flexDays, onSelect }: FlexDateStri
         })}
       </div>
 
-      {/* Price summary */}
+      {/* Price summary + trend indicator */}
       <div className="mt-4 pt-4 border-t border-slate-800/50 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
         <p>
           Prices range from{' '}
@@ -140,7 +151,17 @@ export function FlexDateStrip({ selectedDate, flexDays, onSelect }: FlexDateStri
           {' '}to{' '}
           <span className="font-semibold text-amber-400">{priceFormatter.format(max)}</span>
         </p>
-        <p>Demo prices · Real fares fetched from API</p>
+        <div className="flex items-center gap-2">
+          {avg > 5000 ? (
+            <span className="flex items-center gap-1 text-amber-400 font-medium">
+              <TrendingUp className="h-3 w-3" /> Prices rising for this period
+            </span>
+          ) : (
+            <span className="flex items-center gap-1 text-emerald-400 font-medium">
+              <TrendingDown className="h-3 w-3" /> Great prices available
+            </span>
+          )}
+        </div>
       </div>
     </section>
   )

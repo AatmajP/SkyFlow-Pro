@@ -1,5 +1,5 @@
-import type { FlightOption } from '../types/flight'
-import { mockSearchResults } from '../mocks/mockSearchResults'
+import type { FlightOption, CabinClass } from '../types/flight'
+import { generateFlights } from '../mocks/mockSearchResults'
 import { createHttpClient, requestWithResilience } from './httpClient'
 
 export interface FlightSearchParams {
@@ -22,7 +22,14 @@ export const FlightService = {
     const useMock =
       (import.meta.env.VITE_USE_MOCKS?.toString() ?? 'true') === 'true'
 
-    const fallback = async () => ({ results: mockSearchResults })
+    const fallback = async () => ({
+      results: generateFlights(
+        params.from,
+        params.to,
+        params.date,
+        (params.cabin || 'economy') as CabinClass,
+      ),
+    })
 
     if (useMock) return fallback()
 
@@ -49,4 +56,3 @@ export const FlightService = {
     )
   },
 }
-

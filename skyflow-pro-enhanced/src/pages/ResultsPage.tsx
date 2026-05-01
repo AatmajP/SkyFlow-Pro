@@ -1,31 +1,108 @@
 import { useSearchParams, Link } from 'react-router-dom'
-import { ArrowLeft, Filter, ArrowUpDown, Plane, RefreshCw } from 'lucide-react'
+import { ArrowLeft, Filter, Plane, RefreshCw } from 'lucide-react'
 import { FlightResultsGrid } from '../components/results/FlightResultsGrid'
 import { useFlightSearch } from '../hooks/useFlightSearch'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
+import type { FlightOption } from '../types/flight'
+import { AIRPORTS } from '../mocks/mockSearchResults'
 
-type SortOption = 'price' | 'duration' | 'departure' | 'arrival'
+type SortOption = 'price' | 'duration' | 'departure'
 
 export function ResultsPage() {
   const [params] = useSearchParams()
-  const from = params.get('from') ?? 'JFK'
-  const to = params.get('to') ?? 'LAX'
+  const from = params.get('from') ?? 'DEL'
+  const to = params.get('to') ?? 'BOM'
   const date = params.get('date') ?? ''
   const flex = Number(params.get('flex') ?? 3)
   const adults = Number(params.get('adults') ?? 1)
   const cabin = params.get('cabin') ?? 'economy'
 
   const query = useFlightSearch({ from, to, date, flex, adults, cabin })
-  const results = query.data?.results ?? []
+  const rawResults = query.data?.results ?? []
 
   const [sortBy, setSortBy] = useState<SortOption>('price')
   const [showFilters, setShowFilters] = useState(false)
+  const [stopsFilter, setStopsFilter] = useState<string>('any')
+  const [airlineFilter, setAirlineFilter] = useState<string>('all')
+  const [timeFilter, setTimeFilter] = useState<string>('any')
+  const [priceFilter, setPriceFilter] = useState<string>('any')
+
+  // Get airport display names
+  const fromAirport = AIRPORTS.find((a) => a.code === from)
+  const toAirport = AIRPORTS.find((a) => a.code === to)
+
+  // Get unique airlines for filter dropdown
+  const uniqueAirlines = useMemo(() => {
+    const set = new Set<string>()
+    rawResults.forEach((f) => {
+      const carrier = f.segments[0]?.marketingCarrier
+      if (carrier) set.add(carrier)
+    })
+    return Array.from(set).sort()
+  }, [rawResults])
+
+  // Apply filters and sorting
+  const results = useMemo(() => {
+    let filtered = [...rawResults]
+
+    // Stops filter
+    if (stopsFilter === 'nonstop') {
+      filtered = filtered.filter((f) => f.stops === 0)
+    } else if (stopsFilter === '1stop') {
+      filtered = filtered.filter((f) => f.stops === 1)
+    }
+
+    // Airline filter
+    if (airlineFilter !== 'all') {
+      filtered = filtered.filter((f) => f.segments[0]?.marketingCarrier === airlineFilter)
+    }
+
+    // Time filter
+    if (timeFilter !== 'any') {
+      filtered = filtered.filter((f) => {
+        const hour = new Date(f.segments[0]?.departureTime ?? '').getHours()
+        if (timeFilter === 'morning') return hour >= 6 && hour < 12
+        if (timeFilter === 'afternoon') return hour >= 12 && hour < 18
+        if (timeFilter === 'evening') return hour >= 18 || hour < 6
+        return true
+      })
+    }
+
+    // Price filter
+    if (priceFilter !== 'any') {
+      filtered = filtered.filter((f) => {
+        if (priceFilter === 'under5k') return f.price.total < 5000
+        if (priceFilter === '5k-10k') return f.price.total >= 5000 && f.price.total <= 10000
+        if (priceFilter === 'above10k') return f.price.total > 10000
+        return true
+      })
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'price':
+          return a.price.total - b.price.total
+        case 'duration':
+          return a.totalDurationMinutes - b.totalDurationMinutes
+        case 'departure':
+          return new Date(a.segments[0]?.departureTime ?? '').getTime() -
+                 new Date(b.segments[0]?.departureTime ?? '').getTime()
+        default:
+          return 0
+      }
+    })
+
+    return filtered
+  }, [rawResults, sortBy, stopsFilter, airlineFilter, timeFilter, priceFilter])
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return 'Flexible dates'
     const d = new Date(dateStr)
     return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
   }
+
+  const activeFilterCount = [stopsFilter !== 'any', airlineFilter !== 'all', timeFilter !== 'any', priceFilter !== 'any'].filter(Boolean).length
 
   return (
     <div className="relative min-h-screen">
@@ -60,7 +137,10 @@ export function ResultsPage() {
                 </span>
                 {to}
               </h1>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-slate-400">
+                {fromAirport ? `${fromAirport.city}` : from} → {toAirport ? `${toAirport.city}` : to}
+              </p>
+              <p className="mt-1 text-sm text-slate-400">
                 {formatDate(date)} • {adults} traveler{adults > 1 ? 's' : ''} • {cabin.charAt(0).toUpperCase() + cabin.slice(1)}
               </p>
             </div>
@@ -88,18 +168,47 @@ export function ResultsPage() {
               >
                 <Filter className="h-4 w-4" />
                 Filters
+                {activeFilterCount > 0 && (
+                  <span className="flex items-center justify-center h-5 w-5 rounded-full bg-sky-500 text-white text-[0.6rem] font-bold">
+                    {activeFilterCount}
+                  </span>
+                )}
               </button>
 
               {/* Quick filters */}
               <div className="hidden sm:flex items-center gap-2">
-                <button className="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/50 text-slate-300 hover:bg-slate-800 transition-colors">
+                <button
+                  onClick={() => setStopsFilter(stopsFilter === 'nonstop' ? 'any' : 'nonstop')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    stopsFilter === 'nonstop'
+                      ? 'bg-sky-500/20 text-sky-300 ring-1 ring-sky-500/30'
+                      : 'bg-slate-800/50 text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
                   Non-stop only
                 </button>
-                <button className="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/50 text-slate-300 hover:bg-slate-800 transition-colors">
+                <button
+                  onClick={() => setTimeFilter(timeFilter === 'morning' ? 'any' : 'morning')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    timeFilter === 'morning'
+                      ? 'bg-sky-500/20 text-sky-300 ring-1 ring-sky-500/30'
+                      : 'bg-slate-800/50 text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
                   Morning flights
                 </button>
-                <button className="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/50 text-slate-300 hover:bg-slate-800 transition-colors">
-                  Refundable
+                <button
+                  onClick={() => {
+                    const isActive = airlineFilter === 'Patro Airlines'
+                    setAirlineFilter(isActive ? 'all' : 'Patro Airlines')
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    airlineFilter === 'Patro Airlines'
+                      ? 'bg-sky-500/20 text-sky-300 ring-1 ring-sky-500/30'
+                      : 'bg-slate-800/50 text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  Patro Airlines
                 </button>
               </div>
             </div>
@@ -128,39 +237,72 @@ export function ResultsPage() {
             <div className="mt-4 pt-4 border-t border-slate-800/50 grid grid-cols-2 sm:grid-cols-4 gap-4 animate-fade-in">
               <div>
                 <label className="text-xs font-medium text-slate-400 block mb-2">Stops</label>
-                <select className="input-premium text-sm py-2">
-                  <option>Any</option>
-                  <option>Non-stop</option>
-                  <option>1 stop</option>
-                  <option>2+ stops</option>
+                <select
+                  value={stopsFilter}
+                  onChange={(e) => setStopsFilter(e.target.value)}
+                  className="input-premium text-sm py-2"
+                >
+                  <option value="any">Any</option>
+                  <option value="nonstop">Non-stop</option>
+                  <option value="1stop">1 stop</option>
                 </select>
               </div>
               <div>
                 <label className="text-xs font-medium text-slate-400 block mb-2">Airlines</label>
-                <select className="input-premium text-sm py-2">
-                  <option>All airlines</option>
-                  <option>Sky Atlantic</option>
-                  <option>Pacific Air</option>
+                <select
+                  value={airlineFilter}
+                  onChange={(e) => setAirlineFilter(e.target.value)}
+                  className="input-premium text-sm py-2"
+                >
+                  <option value="all">All airlines</option>
+                  {uniqueAirlines.map((airline) => (
+                    <option key={airline} value={airline}>{airline}</option>
+                  ))}
                 </select>
               </div>
               <div>
                 <label className="text-xs font-medium text-slate-400 block mb-2">Departure time</label>
-                <select className="input-premium text-sm py-2">
-                  <option>Any time</option>
-                  <option>Morning (6AM-12PM)</option>
-                  <option>Afternoon (12PM-6PM)</option>
-                  <option>Evening (6PM-12AM)</option>
+                <select
+                  value={timeFilter}
+                  onChange={(e) => setTimeFilter(e.target.value)}
+                  className="input-premium text-sm py-2"
+                >
+                  <option value="any">Any time</option>
+                  <option value="morning">Morning (6AM-12PM)</option>
+                  <option value="afternoon">Afternoon (12PM-6PM)</option>
+                  <option value="evening">Evening (6PM-6AM)</option>
                 </select>
               </div>
               <div>
                 <label className="text-xs font-medium text-slate-400 block mb-2">Price range</label>
-                <select className="input-premium text-sm py-2">
-                  <option>Any price</option>
-                  <option>Under $300</option>
-                  <option>$300 - $500</option>
-                  <option>$500+</option>
+                <select
+                  value={priceFilter}
+                  onChange={(e) => setPriceFilter(e.target.value)}
+                  className="input-premium text-sm py-2"
+                >
+                  <option value="any">Any price</option>
+                  <option value="under5k">Under ₹5,000</option>
+                  <option value="5k-10k">₹5,000 – ₹10,000</option>
+                  <option value="above10k">Above ₹10,000</option>
                 </select>
               </div>
+
+              {/* Reset filters */}
+              {activeFilterCount > 0 && (
+                <div className="col-span-2 sm:col-span-4">
+                  <button
+                    onClick={() => {
+                      setStopsFilter('any')
+                      setAirlineFilter('all')
+                      setTimeFilter('any')
+                      setPriceFilter('any')
+                    }}
+                    className="text-xs text-sky-400 hover:text-sky-300 transition-colors"
+                  >
+                    Clear all filters
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -173,7 +315,9 @@ export function ResultsPage() {
                 <Plane className="h-8 w-8 text-sky-400 animate-pulse" />
               </div>
               <p className="text-lg font-semibold text-slate-50">Finding the best flights...</p>
-              <p className="text-sm text-slate-400 mt-1">Searching 500+ airlines for the lowest fares</p>
+              <p className="text-sm text-slate-400 mt-1">
+                Searching {fromAirport?.city ?? from} to {toAirport?.city ?? to}
+              </p>
               <div className="mt-6 max-w-xs mx-auto">
                 <div className="progress-bar">
                   <div className="progress-bar-fill animate-shimmer" style={{ width: '60%' }} />
@@ -200,7 +344,30 @@ export function ResultsPage() {
             </div>
           ) : (
             <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <FlightResultsGrid results={results} />
+              {results.length === 0 && rawResults.length > 0 ? (
+                <div className="glass rounded-2xl p-8 text-center">
+                  <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-slate-800/50 mb-4">
+                    <Filter className="h-8 w-8 text-slate-500" />
+                  </div>
+                  <p className="text-lg font-semibold text-slate-200">No flights match your filters</p>
+                  <p className="text-sm text-slate-400 mt-2">
+                    {rawResults.length} flights available. Try adjusting your filters.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setStopsFilter('any')
+                      setAirlineFilter('all')
+                      setTimeFilter('any')
+                      setPriceFilter('any')
+                    }}
+                    className="mt-4 btn-secondary"
+                  >
+                    Clear all filters
+                  </button>
+                </div>
+              ) : (
+                <FlightResultsGrid results={results} />
+              )}
             </div>
           )}
         </main>
