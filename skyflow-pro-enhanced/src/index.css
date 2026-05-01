@@ -284,6 +284,107 @@ body {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(56, 189, 248, 0.1);
 }
 
+/* Enhanced flight card hover */
+.flight-card-hover {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flight-card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.35),
+    0 0 24px rgba(56, 189, 248, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.05) inset;
+}
+
+/* Best value glow on hover */
+.best-value-glow {
+  position: relative;
+}
+
+.best-value-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 1rem;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(56, 189, 248, 0.15), rgba(139, 92, 246, 0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.best-value-glow:hover::before {
+  opacity: 1;
+}
+
+/* Badge pill animation */
+@keyframes badgePop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.badge-pill {
+  animation: badgePop 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Select button feedback */
+.btn-select {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-select:active,
+.btn-select-active {
+  transform: scale(0.95) !important;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3) !important;
+}
+
+/* Details button feedback */
+.btn-details {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-details:active {
+  transform: scale(0.97);
+}
+
+/* Smooth details panel */
+.details-panel {
+  will-change: max-height, opacity;
+}
+
+.details-panel-open {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.details-panel-closed {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* Airline logo subtle hover */
+.airline-logo {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.flight-card-hover:hover .airline-logo {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
 /* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #f472b6 100%);

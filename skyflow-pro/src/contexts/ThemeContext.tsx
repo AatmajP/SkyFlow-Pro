@@ -1,0 +1,115 @@
+/**
+ * Theme Context - REAL FUNCTIONALITY
+ * 
+ * Actually changes the app's appearance by:
+ * 1. Adding/removing 'dark' class on documentElement
+ * 2. Updating CSS variables
+ * 3. Persisting in localStorage
+ * 4. Respecting system preference
+ */
+
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+
+export type Theme = 'light' | 'dark' | 'system'
+export type ResolvedTheme = 'light' | 'dark'
+
+interface ThemeContextType {
+    theme: Theme
+    resolvedTheme: ResolvedTheme
+    setTheme: (theme: Theme) => void
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
+
+const STORAGE_KEY = 'skyflow-theme'
+
+/**
+ * Get system preference
+ */
+function getSystemTheme(): ResolvedTheme {
+    if (typeof window === 'undefined') return 'dark'
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+/**
+ * Apply theme to DOM
+ * CRITICAL: This actually changes the app's appearance
+ */
+function applyThemeToDOM(resolvedTheme: ResolvedTheme) {
+    const root = document.documentElement
+
+    if (resolvedTheme === 'dark') {
+        root.classList.add('dark')
+        root.style.colorScheme = 'dark'
+    } else {
+        root.classList.remove('dark')
+        root.style.colorScheme = 'light'
+    }
+
+    // Update meta theme-color for mobile browsers
+    const metaTheme = document.querySelector('meta[name="theme-color"]')
+    if (metaTheme) {
+        metaTheme.setAttribute('content', resolvedTheme === 'dark' ? '#0f172a' : '#ffffff')
+    }
+}
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
+    const [theme, setThemeState] = useState<Theme>(() => {
+        // Load from localStorage or default to 'dark' (current design)
+        const stored = localStorage.getItem(STORAGE_KEY)
+        return (stored as Theme) || 'dark'
+    })
+
+    const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => {
+        if (theme === 'system') {
+            return getSystemTheme()
+        }
+        return theme as ResolvedTheme
+    })
+
+    // Apply theme immediately on mount
+    useEffect(() => {
+        const resolved = theme === 'system' ? getSystemTheme() : (theme as ResolvedTheme)
+        setResolvedTheme(resolved)
+        applyThemeToDOM(resolved)
+    }, [theme])
+
+    // Listen for system theme changes when theme is 'system'
+    useEffect(() => {
+        if (theme !== 'system') return
+
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+        const handleChange = (e: MediaQueryListEvent) => {
+            const newTheme = e.matches ? 'dark' : 'light'
+            setResolvedTheme(newTheme)
+            applyThemeToDOM(newTheme)
+        }
+
+        mediaQuery.addEventListener('change', handleChange)
+        return () => mediaQuery.removeEventListener('change', handleChange)
+    }, [theme])
+
+    const setTheme = (newTheme: Theme) => {
+        setThemeState(newTheme)
+        localStorage.setItem(STORAGE_KEY, newTheme)
+
+        const resolved = newTheme === 'system' ? getSystemTheme() : (newTheme as ResolvedTheme)
+        setResolvedTheme(resolved)
+        applyThemeToDOM(resolved)
+    }
+
+    return (
+        <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>
+            {children}
+        </ThemeContext.Provider>
+    )
+}
+
+export function useTheme() {
+    const context = useContext(ThemeContext)
+    if (!context) {
+        throw new Error('useTheme must be used within ThemeProvider')
+    }
+    return context
+}

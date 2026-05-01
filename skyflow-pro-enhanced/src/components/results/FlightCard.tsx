@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Clock3, Luggage, ChevronDown, ChevronUp, Leaf, Shield, Info } from 'lucide-react'
+import { ArrowRight, Clock3, Luggage, ChevronDown, Leaf, Shield, Info, Zap, TrendingDown, Award } from 'lucide-react'
 import type { FlightOption } from '../../types/flight'
+import type { FlightBadge } from '../../utils/flightIntelligence'
+import { getBadgeConfig } from '../../utils/flightIntelligence'
 
 interface FlightCardProps {
   flight: FlightOption
+  badges?: FlightBadge[]
 }
 
 const formatter = new Intl.NumberFormat('en-US', {
@@ -27,10 +30,23 @@ function formatTime(dateTime: string) {
   })
 }
 
-export function FlightCard({ flight }: FlightCardProps) {
+function getBadgeIcon(badge: FlightBadge) {
+  switch (badge) {
+    case 'cheapest':
+      return <TrendingDown className="h-3 w-3" />
+    case 'fastest':
+      return <Zap className="h-3 w-3" />
+    case 'best-value':
+      return <Award className="h-3 w-3" />
+  }
+}
+
+export function FlightCard({ flight, badges = [] }: FlightCardProps) {
   const navigate = useNavigate()
   const [isExpanded, setIsExpanded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
+  const [isSelectPressed, setIsSelectPressed] = useState(false)
+  const detailsRef = useRef<HTMLDivElement>(null)
 
   const { price } = flight
   const isHighRefund = price.refundabilityScore >= 75
@@ -41,29 +57,59 @@ export function FlightCard({ flight }: FlightCardProps) {
   )
   const isStale = ageMinutes >= 15
 
+  const hasBadges = badges.length > 0
+  const hasBestValue = badges.includes('best-value')
+
   const handleSelect = () => {
-    // Store the flight in session storage for the booking page
     sessionStorage.setItem('selectedFlight', JSON.stringify(flight))
     navigate(`/booking/${flight.id}`)
   }
 
   return (
     <article
-      className={`relative rounded-2xl border bg-gradient-to-br from-slate-900/90 to-slate-950/90 shadow-lg transition-all duration-400 card-hover ${isHovered ? 'border-sky-500/50 ring-1 ring-sky-500/20' : 'border-slate-800/80'
-        }`}
+      className={`relative rounded-2xl border bg-gradient-to-br from-slate-900/90 to-slate-950/90 shadow-lg flight-card-hover ${
+        isHovered ? 'border-sky-500/50 ring-1 ring-sky-500/20' : 'border-slate-800/80'
+      } ${hasBestValue ? 'best-value-glow' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Intelligent badge ribbon */}
+      {hasBadges && (
+        <div className="flex items-center gap-1.5 px-4 pt-3 sm:px-5 sm:pt-4 pb-0">
+          {badges.map((badge) => {
+            const config = getBadgeConfig(badge)
+            return (
+              <span
+                key={badge}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[0.7rem] font-semibold ring-1 badge-pill ${config.bgClass} ${config.textClass}`}
+              >
+                {getBadgeIcon(badge)}
+                {config.label}
+              </span>
+            )
+          })}
+        </div>
+      )}
+
       {/* Main content */}
-      <div className="p-4 sm:p-5">
+      <div className={`p-4 sm:p-5 ${hasBadges ? 'pt-2 sm:pt-3' : ''}`}>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* Left side - Flight info */}
           <div className="flex flex-1 gap-4">
             {/* Airline logo placeholder */}
             <div className="hidden sm:flex shrink-0">
-              <div className={`h-14 w-14 rounded-xl bg-gradient-to-br flex items-center justify-center text-white font-bold text-lg ${flight.segments[0]?.marketingCarrierCode === 'SA'
-                  ? 'from-sky-500 to-blue-600'
-                  : 'from-purple-500 to-violet-600'
+              <div className={`h-14 w-14 rounded-xl bg-gradient-to-br flex items-center justify-center text-white font-bold text-lg airline-logo ${
+                  flight.segments[0]?.marketingCarrierCode === 'SA'
+                    ? 'from-sky-500 to-blue-600'
+                    : flight.segments[0]?.marketingCarrierCode === 'DL'
+                      ? 'from-blue-600 to-indigo-700'
+                      : flight.segments[0]?.marketingCarrierCode === 'UA'
+                        ? 'from-blue-700 to-blue-900'
+                        : flight.segments[0]?.marketingCarrierCode === 'AA'
+                          ? 'from-red-500 to-red-700'
+                          : flight.segments[0]?.marketingCarrierCode === 'B6'
+                            ? 'from-blue-400 to-blue-600'
+                            : 'from-purple-500 to-violet-600'
                 }`}>
                 {flight.segments[0]?.marketingCarrierCode}
               </div>
@@ -104,7 +150,7 @@ export function FlightCard({ flight }: FlightCardProps) {
                     <div className="relative flex items-center w-full">
                       <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-600 to-transparent" />
                       <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
-                        <ArrowRight className={`h-4 w-4 transition-colors ${isHovered ? 'text-sky-400' : 'text-slate-500'}`} />
+                        <ArrowRight className={`h-4 w-4 transition-colors duration-300 ${isHovered ? 'text-sky-400' : 'text-slate-500'}`} />
                       </div>
                     </div>
                     <p className="text-xs font-medium text-slate-400">
@@ -146,7 +192,7 @@ export function FlightCard({ flight }: FlightCardProps) {
           {/* Right side - Price and CTA */}
           <div className="flex flex-col items-end gap-3 border-t border-slate-800/50 pt-4 lg:border-0 lg:pt-0 lg:pl-6 lg:border-l lg:min-w-[220px]">
             <div className="text-right">
-              <p className="text-2xl font-bold text-slate-50">
+              <p className={`text-2xl font-bold ${hasBadges ? 'text-transparent bg-clip-text bg-gradient-to-r from-slate-50 to-slate-200' : 'text-slate-50'}`}>
                 {formatter.format(price.total)}
               </p>
               <p className="text-xs text-slate-400">
@@ -158,15 +204,22 @@ export function FlightCard({ flight }: FlightCardProps) {
               <button
                 type="button"
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="flex-1 px-3 py-2 rounded-xl text-xs font-medium text-slate-400 bg-slate-800/50 hover:bg-slate-800 hover:text-slate-200 transition-colors flex items-center justify-center gap-1"
+                className={`flex-1 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-300 flex items-center justify-center gap-1 btn-details ${
+                  isExpanded
+                    ? 'text-sky-300 bg-sky-500/10 ring-1 ring-sky-500/20'
+                    : 'text-slate-400 bg-slate-800/50 hover:bg-slate-800 hover:text-slate-200'
+                }`}
               >
                 Details
-                {isExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
               </button>
               <button
                 type="button"
                 onClick={handleSelect}
-                className="flex-1 btn-primary text-xs py-2"
+                onMouseDown={() => setIsSelectPressed(true)}
+                onMouseUp={() => setIsSelectPressed(false)}
+                onMouseLeave={() => setIsSelectPressed(false)}
+                className={`flex-1 btn-primary text-xs py-2 btn-select ${isSelectPressed ? 'btn-select-active' : ''}`}
               >
                 Select
               </button>
@@ -191,9 +244,18 @@ export function FlightCard({ flight }: FlightCardProps) {
         </div>
       </div>
 
-      {/* Expanded details */}
-      {isExpanded && (
-        <div className="border-t border-slate-800/50 p-4 sm:p-5 bg-slate-900/50 animate-fade-in">
+      {/* Expanded details - smooth toggle */}
+      <div
+        ref={detailsRef}
+        className={`details-panel overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+          isExpanded ? 'details-panel-open' : 'details-panel-closed'
+        }`}
+        style={{
+          maxHeight: isExpanded ? '500px' : '0px',
+          opacity: isExpanded ? 1 : 0,
+        }}
+      >
+        <div className="border-t border-slate-800/50 p-4 sm:p-5 bg-slate-900/50">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* Price breakdown */}
             <div className="space-y-3">
@@ -202,16 +264,16 @@ export function FlightCard({ flight }: FlightCardProps) {
                 Price Breakdown
               </h4>
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Base fare</span>
+                <div className="flex justify-between group/row">
+                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Base fare</span>
                   <span className="font-medium text-slate-200">{formatter.format(price.baseFare)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Taxes & fees</span>
+                <div className="flex justify-between group/row">
+                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Taxes & fees</span>
                   <span className="font-medium text-slate-200">{formatter.format(price.taxesAndFees)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Carrier charges</span>
+                <div className="flex justify-between group/row">
+                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Carrier charges</span>
                   <span className="font-medium text-slate-200">{formatter.format(price.carrierCharges)}</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-slate-800">
@@ -229,11 +291,19 @@ export function FlightCard({ flight }: FlightCardProps) {
               </h4>
               <div className="space-y-1">
                 {price.breakdown.map((item) => (
-                  <div key={item.label} className="flex justify-between text-xs">
-                    <span className="text-slate-400">{item.label}</span>
+                  <div key={item.label} className="flex justify-between text-xs group/row">
+                    <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">{item.label}</span>
                     <span className="font-medium text-slate-300">{formatter.format(item.amount)}</span>
                   </div>
                 ))}
+              </div>
+
+              {/* Per-passenger visual */}
+              <div className="mt-3 p-2.5 rounded-lg bg-slate-800/40 border border-slate-700/30">
+                <div className="flex justify-between text-xs">
+                  <span className="text-slate-400">Per passenger</span>
+                  <span className="font-semibold text-sky-300">{formatter.format(price.perPassenger)}</span>
+                </div>
               </div>
             </div>
 
@@ -250,13 +320,21 @@ export function FlightCard({ flight }: FlightCardProps) {
                   {flight.baggagePolicy}
                 </p>
                 <div className="flex items-center gap-2 mt-2">
-                  <div className={`text-xs font-medium px-2 py-1 rounded-lg ${isHighRefund
-                      ? 'bg-emerald-950/50 text-emerald-300'
-                      : isLowRefund
-                        ? 'bg-amber-950/50 text-amber-300'
-                        : 'bg-slate-800/50 text-slate-300'
-                    }`}>
-                    Refundability score: {price.refundabilityScore}/100
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[0.65rem] text-slate-400">Refundability</span>
+                      <span className={`text-[0.65rem] font-semibold ${
+                        isHighRefund ? 'text-emerald-400' : isLowRefund ? 'text-amber-400' : 'text-slate-300'
+                      }`}>{price.refundabilityScore}/100</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-700 ease-out ${
+                          isHighRefund ? 'bg-emerald-500' : isLowRefund ? 'bg-amber-500' : 'bg-slate-500'
+                        }`}
+                        style={{ width: `${price.refundabilityScore}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -269,7 +347,7 @@ export function FlightCard({ flight }: FlightCardProps) {
             </div>
           </div>
         </div>
-      )}
+      </div>
     </article>
   )
 }

@@ -17,6 +17,9 @@ public class Booking {
     @Column(unique = true, nullable = false)
     private String pnr;
 
+    @Column(unique = true)
+    private String bookingReference; // SKY12345 format
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

@@ -2,6 +2,7 @@ E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyfl
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\repository\BookingRepository.java
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\repository\FlightRepository.java
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\model\dto\request\AuthRequest.java
+E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\model\dto\response\FareBreakdownResponse.java
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\service\NotificationService.java
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\service\ChatService.java
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\repository\CityRepository.java
@@ -31,6 +32,7 @@ E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyfl
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\model\entity\User.java
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\exception\UnauthorizedException.java
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\repository\SeatRepository.java
+E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\model\dto\response\BookingResponse.java
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\model\entity\Notification.java
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\service\UserService.java
 E:\Airline-reservation-system-java-master\backend-server\src\main\java\com\skyflow\model\entity\Airline.java

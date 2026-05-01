@@ -1,5 +1,6 @@
 package com.skyflow.service;
 
+import com.skyflow.model.dto.response.BookingResponse;
 import com.skyflow.model.entity.Booking;
 import com.skyflow.model.entity.Flight;
 import com.skyflow.model.entity.Seat;
@@ -15,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
@@ -30,18 +33,22 @@ public class BookingService {
     @Autowired
     NotificationService notificationService;
 
+    private static final AtomicLong referenceCounter = new AtomicLong(10000);
+
+    private String generateBookingReference() {
+        long count = referenceCounter.incrementAndGet();
+        return "SKY" + count;
+    }
+
     @Transactional
-    public Booking createBooking(String username, Long flightId, String seatNumber, String seatClass) {
+    public BookingResponse createBooking(String username, Long flightId, String seatNumber, String seatClass) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
         Flight flight = flightRepository.findById(flightId).orElseThrow(() -> new RuntimeException("Flight not found"));
 
-        // Handle seat locking/creation
-        // Check if seat exists for this flight
         Seat seat = seatRepository.findByFlightAndSeatNumber(flight, seatNumber)
                 .orElse(null);
 
         if (seat == null) {
-            // Create seat if not exists (dynamic seat inventory for simplicity)
             seat = new Seat();
             seat.setFlight(flight);
             seat.setSeatNumber(seatNumber);
@@ -50,13 +57,16 @@ public class BookingService {
             seat = seatRepository.save(seat);
         }
 
-        // Lock check
         if (seat.isBooked()) {
             throw new RuntimeException("Seat already booked");
         }
 
         seat.setBooked(true);
         seatRepository.save(seat);
+
+        // Update available seats count
+        flight.setAvailableSeats(Math.max(0, flight.getAvailableSeats() - 1));
+        flightRepository.save(flight);
 
         Booking booking = new Booking();
         booking.setUser(user);
@@ -65,21 +75,33 @@ public class BookingService {
         booking.setStatus("CONFIRMED");
         booking.setBookingDate(LocalDateTime.now());
         booking.setPnr(UUID.randomUUID().toString().substring(0, 6).toUpperCase());
+        booking.setBookingReference(generateBookingReference());
 
-        // Calculate price based on class/flight... simplified here
-        booking.setTotalAmount(flight.getBasePrice()); // Should use multiplier logic from FlightService
+        // Calculate price based on class multiplier
+        double base = flight.getBasePrice();
+        double multiplier = switch (seatClass) {
+            case "Premium Economy" -> 1.5;
+            case "Business" -> 3.0;
+            case "First Class" -> 5.0;
+            default -> 1.0;
+        };
+        double totalAmount = Math.round(base * multiplier * 1.12); // includes 12% tax
+        booking.setTotalAmount(totalAmount);
 
         bookingRepository.save(booking);
 
-        // Notify
-        notificationService.createNotification(user, "Booking confirmed! PNR: " + booking.getPnr(), booking.getId());
+        notificationService.createNotification(user,
+                "Booking confirmed! Reference: " + booking.getBookingReference() + " | PNR: " + booking.getPnr(),
+                booking.getId());
 
-        return booking;
+        return mapToResponse(booking);
     }
 
-    public List<Booking> getMyBookings(String username) {
+    public List<BookingResponse> getMyBookings(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
-        return bookingRepository.findByUser(user);
+        return bookingRepository.findByUser(user).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -91,11 +113,35 @@ public class BookingService {
         }
 
         booking.setStatus("CANCELLED");
-        booking.getSeat().setBooked(false); // Release seat
+        booking.getSeat().setBooked(false);
         bookingRepository.save(booking);
         seatRepository.save(booking.getSeat());
 
+        // Restore available seats
+        Flight flight = booking.getFlight();
+        flight.setAvailableSeats(flight.getAvailableSeats() + 1);
+        flightRepository.save(flight);
+
         notificationService.createNotification(booking.getUser(),
-                "Booking " + booking.getPnr() + " cancelled. Refund initiated.", booking.getId());
+                "Booking " + booking.getBookingReference() + " cancelled. Refund initiated.", booking.getId());
+    }
+
+    private BookingResponse mapToResponse(Booking booking) {
+        BookingResponse response = new BookingResponse();
+        response.setId(booking.getId());
+        response.setBookingReference(booking.getBookingReference());
+        response.setPnr(booking.getPnr());
+        response.setStatus(booking.getStatus());
+        response.setBookingDate(booking.getBookingDate());
+        response.setTotalAmount(booking.getTotalAmount());
+        response.setPassengerName(booking.getUser().getFullName());
+        response.setFlightNumber(booking.getFlight().getFlightNumber());
+        response.setAirlineName(booking.getFlight().getAirline().getName());
+        response.setOrigin(booking.getFlight().getOrigin().getCode());
+        response.setDestination(booking.getFlight().getDestination().getCode());
+        response.setDepartureTime(booking.getFlight().getDepartureTime());
+        response.setSeatNumber(booking.getSeat().getSeatNumber());
+        response.setSeatClass(booking.getSeat().getSeatClass());
+        return response;
     }
 }

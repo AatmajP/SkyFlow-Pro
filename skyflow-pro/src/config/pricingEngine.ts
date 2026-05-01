@@ -6,7 +6,7 @@
  * easily tested and modified.
  */
 
-import type { CabinClass } from '@/types'
+import type { CabinClass } from '../types/flight'
 import { getAirlineConfig } from './airlines'
 
 /**
@@ -95,7 +95,7 @@ export function calculateCabinPrice(
     baseEconomyFare: number,
     cabinClass: CabinClass,
     airlineCode: string,
-    _distance: number = 1000 // in miles, reserved for future distance-based pricing
+    distance: number = 1000 // in miles
 ): PricingBreakdown {
     const multiplier = CABIN_CLASS_MULTIPLIERS[cabinClass]
     const baseFare = Math.round(baseEconomyFare * multiplier)

@@ -23,4 +23,11 @@ public class FlightSearchResponse {
 
     private Map<String, Double> classPrices; // Economy: 100, Business: 300
     private Map<String, List<String>> features; // "Economy": ["Meal"]
+
+    private int availableSeats;
+    private boolean surgeActive;
+    private String surgeMessage;
+    private String baggagePolicy;
+    private String refundPolicy;
+    private String aircraft;
 }

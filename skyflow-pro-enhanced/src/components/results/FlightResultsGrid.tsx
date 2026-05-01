@@ -1,12 +1,17 @@
-import { Plane, Clock, DollarSign, Star } from 'lucide-react'
+import { useMemo } from 'react'
+import { Plane, Clock, DollarSign, Award, TrendingDown, Zap } from 'lucide-react'
 import type { FlightOption } from '../../types/flight'
 import { FlightCard } from './FlightCard'
+import { computeFlightBadges } from '../../utils/flightIntelligence'
 
 interface FlightResultsGridProps {
   results: FlightOption[]
 }
 
 export function FlightResultsGrid({ results }: FlightResultsGridProps) {
+  // Compute badges dynamically from the data
+  const badgeMap = useMemo(() => computeFlightBadges(results), [results])
+
   if (results.length === 0) {
     return (
       <div className="glass rounded-2xl p-12 text-center">
@@ -21,12 +26,13 @@ export function FlightResultsGrid({ results }: FlightResultsGridProps) {
     )
   }
 
-  // Get price stats for highlighting
+  // Get price stats for header highlights
   const prices = results.map((r) => r.price.total)
   const minPrice = Math.min(...prices)
   const fastestFlight = results.reduce((a, b) =>
     a.totalDurationMinutes < b.totalDurationMinutes ? a : b
   )
+  const bestValueFlight = results.find((f) => badgeMap[f.id]?.includes('best-value'))
 
   return (
     <section
@@ -62,32 +68,42 @@ export function FlightResultsGrid({ results }: FlightResultsGridProps) {
           </div>
         </div>
 
-        {/* Recommendation badges */}
+        {/* Intelligent recommendation badges */}
         <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-slate-800/50">
-          <span className="text-xs text-slate-500">Recommended:</span>
-          {results.map((flight, idx) => {
-            if (idx > 2) return null
-            const isCheapest = flight.price.total === minPrice
-            const isFastest = flight.id === fastestFlight.id
+          <span className="text-xs text-slate-500 mr-1">Smart picks:</span>
 
-            return (
-              <div
-                key={flight.id}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer ${isCheapest
-                    ? 'bg-emerald-950/40 text-emerald-300 hover:bg-emerald-950/60'
-                    : isFastest
-                      ? 'bg-sky-950/40 text-sky-300 hover:bg-sky-950/60'
-                      : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800'
-                  }`}
-              >
-                {isCheapest && <Star className="h-3 w-3" />}
-                {isFastest && !isCheapest && <Clock className="h-3 w-3" />}
-                {flight.segments[0]?.marketingCarrierCode} · ${flight.price.total}
-                {isCheapest && ' (Best price)'}
-                {isFastest && !isCheapest && ' (Fastest)'}
-              </div>
-            )
-          })}
+          {/* Cheapest pill */}
+          {results.filter((f) => badgeMap[f.id]?.includes('cheapest')).map((flight) => (
+            <div
+              key={`cheap-${flight.id}`}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-emerald-950/40 text-emerald-300 hover:bg-emerald-950/60 transition-colors cursor-default"
+            >
+              <TrendingDown className="h-3 w-3" />
+              {flight.segments[0]?.marketingCarrierCode} · ${flight.price.total}
+              <span className="text-emerald-400/70 ml-0.5">Cheapest</span>
+            </div>
+          ))}
+
+          {/* Fastest pill */}
+          {results.filter((f) => badgeMap[f.id]?.includes('fastest') && !badgeMap[f.id]?.includes('cheapest')).map((flight) => (
+            <div
+              key={`fast-${flight.id}`}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-sky-950/40 text-sky-300 hover:bg-sky-950/60 transition-colors cursor-default"
+            >
+              <Zap className="h-3 w-3" />
+              {flight.segments[0]?.marketingCarrierCode} · {Math.floor(flight.totalDurationMinutes / 60)}h {flight.totalDurationMinutes % 60}m
+              <span className="text-sky-400/70 ml-0.5">Fastest</span>
+            </div>
+          ))}
+
+          {/* Best Value pill */}
+          {bestValueFlight && (
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-violet-950/40 text-violet-300 hover:bg-violet-950/60 transition-colors cursor-default">
+              <Award className="h-3 w-3" />
+              {bestValueFlight.segments[0]?.marketingCarrierCode} · ${bestValueFlight.price.total}
+              <span className="text-violet-400/70 ml-0.5">Best Value</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -99,7 +115,10 @@ export function FlightResultsGrid({ results }: FlightResultsGridProps) {
             className="animate-fade-in"
             style={{ animationDelay: `${0.1 * idx}s` }}
           >
-            <FlightCard flight={flight} />
+            <FlightCard
+              flight={flight}
+              badges={badgeMap[flight.id] ?? []}
+            />
           </div>
         ))}
       </div>

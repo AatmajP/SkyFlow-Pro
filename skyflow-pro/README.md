@@ -22,19 +22,19 @@ Example:
 
 `/results?from=JFK&to=LAX&date=2026-02-20&flex=3&adults=1&cabin=economy`
 
-## Mocks vs API (backend connection)
+## Mocks vs API
 
-- **Use real backend** (default when `.env` is set): `VITE_USE_MOCKS=false` and `VITE_API_BASE_URL=http://localhost:8081`
-- **Use mocks** (when backend is not running): `VITE_USE_MOCKS=true`
+By default, the app uses mock results.
 
-Create a `.env` file in this folder (see `.env.example`):
+- **Use mocks (default)**: set `VITE_USE_MOCKS=true`
+- **Use real API**: set `VITE_USE_MOCKS=false` and `VITE_API_BASE_URL=http://localhost:8080/api`
+
+Create a `.env` file in this folder:
 
 ```bash
-VITE_API_BASE_URL=http://localhost:8081
-VITE_USE_MOCKS=false
+VITE_USE_MOCKS=true
+VITE_API_BASE_URL=http://localhost:8080/api
 ```
-
-Start the backend from the project root with `run-backend.bat` or `run-all.bat` so the API is available.
 
 ## Tests
 

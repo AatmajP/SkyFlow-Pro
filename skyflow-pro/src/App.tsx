@@ -1,14 +1,24 @@
-import { SkipLink } from '@/components/common/SkipLink'
-import { NavbarEnhanced as Navbar } from '@/components/Header'
-import { AppRoutes } from '@/routes/AppRoutes'
-import { Toaster } from '@/components/common/Toaster'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { SkipLink } from './components/ui/SkipLink'
+import { NavbarEnhanced as Navbar } from './components/ui/NavbarEnhanced'
+import { ResultsPage } from './pages/ResultsPage'
+import { SearchPage } from './pages/SearchPage'
+import { BookingPage } from './pages/BookingPage'
+import { ConfirmationPage } from './pages/ConfirmationPage'
+import { Toaster } from './components/ui/Toaster'
 
 function App() {
   return (
-    <div className="min-h-screen text-slate-50">
+    <div className="min-h-screen text-slate-900">
       <SkipLink />
       <Navbar />
-      <AppRoutes />
+      <Routes>
+        <Route path="/" element={<SearchPage />} />
+        <Route path="/results" element={<ResultsPage />} />
+        <Route path="/booking/:flightId" element={<BookingPage />} />
+        <Route path="/confirmation/:bookingId" element={<ConfirmationPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
       <Toaster />
     </div>
   )

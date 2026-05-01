@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { FlightService, type FlightSearchParams } from '@/services/flights/flightService'
+import { FlightService, type FlightSearchParams } from '../services/flightService'
 
 export function useFlightSearch(params: FlightSearchParams) {
   return useQuery({

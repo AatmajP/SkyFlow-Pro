@@ -1,6 +1,6 @@
 package com.skyflow.controller;
 
-import com.skyflow.model.entity.Booking;
+import com.skyflow.model.dto.response.BookingResponse;
 import com.skyflow.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,7 +53,7 @@ public class BookingController {
         }
 
         try {
-            Booking booking = bookingService.createBooking(username, flightIdLong, seatNumber, seatClass);
+            BookingResponse booking = bookingService.createBooking(username, flightIdLong, seatNumber, seatClass);
             return ResponseEntity.ok(booking);
         } catch (RuntimeException e) {
             String msg = e.getMessage() != null ? e.getMessage() : "";

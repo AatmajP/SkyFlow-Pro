@@ -97,6 +97,7 @@ public class DataSeeder implements CommandLineRunner {
             createCity("LHR", "London", "UK", "city,history,culture");
             createCity("DXB", "Dubai", "UAE", "city,luxury,desert");
             createCity("ORD", "Chicago", "USA", "city,business,shopping");
+            createCity("BLR", "Bangalore", "India", "city,tech,culture");
         }
     }
 

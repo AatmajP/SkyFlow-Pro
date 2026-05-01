@@ -1,4 +1,4 @@
-import type { FlightOption } from '@/types'
+import type { FlightOption } from '../types/flight'
 
 export const mockSearchResults: FlightOption[] = [
   {

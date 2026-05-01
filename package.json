@@ -7,7 +7,6 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "start-all.bat",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

@@ -23,16 +23,12 @@ export interface FlightNotification {
     actionRequired: boolean
 }
 
-import { notificationService } from '@/services/notifications/notificationService'
-
 interface NotificationStore {
     notifications: FlightNotification[]
-    isLoading: boolean
-    fetchNotifications: () => Promise<void>
     addNotification: (notification: Omit<FlightNotification, 'id' | 'timestamp' | 'read'>) => void
-    markAsRead: (id: string | number) => void
+    markAsRead: (id: string) => void
     markAllAsRead: () => void
-    deleteNotification: (id: string | number) => void
+    deleteNotification: (id: string) => void
     clearAll: () => void
     getUnreadCount: () => number
 }
@@ -44,30 +40,6 @@ export const useNotifications = create<NotificationStore>()(
     persist(
         (set, get) => ({
             notifications: [],
-            isLoading: false,
-
-            fetchNotifications: async () => {
-                set({ isLoading: true })
-                try {
-                    const data = await notificationService.getNotifications()
-                    const mapped: FlightNotification[] = data.map(n => ({
-                        id: String(n.id),
-                        type: 'info',
-                        flightNumber: 'Flight',
-                        airlineCode: 'AI',
-                        title: 'Notification',
-                        message: n.message,
-                        timestamp: n.createdAt,
-                        read: n.isRead,
-                        priority: 'medium',
-                        actionRequired: false
-                    }))
-                    set({ notifications: mapped, isLoading: false })
-                } catch (error) {
-                    console.error('Failed to fetch notifications', error)
-                    set({ isLoading: false })
-                }
-            },
 
             addNotification: (notification) => {
                 const newNotification: FlightNotification = {
@@ -78,14 +50,14 @@ export const useNotifications = create<NotificationStore>()(
                 }
 
                 set((state) => ({
-                    notifications: [newNotification, ...state.notifications].slice(0, 50),
+                    notifications: [newNotification, ...state.notifications].slice(0, 50), // Keep last 50
                 }))
             },
 
             markAsRead: (id) => {
                 set((state) => ({
                     notifications: state.notifications.map((n) =>
-                        String(n.id) === String(id) ? { ...n, read: true } : n
+                        n.id === id ? { ...n, read: true } : n
                     ),
                 }))
             },
@@ -98,7 +70,7 @@ export const useNotifications = create<NotificationStore>()(
 
             deleteNotification: (id) => {
                 set((state) => ({
-                    notifications: state.notifications.filter((n) => String(n.id) !== String(id)),
+                    notifications: state.notifications.filter((n) => n.id !== id),
                 }))
             },
 

@@ -29,14 +29,12 @@ export interface BookingHistoryItem {
 
 interface AuthStore {
     user: UserProfile | null
-    token: string | null
     isAuthenticated: boolean
     bookingHistory: BookingHistoryItem[]
-    login: (token: string, user: UserProfile) => void
+    login: (email: string, password: string) => Promise<void>
     logout: () => void
     updateProfile: (updates: Partial<UserProfile>) => void
     addBooking: (booking: BookingHistoryItem) => void
-    setBookingHistory: (history: BookingHistoryItem[]) => void
 }
 
 /**
@@ -46,14 +44,27 @@ export const useAuth = create<AuthStore>()(
     persist(
         (set) => ({
             user: null,
-            token: null,
             isAuthenticated: false,
             bookingHistory: [],
 
-            login: (token, user) => {
+            login: async (email: string, password: string) => {
+                // In a real app, this would make an API call
+                // For demo purposes, we'll create a mock user
+                await new Promise((resolve) => setTimeout(resolve, 500))
+
+                const mockUser: UserProfile = {
+                    id: 'user-' + Date.now(),
+                    email,
+                    name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+                    phone: '+1234567890',
+                    loyaltyPrograms: {
+                        PT: 'PT123456789', // Patro Airlines loyalty member
+                        '6E': '6E987654321', // IndiGo
+                    },
+                }
+
                 set({
-                    token,
-                    user,
+                    user: mockUser,
                     isAuthenticated: true,
                 })
             },
@@ -61,9 +72,7 @@ export const useAuth = create<AuthStore>()(
             logout: () => {
                 set({
                     user: null,
-                    token: null,
                     isAuthenticated: false,
-                    bookingHistory: [],
                 })
             },
 
@@ -78,10 +87,6 @@ export const useAuth = create<AuthStore>()(
                     bookingHistory: [booking, ...state.bookingHistory],
                 }))
             },
-
-            setBookingHistory: (history) => {
-                set({ bookingHistory: history })
-            }
         }),
         {
             name: 'skyflow-auth',

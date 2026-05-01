@@ -89,11 +89,17 @@ const config: Config = {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
+      transitionDuration: {
+        '400': '400ms',
+      },
       boxShadow: {
         'soft-card': '0 18px 45px rgba(0, 0, 0, 0.45)',
         'glow-sky': '0 0 30px rgba(56, 189, 248, 0.4)',
         'glow-purple': '0 0 30px rgba(139, 92, 246, 0.4)',
         'glow-emerald': '0 0 30px rgba(16, 185, 129, 0.4)',
+        'glow-pink': '0 0 30px rgba(236, 72, 153, 0.4)',
+        'elevated': '0 25px 60px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.08)',
+        'elevated-hover': '0 30px 80px -12px rgba(0, 0, 0, 0.6), 0 0 50px rgba(56, 189, 248, 0.12)',
       },
       borderRadius: {
         xl: '1rem',
@@ -111,6 +117,8 @@ const config: Config = {
         'scale-in': 'scaleIn 0.4s ease-out forwards',
         'spin-slow': 'spin-slow 3s linear infinite',
         'fall': 'fall 4s ease-out forwards',
+        'breathe': 'breathe 4s ease-in-out infinite',
+        'border-dance': 'border-dance 6s ease-in-out infinite',
       },
       backdropBlur: {
         xs: '2px',
