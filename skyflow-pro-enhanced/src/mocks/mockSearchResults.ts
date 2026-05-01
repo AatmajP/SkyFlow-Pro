@@ -1,4 +1,4 @@
-import type { FlightOption, CabinClass, PriceTransparency, FlightSegment } from '../types/flight'
+import type { FlightOption, CabinClass, PriceTransparency, FlightSegment, ClassPrice } from '../types/flight'
 
 // ─── Real Indian + International Airlines ───────────────────────────
 interface AirlineData {
@@ -252,17 +252,35 @@ export function generateFlights(
     // Apply Patro discount
     const effectiveBase = airline.isProprietary ? baseINR * 0.9 : baseINR
 
-    // Class multipliers
-    const classMultiplier =
-      cabin === 'business' ? 3.0 :
-        cabin === 'premium_economy' ? 1.5 :
-          cabin === 'first' ? 5.0 : 1.0
+    // ── Compute prices for ALL 4 cabin classes ──
+    const CLASS_CONFIG: { cabin: CabinClass; label: string; multiplier: number; surcharge: number }[] = [
+      { cabin: 'economy', label: 'Economy', multiplier: 1.0, surcharge: 0 },
+      { cabin: 'premium_economy', label: 'Premium Economy', multiplier: 1.5, surcharge: 1200 },
+      { cabin: 'business', label: 'Business', multiplier: 3.0, surcharge: 3500 },
+      { cabin: 'first', label: 'First Class', multiplier: 5.0, surcharge: 8000 },
+    ]
 
-    const baseFare = Math.round(effectiveBase * classMultiplier)
     const taxRate = 0.12
-    const taxes = Math.round(baseFare * taxRate)
     const carrierCharges = Math.round(200 + rand() * 500)
-    const total = baseFare + taxes + carrierCharges
+
+    const classPrices: ClassPrice[] = CLASS_CONFIG.map((cc) => {
+      const base = Math.round(effectiveBase * cc.multiplier) + cc.surcharge
+      const tax = Math.round(base * taxRate)
+      return {
+        cabin: cc.cabin,
+        label: cc.label,
+        total: base + tax + carrierCharges,
+        baseFare: base,
+        taxesAndFees: tax,
+        carrierCharges,
+      }
+    })
+
+    // Use the selected cabin's price as the primary display price
+    const selectedClassPrice = classPrices.find((cp) => cp.cabin === cabin) ?? classPrices[0]
+    const baseFare = selectedClassPrice.baseFare
+    const taxes = selectedClassPrice.taxesAndFees
+    const total = selectedClassPrice.total
 
     // Build departure time
     const dateObj = new Date(dateStr + 'T00:00:00')
@@ -274,6 +292,14 @@ export function generateFlights(
 
     const refundInfo = REFUND_LABELS[Math.floor(rand() * REFUND_LABELS.length)]
     const carbon = Math.round(duration * (domestic ? 0.8 : 1.2) + rand() * 50)
+    const seatsLeft = 5 + Math.floor(rand() * 140) // 5..145 seats
+
+    // Tags based on random attributes
+    const tags: string[] = []
+    if (rand() > 0.3) tags.push('meal')
+    if (rand() > 0.4) tags.push('baggage')
+    if (refundInfo.score >= 68) tags.push('refundable')
+    if (seatsLeft <= 30) tags.push('surge')
 
     const segment: FlightSegment = {
       id: `seg-${i}-0`,
@@ -319,6 +345,9 @@ export function generateFlights(
       segments: [segment],
       layovers: [],
       price,
+      classPrices,
+      seatsLeft,
+      tags,
       baggagePolicy: BAGGAGE_POLICIES[Math.floor(rand() * BAGGAGE_POLICIES.length)],
       alliance: airline.alliance,
       fareBrand: FARE_BRANDS[Math.floor(rand() * FARE_BRANDS.length)],

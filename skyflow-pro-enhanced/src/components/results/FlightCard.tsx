@@ -1,7 +1,10 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Clock3, Luggage, ChevronDown, Leaf, Shield, Info, Zap, TrendingDown, Award, Star } from 'lucide-react'
-import type { FlightOption } from '../../types/flight'
+import {
+  ArrowRight, Clock3, Luggage, ChevronDown, Leaf, Shield, Info,
+  Zap, TrendingDown, Award, Star, AlertTriangle, Utensils, Briefcase, RotateCcw,
+} from 'lucide-react'
+import type { FlightOption, CabinClass } from '../../types/flight'
 import type { FlightBadge } from '../../utils/flightIntelligence'
 import { getBadgeConfig } from '../../utils/flightIntelligence'
 
@@ -57,8 +60,28 @@ function getAirlineVisuals(code: string): { gradient: string; initial: string } 
     case 'DL': return { gradient: 'from-blue-600 to-indigo-700', initial: 'DL' }
     case 'UA': return { gradient: 'from-blue-700 to-blue-900', initial: 'UA' }
     case 'AA': return { gradient: 'from-red-500 to-red-700', initial: 'AA' }
-    case 'B6': return { gradient: 'from-blue-400 to-blue-600', initial: 'B6' }
     default: return { gradient: 'from-slate-600 to-slate-700', initial: code.slice(0, 2) }
+  }
+}
+
+// Tag icon helper
+function getTagIcon(tag: string) {
+  switch (tag) {
+    case 'meal': return <Utensils className="h-3 w-3" />
+    case 'baggage': return <Briefcase className="h-3 w-3" />
+    case 'refundable': return <RotateCcw className="h-3 w-3" />
+    case 'surge': return <AlertTriangle className="h-3 w-3" />
+    default: return null
+  }
+}
+
+function getTagStyle(tag: string) {
+  switch (tag) {
+    case 'meal': return 'bg-emerald-950/50 text-emerald-300 ring-emerald-500/30'
+    case 'baggage': return 'bg-sky-950/50 text-sky-300 ring-sky-500/30'
+    case 'refundable': return 'bg-violet-950/50 text-violet-300 ring-violet-500/30'
+    case 'surge': return 'bg-amber-950/50 text-amber-300 ring-amber-500/30'
+    default: return 'bg-slate-800 text-slate-300 ring-slate-700'
   }
 }
 
@@ -67,25 +90,47 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const [isSelectPressed, setIsSelectPressed] = useState(false)
+  const [selectedCabin, setSelectedCabin] = useState<CabinClass>(flight.cabin)
   const detailsRef = useRef<HTMLDivElement>(null)
+
+  // Get price for the currently selected cabin class
+  const activeClassPrice = flight.classPrices?.find((cp) => cp.cabin === selectedCabin)
+    ?? { total: flight.price.total, baseFare: flight.price.baseFare, taxesAndFees: flight.price.taxesAndFees, carrierCharges: flight.price.carrierCharges, cabin: selectedCabin, label: 'Economy' }
 
   const { price } = flight
   const isHighRefund = price.refundabilityScore >= 75
   const isLowRefund = price.refundabilityScore <= 30
-  const ageMinutes = Math.max(
-    0,
-    Math.round((Date.now() - new Date(price.lastUpdated).getTime()) / 60_000),
-  )
+  const ageMinutes = Math.max(0, Math.round((Date.now() - new Date(price.lastUpdated).getTime()) / 60_000))
   const isStale = ageMinutes >= 15
 
   const hasBadges = badges.length > 0
   const hasBestValue = badges.includes('best-value')
   const isPatro = flight.segments[0]?.marketingCarrierCode === 'PT'
-
+  const isSurge = (flight.seatsLeft ?? 150) <= 30
   const airlineVisuals = getAirlineVisuals(flight.segments[0]?.marketingCarrierCode ?? '')
 
   const handleSelect = () => {
-    sessionStorage.setItem('selectedFlight', JSON.stringify(flight))
+    // Store flight with updated price for selected class
+    const updatedFlight = {
+      ...flight,
+      cabin: selectedCabin,
+      price: {
+        ...flight.price,
+        total: activeClassPrice.total,
+        baseFare: activeClassPrice.baseFare,
+        taxesAndFees: activeClassPrice.taxesAndFees,
+        carrierCharges: activeClassPrice.carrierCharges,
+        perPassenger: activeClassPrice.total,
+        breakdown: [
+          { label: 'Base fare', amount: activeClassPrice.baseFare },
+          { label: 'GST & airport taxes', amount: Math.round(activeClassPrice.taxesAndFees * 0.6) },
+          { label: 'User development fee', amount: Math.round(activeClassPrice.taxesAndFees * 0.2) },
+          { label: 'Aviation security fee', amount: Math.round(activeClassPrice.taxesAndFees * 0.2) },
+          { label: 'Carrier surcharge', amount: activeClassPrice.carrierCharges },
+        ],
+      },
+    }
+    sessionStorage.setItem('selectedFlight', JSON.stringify(updatedFlight))
     navigate(`/booking/${flight.id}`)
   }
 
@@ -99,7 +144,7 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
     >
       {/* Patro Airlines ribbon */}
       {isPatro && (
-        <div className="absolute top-0 right-6 bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-[0.6rem] font-bold px-3 py-1 rounded-b-lg shadow-lg flex items-center gap-1">
+        <div className="absolute top-0 right-6 bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-[0.6rem] font-bold px-3 py-1 rounded-b-lg shadow-lg flex items-center gap-1 z-10">
           <Star className="h-3 w-3" />
           Patro Special
         </div>
@@ -138,7 +183,6 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
             <div className="flex-1 space-y-3">
               {/* Airline and flight info */}
               <div className="flex flex-wrap items-center gap-2">
-                {/* Mobile airline logo */}
                 <div className={`sm:hidden h-8 w-8 rounded-lg bg-gradient-to-br flex items-center justify-center text-white font-bold text-xs ${airlineVisuals.gradient}`}>
                   {airlineVisuals.initial}
                 </div>
@@ -150,9 +194,7 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
                   {flight.segments[0]?.flightNumber}
                 </span>
                 {flight.alliance && (
-                  <span className="badge-info text-[0.65rem]">
-                    {flight.alliance}
-                  </span>
+                  <span className="badge-info text-[0.65rem]">{flight.alliance}</span>
                 )}
                 <span className="px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-slate-800 text-slate-300 ring-1 ring-slate-700">
                   {flight.fareBrand}
@@ -203,12 +245,19 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
                 </div>
               </div>
 
-              {/* Layover info */}
-              {flight.layovers.length > 0 && (
-                <p className="text-xs text-slate-400">
-                  <span className="text-amber-400">Layover:</span>{' '}
-                  {flight.layovers[0]?.airport} · {formatDuration(flight.layovers[0]?.durationMinutes ?? 0)}
-                </p>
+              {/* Tags row */}
+              {flight.tags && flight.tags.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {flight.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.6rem] font-medium ring-1 ${getTagStyle(tag)}`}
+                    >
+                      {getTagIcon(tag)}
+                      {tag === 'surge' ? `Only ${flight.seatsLeft} left!` : tag.charAt(0).toUpperCase() + tag.slice(1)}
+                    </span>
+                  ))}
+                </div>
               )}
             </div>
           </div>
@@ -216,17 +265,54 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
           {/* Right side - Price and CTA */}
           <div className="flex flex-col items-end gap-3 border-t border-slate-800/50 pt-4 lg:border-0 lg:pt-0 lg:pl-6 lg:border-l lg:min-w-[220px]">
             <div className="text-right">
-              <p className={`text-2xl font-bold ${isPatro ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400' : hasBadges ? 'text-transparent bg-clip-text bg-gradient-to-r from-slate-50 to-slate-200' : 'text-slate-50'}`}>
-                {formatter.format(price.total)}
+              <p className={`text-2xl font-bold transition-all duration-300 ${
+                isPatro
+                  ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400'
+                  : hasBadges
+                    ? 'text-transparent bg-clip-text bg-gradient-to-r from-slate-50 to-slate-200'
+                    : 'text-slate-50'
+              }`}>
+                {formatter.format(activeClassPrice.total)}
               </p>
               <p className="text-xs text-slate-400">
-                {formatter.format(price.perPassenger)} per traveler
+                {formatter.format(activeClassPrice.total)} per traveler · {activeClassPrice.label ?? 'Economy'}
               </p>
               {isPatro && (
                 <p className="text-[0.65rem] text-emerald-400 font-medium mt-0.5">
                   10% Patro discount applied
                 </p>
               )}
+              {isSurge && (
+                <p className="text-[0.65rem] text-amber-400 font-medium mt-0.5 flex items-center gap-1 justify-end">
+                  <AlertTriangle className="h-3 w-3" />
+                  Surge pricing active
+                </p>
+              )}
+            </div>
+
+            {/* Class selector — FIXES Economy = Premium pricing bug */}
+            <div className="w-full grid grid-cols-4 gap-1 rounded-xl bg-slate-900/80 p-1 ring-1 ring-slate-800">
+              {(flight.classPrices ?? []).map((cp) => (
+                <button
+                  key={cp.cabin}
+                  type="button"
+                  onClick={() => setSelectedCabin(cp.cabin)}
+                  className={`px-1 py-1.5 rounded-lg text-center transition-all duration-200 ${
+                    selectedCabin === cp.cabin
+                      ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                  }`}
+                >
+                  <p className="text-[0.55rem] font-medium leading-tight truncate">
+                    {cp.cabin === 'economy' ? 'Eco' :
+                     cp.cabin === 'premium_economy' ? 'Prem' :
+                     cp.cabin === 'business' ? 'Biz' : '1st'}
+                  </p>
+                  <p className={`text-[0.6rem] font-bold mt-0.5 ${selectedCabin === cp.cabin ? 'text-white' : 'text-slate-300'}`}>
+                    {formatter.format(cp.total)}
+                  </p>
+                </button>
+              ))}
             </div>
 
             <div className="flex items-center gap-2 w-full">
@@ -256,12 +342,13 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
 
             {/* Quick badges */}
             <div className="flex items-center gap-2">
-              <span className={`text-[0.65rem] font-medium px-2 py-0.5 rounded-full ${isHighRefund
+              <span className={`text-[0.65rem] font-medium px-2 py-0.5 rounded-full ${
+                isHighRefund
                   ? 'bg-emerald-950/50 text-emerald-300 ring-1 ring-emerald-500/30'
                   : isLowRefund
                     ? 'bg-amber-950/50 text-amber-300 ring-1 ring-amber-500/30'
                     : 'bg-slate-800/50 text-slate-300 ring-1 ring-slate-700'
-                }`}>
+              }`}>
                 {isHighRefund ? 'Flexible' : isLowRefund ? 'Restricted' : 'Mixed'}
               </span>
               <span className="text-[0.65rem] text-slate-500 flex items-center gap-1">
@@ -273,7 +360,7 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
         </div>
       </div>
 
-      {/* Expanded details - smooth toggle */}
+      {/* Expanded details — fare breakdown updates dynamically with class */}
       <div
         ref={detailsRef}
         className={`details-panel overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
@@ -286,53 +373,56 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
       >
         <div className="border-t border-slate-800/50 p-4 sm:p-5 bg-slate-900/50">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Price breakdown */}
+            {/* Dynamic fare breakdown for selected class */}
             <div className="space-y-3">
               <h4 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
                 <Shield className="h-4 w-4 text-sky-400" />
-                Price Breakdown
+                Fare Breakdown — {activeClassPrice.label}
               </h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between group/row">
                   <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Base fare</span>
-                  <span className="font-medium text-slate-200">{formatter.format(price.baseFare)}</span>
+                  <span className="font-medium text-slate-200">{formatter.format(activeClassPrice.baseFare)}</span>
                 </div>
                 <div className="flex justify-between group/row">
                   <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Taxes & fees</span>
-                  <span className="font-medium text-slate-200">{formatter.format(price.taxesAndFees)}</span>
+                  <span className="font-medium text-slate-200">{formatter.format(activeClassPrice.taxesAndFees)}</span>
                 </div>
                 <div className="flex justify-between group/row">
                   <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Carrier charges</span>
-                  <span className="font-medium text-slate-200">{formatter.format(price.carrierCharges)}</span>
+                  <span className="font-medium text-slate-200">{formatter.format(activeClassPrice.carrierCharges)}</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-slate-800">
                   <span className="font-semibold text-slate-200">Total</span>
-                  <span className="font-bold text-sky-400">{formatter.format(price.total)}</span>
+                  <span className="font-bold text-sky-400">{formatter.format(activeClassPrice.total)}</span>
                 </div>
               </div>
             </div>
 
-            {/* Detailed breakdown */}
+            {/* All class comparison */}
             <div className="space-y-3">
               <h4 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
                 <Info className="h-4 w-4 text-sky-400" />
-                Fee Details
+                Compare Classes
               </h4>
-              <div className="space-y-1">
-                {price.breakdown.map((item) => (
-                  <div key={item.label} className="flex justify-between text-xs group/row">
-                    <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">{item.label}</span>
-                    <span className="font-medium text-slate-300">{formatter.format(item.amount)}</span>
-                  </div>
+              <div className="space-y-1.5">
+                {(flight.classPrices ?? []).map((cp) => (
+                  <button
+                    key={cp.cabin}
+                    type="button"
+                    onClick={() => setSelectedCabin(cp.cabin)}
+                    className={`w-full flex justify-between items-center text-xs px-3 py-2 rounded-lg transition-all ${
+                      selectedCabin === cp.cabin
+                        ? 'bg-sky-500/15 text-sky-300 ring-1 ring-sky-500/30'
+                        : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+                    }`}
+                  >
+                    <span className="font-medium">{cp.label}</span>
+                    <span className={`font-bold ${selectedCabin === cp.cabin ? 'text-sky-300' : 'text-slate-300'}`}>
+                      {formatter.format(cp.total)}
+                    </span>
+                  </button>
                 ))}
-              </div>
-
-              {/* Per-passenger visual */}
-              <div className="mt-3 p-2.5 rounded-lg bg-slate-800/40 border border-slate-700/30">
-                <div className="flex justify-between text-xs">
-                  <span className="text-slate-400">Per passenger</span>
-                  <span className="font-semibold text-sky-300">{formatter.format(price.perPassenger)}</span>
-                </div>
               </div>
             </div>
 
@@ -341,16 +431,13 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
               <h4 className="text-sm font-semibold text-slate-200">Fare Rules</h4>
               <div className="space-y-2 text-xs">
                 <p className="text-slate-400">
-                  <span className="font-medium text-slate-200">Refund policy:</span>{' '}
-                  {price.refundableLabel}
+                  <span className="font-medium text-slate-200">Refund:</span> {price.refundableLabel}
                 </p>
                 <p className="text-slate-400">
-                  <span className="font-medium text-slate-200">Baggage:</span>{' '}
-                  {flight.baggagePolicy}
+                  <span className="font-medium text-slate-200">Baggage:</span> {flight.baggagePolicy}
                 </p>
                 <p className="text-slate-400">
-                  <span className="font-medium text-slate-200">Aircraft:</span>{' '}
-                  {flight.segments[0]?.aircraft}
+                  <span className="font-medium text-slate-200">Aircraft:</span> {flight.segments[0]?.aircraft}
                 </p>
                 <div className="flex items-center gap-2 mt-2">
                   <div className="flex-1">
@@ -374,7 +461,7 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
               <p className="text-[0.65rem] text-slate-500">
                 Last checked: {new Date(price.lastUpdated).toLocaleTimeString()}
                 {isStale && (
-                  <span className="ml-1 text-amber-400">({ageMinutes}m ago - may have changed)</span>
+                  <span className="ml-1 text-amber-400">({ageMinutes}m ago)</span>
                 )}
               </p>
             </div>

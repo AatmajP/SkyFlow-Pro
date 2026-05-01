@@ -1,7 +1,8 @@
-import { Search, ArrowRightLeft, Calendar, Users, Briefcase, Info, MapPin } from 'lucide-react'
-import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
+import { Search, ArrowRightLeft, Calendar, Users, Briefcase, Info } from 'lucide-react'
+import { useState, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FlexDateStrip } from '../calendar/FlexDateStrip'
+import { AirportDropdownPortal } from './AirportDropdownPortal'
 import { AIRPORTS } from '../../mocks/mockSearchResults'
 
 type TripType = 'oneway' | 'roundtrip' | 'multicity'
@@ -25,76 +26,9 @@ const cabinLabels: Record<CabinClass, string> = {
   first: 'First Class',
 }
 
-// Today's date string for min attribute
 function getTodayStr() {
   const d = new Date()
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
-// ─── Airport Autocomplete Dropdown ──────────────────────────────────
-function AirportDropdown({
-  query,
-  onSelect,
-  isOpen,
-  onClose,
-}: {
-  query: string
-  onSelect: (code: string) => void
-  isOpen: boolean
-  onClose: () => void
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose()
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [onClose])
-
-  const filtered = useMemo(() => {
-    if (!query || query.length < 1) return AIRPORTS.slice(0, 10)
-    const q = query.toLowerCase()
-    return AIRPORTS.filter(
-      (a) =>
-        a.code.toLowerCase().includes(q) ||
-        a.city.toLowerCase().includes(q) ||
-        a.country.toLowerCase().includes(q),
-    ).slice(0, 8)
-  }, [query])
-
-  if (!isOpen || filtered.length === 0) return null
-
-  return (
-    <div
-      ref={ref}
-      className="absolute left-0 right-0 top-full mt-1 z-50 rounded-xl bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 shadow-2xl shadow-black/40 overflow-hidden"
-    >
-      {filtered.map((airport) => (
-        <button
-          key={airport.code}
-          type="button"
-          className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-sky-500/10 transition-colors"
-          onClick={() => {
-            onSelect(airport.code)
-            onClose()
-          }}
-        >
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-xs font-bold text-sky-400">
-            {airport.code}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-slate-200 truncate">{airport.city}</p>
-            <p className="text-xs text-slate-500">{airport.country}</p>
-          </div>
-          <MapPin className="h-3.5 w-3.5 text-slate-600 shrink-0" />
-        </button>
-      ))}
-    </div>
-  )
 }
 
 export function GlobalSearchHeader() {
@@ -103,6 +37,10 @@ export function GlobalSearchHeader() {
   const [fromDropdownOpen, setFromDropdownOpen] = useState(false)
   const [toDropdownOpen, setToDropdownOpen] = useState(false)
   const today = getTodayStr()
+
+  // Refs for portal positioning
+  const fromInputRef = useRef<HTMLDivElement>(null)
+  const toInputRef = useRef<HTMLDivElement>(null)
 
   const [form, setForm] = useState<GlobalSearchForm>({
     from: 'DEL',
@@ -121,7 +59,6 @@ export function GlobalSearchHeader() {
   ) => {
     setForm((prev) => {
       const next = { ...prev, [key]: value }
-      // If departure date changes and return date is before it, clear return
       if (key === 'departureDate' && next.returnDate && next.returnDate < String(value)) {
         next.returnDate = ''
       }
@@ -139,8 +76,6 @@ export function GlobalSearchHeader() {
   const handleSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault()
     setIsSearching(true)
-
-    // Simulate a brief loading state for better UX
     await new Promise((resolve) => setTimeout(resolve, 800))
 
     const params = new URLSearchParams()
@@ -158,7 +93,6 @@ export function GlobalSearchHeader() {
     setIsSearching(false)
   }
 
-  // Get display name for airport
   const getAirportLabel = (code: string) => {
     const airport = AIRPORTS.find((a) => a.code === code)
     return airport ? `${airport.city} (${airport.code})` : code
@@ -205,7 +139,7 @@ export function GlobalSearchHeader() {
         {/* Main Search Fields */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr,auto,1fr]">
           {/* From Field */}
-          <div className="relative">
+          <div ref={fromInputRef} className="relative">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
               From
             </label>
@@ -227,11 +161,13 @@ export function GlobalSearchHeader() {
             {form.from && (
               <p className="text-xs text-slate-500 mt-1">{getAirportLabel(form.from)}</p>
             )}
-            <AirportDropdown
+            {/* Portal-based dropdown — no overlap issues */}
+            <AirportDropdownPortal
               query={form.from}
               isOpen={fromDropdownOpen}
               onSelect={(code) => handleChange('from', code)}
               onClose={handleFromClose}
+              anchorRef={fromInputRef}
             />
           </div>
 
@@ -248,7 +184,7 @@ export function GlobalSearchHeader() {
           </div>
 
           {/* To Field */}
-          <div className="relative">
+          <div ref={toInputRef} className="relative">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
               To
             </label>
@@ -270,18 +206,18 @@ export function GlobalSearchHeader() {
             {form.to && (
               <p className="text-xs text-slate-500 mt-1">{getAirportLabel(form.to)}</p>
             )}
-            <AirportDropdown
+            <AirportDropdownPortal
               query={form.to}
               isOpen={toDropdownOpen}
               onSelect={(code) => handleChange('to', code)}
               onClose={handleToClose}
+              anchorRef={toInputRef}
             />
           </div>
         </div>
 
         {/* Date and Passenger Fields */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Departure Date */}
           <div className="relative">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
               <Calendar className="inline h-3 w-3 mr-1" />
@@ -297,7 +233,6 @@ export function GlobalSearchHeader() {
             />
           </div>
 
-          {/* Return Date - Only for roundtrip */}
           {form.tripType === 'roundtrip' && (
             <div className="relative">
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
@@ -314,7 +249,6 @@ export function GlobalSearchHeader() {
             </div>
           )}
 
-          {/* Passengers */}
           <div className="relative">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
               <Users className="inline h-3 w-3 mr-1" />
@@ -331,7 +265,6 @@ export function GlobalSearchHeader() {
             />
           </div>
 
-          {/* Cabin Class */}
           <div className="relative">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
               Cabin Class

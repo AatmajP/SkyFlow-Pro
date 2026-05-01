@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
-import { ArrowLeft, User, CreditCard, Shield, Check, Plane, Clock, AlertCircle, ChevronRight, Lock } from 'lucide-react'
+import { ArrowLeft, User, CreditCard, Shield, Check, Plane, Clock, AlertCircle, ChevronRight, Lock, Move3D, MapPin } from 'lucide-react'
 import type { FlightOption } from '../types/flight'
+import { CabinPreview3D } from '../components/cabin/CabinPreview3D'
+import { AirportMap } from '../components/airport/AirportMap'
 
 interface PassengerInfo {
     firstName: string
@@ -19,9 +21,9 @@ interface PaymentInfo {
     cardholderName: string
 }
 
-const formatter = new Intl.NumberFormat('en-US', {
+const formatter = new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'INR',
     maximumFractionDigits: 0,
 })
 
@@ -32,6 +34,8 @@ export function BookingPage() {
     const [currentStep, setCurrentStep] = useState(1)
     const [isProcessing, setIsProcessing] = useState(false)
     const [agreedToTerms, setAgreedToTerms] = useState(false)
+    const [showCabinPreview, setShowCabinPreview] = useState(false)
+    const [showAirportMap, setShowAirportMap] = useState(false)
 
     const [passenger, setPassenger] = useState<PassengerInfo>({
         firstName: '',
@@ -151,7 +155,40 @@ export function BookingPage() {
                 <div className="mb-8 animate-fade-in">
                     <h1 className="text-3xl font-bold text-slate-50">Complete Your Booking</h1>
                     <p className="text-slate-400 mt-1">Secure checkout · Your data is encrypted</p>
+                    <div className="flex items-center gap-3 mt-3">
+                        <button
+                            type="button"
+                            onClick={() => setShowCabinPreview(true)}
+                            className="btn-secondary text-xs flex items-center gap-1.5"
+                        >
+                            <Move3D className="h-3.5 w-3.5" />
+                            View Cabin in 3D
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setShowAirportMap(true)}
+                            className="btn-secondary text-xs flex items-center gap-1.5"
+                        >
+                            <MapPin className="h-3.5 w-3.5" />
+                            Airport Map
+                        </button>
+                    </div>
                 </div>
+
+                {/* 3D Cabin Preview Modal */}
+                <CabinPreview3D
+                    isOpen={showCabinPreview}
+                    onClose={() => setShowCabinPreview(false)}
+                    aircraft={flight.segments[0]?.aircraft}
+                    cabinClass={flight.cabin}
+                />
+
+                {/* Airport Map Modal */}
+                <AirportMap
+                    isOpen={showAirportMap}
+                    onClose={() => setShowAirportMap(false)}
+                    airportCode={flight.from}
+                />
 
                 {/* Progress steps */}
                 <div className="glass rounded-2xl p-4 mb-8 animate-fade-in">
