@@ -1,24 +1,52 @@
-import { useSearchParams, Link } from 'react-router-dom'
-import { ArrowLeft, Filter, Plane, RefreshCw } from 'lucide-react'
+import { useSearchParams, Link, useNavigate } from 'react-router-dom'
+import { ArrowLeft, Filter, Plane, RefreshCw, CheckCircle, ArrowRight } from 'lucide-react'
 import { FlightResultsGrid } from '../components/results/FlightResultsGrid'
 import { useFlightSearch } from '../hooks/useFlightSearch'
 import { useState, useMemo } from 'react'
-import type { FlightOption } from '../types/flight'
 import { AIRPORTS } from '../mocks/mockSearchResults'
+import type { FlightOption } from '../types/flight'
 
 type SortOption = 'price' | 'duration' | 'departure'
 
+const formatter = new Intl.NumberFormat('en-IN', {
+  style: 'currency',
+  currency: 'INR',
+  maximumFractionDigits: 0,
+})
+
 export function ResultsPage() {
+  const navigate = useNavigate()
   const [params] = useSearchParams()
   const from = params.get('from') ?? 'DEL'
   const to = params.get('to') ?? 'BOM'
   const date = params.get('date') ?? ''
+  const returnDate = params.get('return') ?? ''
   const flex = Number(params.get('flex') ?? 3)
   const adults = Number(params.get('adults') ?? 1)
   const cabin = params.get('cabin') ?? 'economy'
+  const tripType = params.get('tripType') ?? 'oneway'
 
-  const query = useFlightSearch({ from, to, date, flex, adults, cabin })
-  const rawResults = query.data?.results ?? []
+  const query = useFlightSearch({ from, to, date, flex, adults, cabin, tripType, returnDate })
+  const data = query.data
+  const isRoundTrip = data?.tripType === 'roundtrip'
+
+  // Round trip selection state
+  const [selectedOutbound, setSelectedOutbound] = useState<FlightOption | null>(null)
+  const [selectedReturn, setSelectedReturn] = useState<FlightOption | null>(null)
+
+  // Which leg is the user currently viewing
+  const [activeLeg, setActiveLeg] = useState<'outbound' | 'return'>('outbound')
+
+  // Get the correct flight list based on trip type and active leg
+  const rawResults = useMemo(() => {
+    if (!data) return []
+    if (isRoundTrip) {
+      return activeLeg === 'outbound'
+        ? (data.outboundFlights ?? [])
+        : (data.returnFlights ?? [])
+    }
+    return data.results ?? []
+  }, [data, isRoundTrip, activeLeg])
 
   const [sortBy, setSortBy] = useState<SortOption>('price')
   const [showFilters, setShowFilters] = useState(false)
@@ -104,6 +132,29 @@ export function ResultsPage() {
 
   const activeFilterCount = [stopsFilter !== 'any', airlineFilter !== 'all', timeFilter !== 'any', priceFilter !== 'any'].filter(Boolean).length
 
+  // Round trip total price
+  const roundTripTotal = (selectedOutbound?.price.total ?? 0) + (selectedReturn?.price.total ?? 0)
+
+  // Handle flight selection in round trip mode
+  const handleSelectFlight = (flight: FlightOption) => {
+    if (!isRoundTrip) return
+    if (activeLeg === 'outbound') {
+      setSelectedOutbound(flight)
+      // Auto-switch to return leg
+      setActiveLeg('return')
+    } else {
+      setSelectedReturn(flight)
+    }
+  }
+
+  const handleProceedToBooking = () => {
+    if (selectedOutbound && selectedReturn) {
+      sessionStorage.setItem('selectedFlight', JSON.stringify(selectedOutbound))
+      sessionStorage.setItem('returnFlight', JSON.stringify(selectedReturn))
+      navigate(`/booking/${selectedOutbound.id}`)
+    }
+  }
+
   return (
     <div className="relative min-h-screen">
       {/* Background decorations */}
@@ -128,12 +179,16 @@ export function ResultsPage() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-500" />
                 </span>
-                Live Results
+                Live Results {isRoundTrip && '· Round Trip'}
               </p>
               <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl flex items-center gap-3">
                 {from}
                 <span className="inline-flex items-center gap-1 text-sky-400">
-                  <Plane className="h-6 w-6 rotate-90" />
+                  {isRoundTrip ? (
+                    <ArrowRight className="h-6 w-6" />
+                  ) : (
+                    <Plane className="h-6 w-6 rotate-90" />
+                  )}
                 </span>
                 {to}
               </h1>
@@ -141,7 +196,9 @@ export function ResultsPage() {
                 {fromAirport ? `${fromAirport.city}` : from} → {toAirport ? `${toAirport.city}` : to}
               </p>
               <p className="mt-1 text-sm text-slate-400">
-                {formatDate(date)} • {adults} traveler{adults > 1 ? 's' : ''} • {cabin.charAt(0).toUpperCase() + cabin.slice(1)}
+                {formatDate(date)}
+                {isRoundTrip && returnDate && ` — ${formatDate(returnDate)}`}
+                {' '}• {adults} traveler{adults > 1 ? 's' : ''} • {cabin.charAt(0).toUpperCase() + cabin.slice(1)}
               </p>
             </div>
 
@@ -157,6 +214,99 @@ export function ResultsPage() {
             </div>
           </div>
         </div>
+
+        {/* ── Round Trip Leg Selector ── */}
+        {isRoundTrip && (
+          <div className="mb-6 animate-fade-in">
+            <div className="glass rounded-2xl p-4">
+              <div className="flex items-center gap-4">
+                {/* Outbound tab */}
+                <button
+                  onClick={() => setActiveLeg('outbound')}
+                  className={`flex-1 flex items-center gap-3 p-4 rounded-xl border transition-all duration-300 ${
+                    activeLeg === 'outbound'
+                      ? 'border-sky-500/50 bg-sky-500/10'
+                      : 'border-slate-700/40 bg-slate-800/30 hover:bg-slate-800/60'
+                  }`}
+                >
+                  <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${
+                    selectedOutbound ? 'bg-emerald-500/20' : activeLeg === 'outbound' ? 'bg-sky-500/20' : 'bg-slate-800'
+                  }`}>
+                    {selectedOutbound ? (
+                      <CheckCircle className="h-5 w-5 text-emerald-400" />
+                    ) : (
+                      <Plane className="h-5 w-5 text-sky-400 -rotate-45" />
+                    )}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Outbound</p>
+                    <p className="text-sm font-semibold text-slate-200">
+                      {from} → {to} · {formatDate(date)}
+                    </p>
+                    {selectedOutbound && (
+                      <p className="text-xs text-emerald-400 mt-0.5">
+                        {selectedOutbound.segments[0]?.marketingCarrier} · {formatter.format(selectedOutbound.price.total)}
+                      </p>
+                    )}
+                  </div>
+                </button>
+
+                {/* Return tab */}
+                <button
+                  onClick={() => setActiveLeg('return')}
+                  className={`flex-1 flex items-center gap-3 p-4 rounded-xl border transition-all duration-300 ${
+                    activeLeg === 'return'
+                      ? 'border-sky-500/50 bg-sky-500/10'
+                      : 'border-slate-700/40 bg-slate-800/30 hover:bg-slate-800/60'
+                  }`}
+                >
+                  <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${
+                    selectedReturn ? 'bg-emerald-500/20' : activeLeg === 'return' ? 'bg-sky-500/20' : 'bg-slate-800'
+                  }`}>
+                    {selectedReturn ? (
+                      <CheckCircle className="h-5 w-5 text-emerald-400" />
+                    ) : (
+                      <Plane className="h-5 w-5 text-purple-400 rotate-[135deg]" />
+                    )}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Return</p>
+                    <p className="text-sm font-semibold text-slate-200">
+                      {to} → {from} · {formatDate(returnDate)}
+                    </p>
+                    {selectedReturn && (
+                      <p className="text-xs text-emerald-400 mt-0.5">
+                        {selectedReturn.segments[0]?.marketingCarrier} · {formatter.format(selectedReturn.price.total)}
+                      </p>
+                    )}
+                  </div>
+                </button>
+              </div>
+
+              {/* Total price when both are selected */}
+              {selectedOutbound && selectedReturn && (
+                <div className="mt-4 pt-4 border-t border-slate-800/50 flex items-center justify-between animate-fade-in">
+                  <div>
+                    <p className="text-xs text-slate-400 uppercase tracking-wider font-medium">Round Trip Total</p>
+                    <p className="text-2xl font-bold text-emerald-400">
+                      {formatter.format(roundTripTotal)}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      {formatter.format(selectedOutbound.price.total)} outbound + {formatter.format(selectedReturn.price.total)} return
+                    </p>
+                  </div>
+                  <button 
+                    onClick={handleProceedToBooking}
+                    className="btn-primary flex items-center gap-2"
+                  >
+                    Proceed to Booking
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Filters and Sort Bar */}
         <div className="mb-6 glass rounded-2xl p-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
@@ -196,19 +346,6 @@ export function ResultsPage() {
                   }`}
                 >
                   Morning flights
-                </button>
-                <button
-                  onClick={() => {
-                    const isActive = airlineFilter === 'Patro Airlines'
-                    setAirlineFilter(isActive ? 'all' : 'Patro Airlines')
-                  }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                    airlineFilter === 'Patro Airlines'
-                      ? 'bg-sky-500/20 text-sky-300 ring-1 ring-sky-500/30'
-                      : 'bg-slate-800/50 text-slate-300 hover:bg-slate-800'
-                  }`}
-                >
-                  Patro Airlines
                 </button>
               </div>
             </div>
@@ -344,6 +481,26 @@ export function ResultsPage() {
             </div>
           ) : (
             <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              {/* Leg label for round trip */}
+              {isRoundTrip && (
+                <div className="mb-4 flex items-center gap-2 text-sm">
+                  <Plane className={`h-4 w-4 ${activeLeg === 'outbound' ? 'text-sky-400 -rotate-45' : 'text-purple-400 rotate-[135deg]'}`} />
+                  <span className="font-semibold text-slate-200">
+                    {activeLeg === 'outbound'
+                      ? `Outbound: ${fromAirport?.city ?? from} → ${toAirport?.city ?? to}`
+                      : `Return: ${toAirport?.city ?? to} → ${fromAirport?.city ?? from}`
+                    }
+                  </span>
+                  <span className="text-slate-500">·</span>
+                  <span className="text-slate-400">{formatDate(activeLeg === 'outbound' ? date : returnDate)}</span>
+                  {isRoundTrip && (
+                    <span className="ml-auto text-xs text-slate-500">
+                      Select a flight to {activeLeg === 'outbound' ? 'continue to return leg' : 'see total price'}
+                    </span>
+                  )}
+                </div>
+              )}
+
               {results.length === 0 && rawResults.length > 0 ? (
                 <div className="glass rounded-2xl p-8 text-center">
                   <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-slate-800/50 mb-4">
@@ -366,7 +523,13 @@ export function ResultsPage() {
                   </button>
                 </div>
               ) : (
-                <FlightResultsGrid results={results} />
+                <FlightResultsGrid
+                  results={results}
+                  onSelectFlight={isRoundTrip ? handleSelectFlight : undefined}
+                  selectedFlightId={
+                    activeLeg === 'outbound' ? selectedOutbound?.id : selectedReturn?.id
+                  }
+                />
               )}
             </div>
           )}

@@ -11,8 +11,11 @@ export class CircuitBreaker {
   private failureCount = 0
   private successCount = 0
   private openedAt = 0
+  private readonly options: CircuitBreakerOptions
 
-  constructor(private readonly options: CircuitBreakerOptions) {}
+  constructor(options: CircuitBreakerOptions) {
+    this.options = options
+  }
 
   getState() {
     return this.state

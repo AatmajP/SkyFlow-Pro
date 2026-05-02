@@ -8,4 +8,3 @@ export function useFlightSearch(params: FlightSearchParams) {
     enabled: Boolean(params.from && params.to && params.date),
   })
 }
-

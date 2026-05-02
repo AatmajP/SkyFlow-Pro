@@ -1,6 +1,6 @@
-import { useState, useMemo, useRef, useEffect } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
-import { MapPin, Plane, SearchX } from 'lucide-react'
+import { MapPin, SearchX, Waves, Building2 } from 'lucide-react'
 import { AIRPORTS } from '../../mocks/mockSearchResults'
 
 interface AirportDropdownPortalProps {
@@ -13,7 +13,24 @@ interface AirportDropdownPortalProps {
 
 /**
  * Portal-based airport autocomplete dropdown.
- * Renders at document.body level to avoid clipping by parent overflow/z-index.
+ *
+ * WHY PORTAL:
+ *   Rendering into document.body completely detaches the dropdown from
+ *   any parent stacking context, overflow:hidden, or transform that would
+ *   clip it.
+ *
+ * WHY position:fixed (NOT absolute):
+ *   `fixed` positions relative to the **viewport**, which is exactly what
+ *   getBoundingClientRect() returns.  No scroll offsets needed.
+ *   `absolute` would require the portal container to be `position:relative`,
+ *   and document.body is not — so absolute would break.
+ *
+ * POSITIONING MATH:
+ *   rect = anchorRef.getBoundingClientRect()   // viewport coords
+ *   top  = rect.bottom + gap                   // directly below input
+ *   left = rect.left                           // left-aligned with input
+ *   width = rect.width                         // same width as input
+ *   NO scrollY/scrollX — fixed already uses viewport coords.
  */
 export function AirportDropdownPortal({
   query,
@@ -26,58 +43,59 @@ export function AirportDropdownPortal({
   const [position, setPosition] = useState({ top: 0, left: 0, width: 0 })
   const [selectedIndex, setSelectedIndex] = useState(-1)
 
-  // Reset selected index when query changes
+  // Reset keyboard selection when query changes
   useEffect(() => {
     setSelectedIndex(-1)
   }, [query])
 
-  // Calculate position relative to anchor element
+  // ── Position calculation ──────────────────────────────────────────
+  // position:fixed uses VIEWPORT coordinates.
+  // getBoundingClientRect() returns VIEWPORT coordinates.
+  // Therefore: top = rect.bottom, left = rect.left. No scroll offsets.
+  const updatePosition = useCallback(() => {
+    if (!anchorRef.current) return
+    const rect = anchorRef.current.getBoundingClientRect()
+    const GAP = 6
+
+    // Always position directly below the input
+    setPosition({
+      top: rect.bottom + GAP,
+      left: rect.left,
+      width: rect.width,
+    })
+  }, [anchorRef])
+
+  // Recalculate on open, scroll, and resize
   useEffect(() => {
     if (!isOpen || !anchorRef.current) return
 
-    function updatePosition() {
-      if (!anchorRef.current) return
-      const rect = anchorRef.current.getBoundingClientRect()
-      // Adjust if it goes off bottom of screen
-      const dropdownHeight = 350 // approx max height
-      const spaceBelow = window.innerHeight - rect.bottom
-      
-      let top = rect.bottom + window.scrollY + 8
-      if (spaceBelow < dropdownHeight && rect.top > dropdownHeight) {
-        // Show above if not enough space below but enough space above
-        top = rect.top + window.scrollY - dropdownHeight - 8
-      }
-
-      setPosition({
-        top,
-        left: rect.left + window.scrollX,
-        width: rect.width,
-      })
-    }
-
+    // Initial position
     updatePosition()
-    // Use requestAnimationFrame for smoother scrolling updates
-    let rafId: number
+
+    // Use rAF-throttled scroll handler for 60fps tracking
+    let rafId = 0
     const onScroll = () => {
+      cancelAnimationFrame(rafId)
       rafId = requestAnimationFrame(updatePosition)
     }
 
-    window.addEventListener('scroll', onScroll, true)
+    window.addEventListener('scroll', onScroll, true) // capture phase for nested scrollers
     window.addEventListener('resize', updatePosition)
     return () => {
       window.removeEventListener('scroll', onScroll, true)
       window.removeEventListener('resize', updatePosition)
       cancelAnimationFrame(rafId)
     }
-  }, [isOpen, anchorRef])
+  }, [isOpen, anchorRef, updatePosition])
 
-  // Close on click outside
+  // ── Close on outside click ────────────────────────────────────────
   useEffect(() => {
     if (!isOpen) return
-    function handleClickOutside(e: MouseEvent) {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node
       if (
-        dropdownRef.current && !dropdownRef.current.contains(e.target as Node) &&
-        anchorRef.current && !anchorRef.current.contains(e.target as Node)
+        dropdownRef.current && !dropdownRef.current.contains(target) &&
+        anchorRef.current && !anchorRef.current.contains(target)
       ) {
         onClose()
       }
@@ -86,120 +104,167 @@ export function AirportDropdownPortal({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isOpen, onClose, anchorRef])
 
-  const { filtered, isPopular } = useMemo(() => {
+  // ── Smart search: prefix-first, then contains ─────────────────────
+  const { groups, flatList, isSearching } = useMemo(() => {
     if (!query || query.length < 1) {
-      // Default to popular global destinations
-      const popularCodes = ['DXB', 'LHR', 'JFK', 'SIN', 'BOM', 'CDG']
+      // Default groups when input is empty/focused
+      const beach = AIRPORTS.filter(a => a.type === 'beach').slice(0, 4)
+      const popularCodes = ['DXB', 'LHR', 'JFK', 'SIN', 'CDG', 'HND']
+      const popular = AIRPORTS.filter(a => popularCodes.includes(a.code))
+
       return {
-        filtered: AIRPORTS.filter(a => popularCodes.includes(a.code)),
-        isPopular: true
+        groups: [
+          { label: '🌴 Beach Destinations', icon: Waves, items: beach },
+          { label: '🏙 Popular Cities', icon: Building2, items: popular },
+        ],
+        flatList: [...beach, ...popular],
+        isSearching: false,
       }
     }
+
     const q = query.toLowerCase().trim()
+
+    // Priority 1: prefix matches (code/city/country starts with query)
+    const prefixMatches = AIRPORTS.filter(a =>
+      a.code.toLowerCase().startsWith(q) ||
+      a.city.toLowerCase().startsWith(q) ||
+      a.country.toLowerCase().startsWith(q),
+    )
+
+    // Priority 2: contains matches (excluding already-matched prefixes)
+    const prefixSet = new Set(prefixMatches.map(a => a.code))
+    const containsMatches = AIRPORTS.filter(a =>
+      !prefixSet.has(a.code) && (
+        a.code.toLowerCase().includes(q) ||
+        a.city.toLowerCase().includes(q) ||
+        a.country.toLowerCase().includes(q)
+      ),
+    )
+
+    const combined = [...prefixMatches, ...containsMatches].slice(0, 8)
+
     return {
-      filtered: AIRPORTS.filter(
-        (a) =>
-          a.code.toLowerCase().includes(q) ||
-          a.city.toLowerCase().includes(q) ||
-          a.country.toLowerCase().includes(q),
-      ).slice(0, 8),
-      isPopular: false
+      groups: [{ label: '🔎 Search Results', icon: MapPin, items: combined }],
+      flatList: combined,
+      isSearching: true,
     }
   }, [query])
 
-  // Keyboard navigation
+  // ── Keyboard navigation ───────────────────────────────────────────
   useEffect(() => {
     if (!isOpen) return
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault()
-        setSelectedIndex(prev => (prev < filtered.length - 1 ? prev + 1 : prev))
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault()
-        setSelectedIndex(prev => (prev > 0 ? prev - 1 : 0))
-      } else if (e.key === 'Enter') {
-        if (selectedIndex >= 0 && selectedIndex < filtered.length) {
+      switch (e.key) {
+        case 'ArrowDown':
           e.preventDefault()
-          e.stopPropagation()
-          onSelect(filtered[selectedIndex].code)
+          setSelectedIndex(prev => Math.min(prev + 1, flatList.length - 1))
+          break
+        case 'ArrowUp':
+          e.preventDefault()
+          setSelectedIndex(prev => Math.max(prev - 1, 0))
+          break
+        case 'Enter':
+          if (selectedIndex >= 0 && selectedIndex < flatList.length) {
+            e.preventDefault()
+            e.stopPropagation()
+            onSelect(flatList[selectedIndex].code)
+            onClose()
+          }
+          break
+        case 'Escape':
           onClose()
-        }
-      } else if (e.key === 'Escape') {
-        onClose()
+          break
       }
     }
-    
-    // Use capture phase to intercept Enter before form submission
+
+    // Capture phase so we intercept Enter before the <form> sees it
     window.addEventListener('keydown', handleKeyDown, true)
     return () => window.removeEventListener('keydown', handleKeyDown, true)
-  }, [isOpen, filtered, selectedIndex, onSelect, onClose])
+  }, [isOpen, flatList, selectedIndex, onSelect, onClose])
 
+  // ── Render ────────────────────────────────────────────────────────
   if (!isOpen) return null
 
-  const portalContent = (
+  let globalIdx = -1
+
+  const dropdown = (
     <div
       ref={dropdownRef}
-      className="fixed rounded-2xl bg-slate-900/98 backdrop-blur-2xl border border-slate-700/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col transition-all duration-200"
       style={{
+        position: 'fixed',
         top: position.top,
         left: position.left,
         width: position.width,
-        zIndex: 99999, // Ensure it's above everything
-        maxHeight: '350px'
+        maxHeight: 360,
+        zIndex: 99999,
       }}
+      className="rounded-2xl border border-slate-700/60 overflow-hidden flex flex-col shadow-2xl"
     >
-      {/* Group Header */}
-      <div className="px-4 py-3 border-b border-slate-800 bg-slate-900/50">
-        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-          {isPopular ? (
-            <>
-              <Plane className="h-3.5 w-3.5 text-sky-400" />
-              Popular Destinations
-            </>
-          ) : (
-            <>
-              <MapPin className="h-3.5 w-3.5 text-sky-400" />
-              Search Results
-            </>
-          )}
-        </h4>
-      </div>
+      {/* Opaque background — no backdrop-filter here to avoid creating stacking context */}
+      <div
+        className="absolute inset-0 rounded-2xl"
+        style={{ background: 'rgba(15, 23, 42, 0.98)' }}
+      />
 
-      <div className="overflow-y-auto custom-scrollbar p-1">
-        {filtered.length > 0 ? (
-          filtered.map((airport, idx) => {
-            const isSelected = idx === selectedIndex
-            return (
-              <button
-                key={airport.code}
-                type="button"
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors duration-150 ${
-                  isSelected 
-                    ? 'bg-sky-500/20 border border-sky-500/30' 
-                    : 'bg-transparent border border-transparent hover:bg-slate-800/60'
-                }`}
-                onClick={() => {
-                  onSelect(airport.code)
-                  onClose()
-                }}
-                onMouseEnter={() => setSelectedIndex(idx)}
+      <div className="relative overflow-y-auto" style={{ maxHeight: 360 }}>
+        {flatList.length > 0 ? (
+          groups.map((group) => (
+            <div key={group.label}>
+              {/* Group header */}
+              <div
+                className="sticky top-0 px-4 py-2.5 border-b border-slate-800/80"
+                style={{ background: 'rgba(15, 23, 42, 0.95)' }}
               >
-                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg font-bold text-xs shadow-sm ${
-                  isSelected ? 'bg-sky-500 text-white shadow-sky-500/20' : 'bg-slate-800 text-sky-400 border border-slate-700/50'
-                }`}>
-                  {airport.code}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className={`text-sm font-semibold truncate ${isSelected ? 'text-sky-300' : 'text-slate-200'}`}>
-                    {airport.city}
-                  </p>
-                  <p className="text-xs text-slate-500 truncate mt-0.5">
-                    {airport.code} — {airport.city}, {airport.country}
-                  </p>
-                </div>
-              </button>
-            )
-          })
+                <h4 className="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                  {isSearching
+                    ? <MapPin className="h-3.5 w-3.5 text-sky-400" />
+                    : <group.icon className="h-3.5 w-3.5 text-sky-400" />
+                  }
+                  {group.label}
+                </h4>
+              </div>
+
+              {/* Items */}
+              <div className="p-1">
+                {group.items.map((airport) => {
+                  globalIdx++
+                  const isActive = globalIdx === selectedIndex
+                  const capturedIdx = globalIdx
+                  return (
+                    <button
+                      key={airport.code}
+                      type="button"
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors duration-100 ${
+                        isActive
+                          ? 'bg-sky-500/15'
+                          : 'hover:bg-slate-800/70'
+                      }`}
+                      onClick={() => {
+                        onSelect(airport.code)
+                        onClose()
+                      }}
+                      onMouseEnter={() => setSelectedIndex(capturedIdx)}
+                    >
+                      <div
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg font-bold text-xs ${
+                          isActive
+                            ? 'bg-sky-500 text-white'
+                            : 'bg-slate-800 text-sky-400 border border-slate-700/50'
+                        }`}
+                      >
+                        {airport.code}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className={`text-sm font-semibold truncate ${isActive ? 'text-sky-300' : 'text-slate-200'}`}>
+                          {airport.code} — {airport.city}, {airport.country}
+                        </p>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          ))
         ) : (
           <div className="px-4 py-8 text-center flex flex-col items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-slate-800/50 flex items-center justify-center">
@@ -207,7 +272,7 @@ export function AirportDropdownPortal({
             </div>
             <div>
               <p className="text-sm font-medium text-slate-300">No airports found</p>
-              <p className="text-xs text-slate-500 mt-1">Try a different city, country or IATA code</p>
+              <p className="text-xs text-slate-500 mt-1">Try a different city, country, or IATA code</p>
             </div>
           </div>
         )}
@@ -215,5 +280,5 @@ export function AirportDropdownPortal({
     </div>
   )
 
-  return createPortal(portalContent, document.body)
+  return createPortal(dropdown, document.body)
 }

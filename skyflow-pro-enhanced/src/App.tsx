@@ -6,6 +6,7 @@ import { SearchPage } from './pages/SearchPage'
 import { BookingPage } from './pages/BookingPage'
 import { ConfirmationPage } from './pages/ConfirmationPage'
 import { Toaster } from './components/ui/Toaster'
+import { TravelAssistantChat } from './components/chat/TravelAssistantChat'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/confirmation/:bookingId" element={<ConfirmationPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <TravelAssistantChat />
       <Toaster />
     </div>
   )

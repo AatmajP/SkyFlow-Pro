@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Compass, Palmtree, Mountain, LandPlot, Building2, Sparkles, ArrowRight, TrendingDown } from 'lucide-react'
+import { Compass, Palmtree, Mountain, Building2, Sparkles, ArrowRight } from 'lucide-react'
 import { AIRPORTS } from '../../mocks/mockSearchResults'
 
 interface DestinationCategory {
@@ -24,31 +24,22 @@ const CATEGORIES: DestinationCategory[] = [
     emoji: '🏖️',
   },
   {
-    id: 'mountain',
-    label: 'Mountains',
-    tag: 'mountain',
-    icon: Mountain,
-    gradient: 'from-emerald-500 to-teal-600',
-    description: 'Peaks & valleys',
-    emoji: '🏔️',
-  },
-  {
-    id: 'temple',
-    label: 'Temples',
-    tag: 'temple',
-    icon: LandPlot,
-    gradient: 'from-amber-500 to-orange-600',
-    description: 'Sacred places',
-    emoji: '🛕',
-  },
-  {
-    id: 'city',
+    id: 'metro',
     label: 'Cities',
-    tag: 'city',
+    tag: 'metro',
     icon: Building2,
     gradient: 'from-violet-500 to-purple-600',
     description: 'Urban exploration',
     emoji: '🌆',
+  },
+  {
+    id: 'tourism',
+    label: 'Tourism',
+    tag: 'tourism',
+    icon: Mountain,
+    gradient: 'from-emerald-500 to-teal-600',
+    description: 'Temples & Mountains',
+    emoji: '🌄',
   },
 ]
 
@@ -89,7 +80,7 @@ export function DestinationDiscovery() {
   const [activeCategory, setActiveCategory] = useState<string>('beach')
 
   const filteredDestinations = AIRPORTS.filter((a) =>
-    a.tags.includes(activeCategory),
+    a.type === activeCategory,
   ).slice(0, 6)
 
   const handleExplore = (code: string) => {
@@ -183,14 +174,11 @@ export function DestinationDiscovery() {
 
               {/* Tags */}
               <div className="flex flex-wrap items-center gap-1.5 mt-3">
-                {dest.tags.slice(0, 3).map((tag) => (
                   <span
-                    key={tag}
-                    className="text-[0.6rem] px-2 py-0.5 rounded-full bg-slate-800/80 text-slate-400 ring-1 ring-slate-700/50"
+                    className="text-[0.6rem] px-2 py-0.5 rounded-full bg-slate-800/80 text-slate-400 ring-1 ring-slate-700/50 uppercase"
                   >
-                    {tag}
+                    {dest.type}
                   </span>
-                ))}
               </div>
 
               {/* Travel hint */}

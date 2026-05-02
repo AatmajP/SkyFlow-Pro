@@ -11,6 +11,8 @@ import { getBadgeConfig } from '../../utils/flightIntelligence'
 interface FlightCardProps {
   flight: FlightOption
   badges?: FlightBadge[]
+  onSelect?: (flight: FlightOption) => void
+  isSelected?: boolean
 }
 
 const formatter = new Intl.NumberFormat('en-IN', {
@@ -85,7 +87,7 @@ function getTagStyle(tag: string) {
   }
 }
 
-export function FlightCard({ flight, badges = [] }: FlightCardProps) {
+export function FlightCard({ flight, badges = [], onSelect, isSelected }: FlightCardProps) {
   const navigate = useNavigate()
   const [isExpanded, setIsExpanded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
@@ -130,14 +132,21 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
         ],
       },
     }
-    sessionStorage.setItem('selectedFlight', JSON.stringify(updatedFlight))
-    navigate(`/booking/${flight.id}`)
+
+    if (onSelect) {
+      onSelect(updatedFlight)
+    } else {
+      sessionStorage.setItem('selectedFlight', JSON.stringify(updatedFlight))
+      navigate(`/booking/${flight.id}`)
+    }
   }
 
   return (
     <article
       className={`relative rounded-2xl border bg-gradient-to-br from-slate-900/90 to-slate-950/90 shadow-lg flight-card-hover ${
-        isHovered ? 'border-sky-500/50 ring-1 ring-sky-500/20' : 'border-slate-800/80'
+        isSelected
+          ? 'border-emerald-500/60 ring-1 ring-emerald-500/40 bg-emerald-950/20'
+          : isHovered ? 'border-sky-500/50 ring-1 ring-sky-500/20' : 'border-slate-800/80'
       } ${hasBestValue ? 'best-value-glow' : ''} ${isPatro ? 'patro-glow' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -334,9 +343,11 @@ export function FlightCard({ flight, badges = [] }: FlightCardProps) {
                 onMouseDown={() => setIsSelectPressed(true)}
                 onMouseUp={() => setIsSelectPressed(false)}
                 onMouseLeave={() => setIsSelectPressed(false)}
-                className={`flex-1 btn-primary text-xs py-2 btn-select ${isSelectPressed ? 'btn-select-active' : ''}`}
+                className={`flex-1 text-xs py-2 btn-select ${
+                  isSelected ? 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/25' : 'btn-primary'
+                } ${isSelectPressed && !isSelected ? 'btn-select-active' : ''}`}
               >
-                Select
+                {isSelected ? 'Selected' : 'Select'}
               </button>
             </div>
 

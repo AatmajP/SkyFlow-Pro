@@ -6,6 +6,8 @@ import { computeFlightBadges } from '../../utils/flightIntelligence'
 
 interface FlightResultsGridProps {
   results: FlightOption[]
+  onSelectFlight?: (flight: FlightOption) => void
+  selectedFlightId?: string
 }
 
 const formatter = new Intl.NumberFormat('en-IN', {
@@ -14,7 +16,7 @@ const formatter = new Intl.NumberFormat('en-IN', {
   maximumFractionDigits: 0,
 })
 
-export function FlightResultsGrid({ results }: FlightResultsGridProps) {
+export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId }: FlightResultsGridProps) {
   // Compute badges dynamically from the data
   const badgeMap = useMemo(() => computeFlightBadges(results), [results])
 
@@ -43,7 +45,6 @@ export function FlightResultsGrid({ results }: FlightResultsGridProps) {
   const bestValueFlight = results.find((f) => badgeMap[f.id]?.includes('best-value'))
 
   // Determine price trend direction
-  const priceSpread = maxPrice - minPrice
   const trendLabel = avgPrice > minPrice * 1.4 ? 'rising' : avgPrice < minPrice * 1.15 ? 'stable' : 'moderate'
 
   // Count Patro Airlines flights
@@ -159,6 +160,8 @@ export function FlightResultsGrid({ results }: FlightResultsGridProps) {
             <FlightCard
               flight={flight}
               badges={badgeMap[flight.id] ?? []}
+              onSelect={onSelectFlight}
+              isSelected={selectedFlightId === flight.id}
             />
           </div>
         ))}
