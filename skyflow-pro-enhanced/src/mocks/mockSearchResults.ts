@@ -87,6 +87,16 @@ const AIRPORTS: AirportInfo[] = [
   { code: 'FCO', city: 'Rome', country: 'Italy', tags: ['city', 'history', 'food'] },
   { code: 'NBO', city: 'Nairobi', country: 'Kenya', tags: ['safari', 'nature', 'wildlife'] },
   { code: 'AUH', city: 'Abu Dhabi', country: 'UAE', tags: ['luxury', 'culture', 'island'] },
+  { code: 'AMS', city: 'Amsterdam', country: 'Netherlands', tags: ['city', 'canals', 'culture'] },
+  { code: 'IST', city: 'Istanbul', country: 'Turkey', tags: ['city', 'history', 'bazaar'] },
+  { code: 'HND', city: 'Tokyo', country: 'Japan', tags: ['city', 'food', 'culture'] },
+  { code: 'ICN', city: 'Seoul', country: 'South Korea', tags: ['city', 'tech', 'kpop'] },
+  { code: 'DFW', city: 'Dallas', country: 'USA', tags: ['city', 'business', 'cowboy'] },
+  { code: 'ATL', city: 'Atlanta', country: 'USA', tags: ['city', 'hub', 'business'] },
+  { code: 'ORD', city: 'Chicago', country: 'USA', tags: ['city', 'architecture', 'food'] },
+  { code: 'MAD', city: 'Madrid', country: 'Spain', tags: ['city', 'culture', 'nightlife'] },
+  { code: 'BCN', city: 'Barcelona', country: 'Spain', tags: ['beach', 'gaudi', 'food'] },
+  { code: 'MUC', city: 'Munich', country: 'Germany', tags: ['city', 'beer', 'history'] },
 ]
 
 // ─── Time Slots for Realistic Scheduling ────────────────────────────

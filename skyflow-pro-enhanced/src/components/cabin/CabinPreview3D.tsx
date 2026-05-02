@@ -1,135 +1,301 @@
+/**
+ * CabinPreview3D — class-aware 3D cabin preview modal.
+ *
+ * - Renders different layouts for Economy / Premium / Business / First
+ * - Synchronizes with 2D SeatMap using seatMap data
+ * - Supports rotate, zoom, and reset
+ * - Fully interactive: click to select seats
+ */
 import { useRef, useEffect, useState, useCallback } from 'react'
 import { X, RotateCcw, ZoomIn, ZoomOut, Move3D } from 'lucide-react'
 import * as THREE from 'three'
+import type { CabinClass } from '../../types/flight'
+import type { Seat, SeatMapData } from '../../types/seat'
 
 interface CabinPreview3DProps {
   isOpen: boolean
   onClose: () => void
   aircraft?: string
-  cabinClass?: string
+  cabinClass?: CabinClass | string
+  seatMap?: SeatMapData | null
+  selectedSeatId?: string | null
+  onSeatSelected?: (seat: Seat) => void
 }
 
-const SEAT_COLORS = {
-  available: 0x38bdf8,   // sky-400
-  occupied: 0x475569,    // slate-600
-  selected: 0x22c55e,    // green-500
-  premium: 0xa855f7,     // purple-500
-  business: 0xf59e0b,    // amber-500
+/* ── colour palette ── */
+const COLORS = {
+  available_economy: 0x38bdf8,
+  available_premium: 0xa855f7,
+  available_business: 0xf59e0b,
+  available_first: 0xec4899,
+  occupied: 0x334155,
+  selected: 0x22c55e, // Emerald 500
+  fuselage: 0x1e293b,
+  floor: 0x334155,
+  aisle: 0x38bdf8,
+  bins: 0x1e293b,
+  scene_bg: 0x0f172a,
 }
 
-export function CabinPreview3D({ isOpen, onClose, aircraft = 'Airbus A320neo', cabinClass = 'Economy' }: CabinPreview3DProps) {
+/* ── cabin layout configs ── */
+interface CabinConfig {
+  seatWidth: number
+  seatSpacing: number
+  rowSpacing: number
+  fuselageRadius: number
+  occupancyRate: number
+  label: string
+}
+
+function getCabinConfig(cabin: string): CabinConfig {
+  switch (cabin) {
+    case 'business':
+      return {
+        seatWidth: 0.5, seatSpacing: 0.65, rowSpacing: 0.8, fuselageRadius: 2.2,
+        occupancyRate: 0.2, label: 'Business',
+      }
+    case 'premium_economy':
+      return {
+        seatWidth: 0.42, seatSpacing: 0.55, rowSpacing: 0.65, fuselageRadius: 2.1,
+        occupancyRate: 0.25, label: 'Premium Economy',
+      }
+    case 'first':
+      return {
+        seatWidth: 0.6, seatSpacing: 0.8, rowSpacing: 1.0, fuselageRadius: 2.3,
+        occupancyRate: 0.15, label: 'First Class',
+      }
+    default: // economy
+      return {
+        seatWidth: 0.35, seatSpacing: 0.48, rowSpacing: 0.55, fuselageRadius: 2.0,
+        occupancyRate: 0.35, label: 'Economy',
+      }
+  }
+}
+
+function getAvailableColor(cabin: string): number {
+  switch (cabin) {
+    case 'business': return COLORS.available_business
+    case 'premium_economy': return COLORS.available_premium
+    case 'first': return COLORS.available_first
+    default: return COLORS.available_economy
+  }
+}
+
+export function CabinPreview3D({
+  isOpen,
+  onClose,
+  aircraft = 'Airbus A320neo',
+  cabinClass = 'economy',
+  seatMap,
+  selectedSeatId,
+  onSeatSelected,
+}: CabinPreview3DProps) {
   const canvasRef = useRef<HTMLDivElement>(null)
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
   const sceneRef = useRef<THREE.Scene | null>(null)
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
+  const seatMeshesRef = useRef<THREE.Mesh[]>([])
+  
   const [isLoaded, setIsLoaded] = useState(false)
   const isDragging = useRef(false)
+  const hasMoved = useRef(false) // to distinguish click from drag
   const lastMouse = useRef({ x: 0, y: 0 })
   const rotation = useRef({ x: -0.5, y: 0 })
   const zoom = useRef(8)
   const animFrameRef = useRef<number>(0)
 
+  const raycaster = useRef(new THREE.Raycaster())
+  const mouse = useRef(new THREE.Vector2())
+
   const createCabin = useCallback(() => {
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x0f172a) // slate-900
+    scene.background = new THREE.Color(COLORS.scene_bg)
+    seatMeshesRef.current = [] // clear meshes
 
-    // Ambient light
-    const ambient = new THREE.AmbientLight(0xffffff, 0.4)
-    scene.add(ambient)
-
-    // Directional light
+    // ── Lighting ──
+    scene.add(new THREE.AmbientLight(0xffffff, 0.4))
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8)
     dirLight.position.set(5, 10, 7)
     scene.add(dirLight)
 
-    // Point light for cabin warmth
-    const pointLight = new THREE.PointLight(0x38bdf8, 0.3, 20)
+    const accentColor = getAvailableColor(cabinClass as string)
+    const pointLight = new THREE.PointLight(accentColor, 0.3, 20)
     pointLight.position.set(0, 3, 0)
     scene.add(pointLight)
 
-    // ── Fuselage (cylinder) ──
-    const fuselageGeom = new THREE.CylinderGeometry(2.0, 2.0, 12, 32, 1, true)
+    const cfg = getCabinConfig(cabinClass as string)
+    const layout = seatMap?.layouts[0]
+    
+    // fallback dimensions if no seatMap
+    const rowsCount = layout ? (layout.rowEnd - layout.rowStart + 1) : (cabinClass === 'economy' ? 22 : 6)
+    const columns = layout ? layout.columns : (cabinClass === 'economy' ? ['A','B','C','D','E','F'] : ['A','B','C','D'])
+    const aisleAfter = layout ? layout.aisleAfter : (cabinClass === 'economy' ? [2] : [1])
+    const fuselageLength = Math.max(10, rowsCount * cfg.rowSpacing + 4)
+
+    // ── Fuselage ──
+    const fuselageGeom = new THREE.CylinderGeometry(cfg.fuselageRadius, cfg.fuselageRadius, fuselageLength, 32, 1, true)
     const fuselageMat = new THREE.MeshPhongMaterial({
-      color: 0x1e293b,
+      color: COLORS.fuselage,
       side: THREE.BackSide,
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.55,
     })
     const fuselage = new THREE.Mesh(fuselageGeom, fuselageMat)
     fuselage.rotation.z = Math.PI / 2
     scene.add(fuselage)
 
     // ── Floor ──
-    const floorGeom = new THREE.BoxGeometry(12, 0.05, 3.2)
-    const floorMat = new THREE.MeshPhongMaterial({ color: 0x334155 })
+    const floorW = fuselageLength + 2
+    const floorGeom = new THREE.BoxGeometry(floorW, 0.05, cfg.fuselageRadius * 1.5)
+    const floorMat = new THREE.MeshPhongMaterial({ color: COLORS.floor })
     const floor = new THREE.Mesh(floorGeom, floorMat)
     floor.position.y = -1.0
     scene.add(floor)
 
     // ── Aisle line ──
-    const aisleGeom = new THREE.BoxGeometry(10, 0.01, 0.02)
-    const aisleMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 })
-    const aisle = new THREE.Mesh(aisleGeom, aisleMat)
-    aisle.position.y = -0.95
-    scene.add(aisle)
+    const aisleGeom = new THREE.BoxGeometry(fuselageLength - 1, 0.015, 0.03)
+    const aisleMat = new THREE.MeshBasicMaterial({ color: COLORS.aisle })
+    const aisleLine = new THREE.Mesh(aisleGeom, aisleMat)
+    aisleLine.position.y = -0.95
+    scene.add(aisleLine)
 
-    // ── Generate seats ──
-    const rows = 20
-    const seatsPerSide = 3 // 3-3 layout
-    const seatSpacing = 0.48
-    const rowSpacing = 0.55
-    const startX = -rows * rowSpacing / 2 + 0.5
+    // ── Seats ──
+    const startX = -(rowsCount * cfg.rowSpacing) / 2 + 0.5
 
-    for (let row = 0; row < rows; row++) {
-      for (let side = 0; side < 2; side++) {
-        for (let s = 0; s < seatsPerSide; s++) {
-          const seatGeom = new THREE.BoxGeometry(0.35, 0.5, 0.35)
-          const isOccupied = Math.random() > 0.5
-          const isBusinessRow = row < 3
+    let rngSeed = 42
+    for (let i = 0; i < (cabinClass as string).length; i++) {
+      rngSeed = (rngSeed * 31 + (cabinClass as string).charCodeAt(i)) >>> 0
+    }
+    const rng = () => {
+      rngSeed = (rngSeed * 16807) % 2147483647
+      return (rngSeed - 1) / 2147483646
+    }
 
-          let color = isOccupied ? SEAT_COLORS.occupied : SEAT_COLORS.available
-          if (isBusinessRow) color = isOccupied ? SEAT_COLORS.occupied : SEAT_COLORS.business
+    for (let r = 0; r < rowsCount; r++) {
+      const realRow = layout ? layout.rowStart + r : r + 1
+      
+      let currentZ = -((columns.length - 1) * cfg.seatSpacing) / 2
+      if (aisleAfter.length > 0) {
+          // adjust starting Z to account for aisles
+          currentZ -= (aisleAfter.length * cfg.seatSpacing * 0.5)
+      }
 
-          const seatMat = new THREE.MeshPhongMaterial({
-            color,
-            emissive: isOccupied ? 0x000000 : new THREE.Color(color).multiplyScalar(0.1).getHex(),
-          })
-          const seat = new THREE.Mesh(seatGeom, seatMat)
+      for (let ci = 0; ci < columns.length; ci++) {
+        const colName = columns[ci]
+        const seat = seatMap?.seats.find(s => s.row === realRow && s.column === colName)
+        
+        const isOcc = seat ? !seat.isAvailable : (rng() < cfg.occupancyRate)
+        const isSelected = seat && seat.seatId === selectedSeatId
 
-          const x = startX + row * rowSpacing
-          const z = (side === 0 ? -1 : 1) * (0.35 + s * seatSpacing)
-          seat.position.set(x, -0.7, z)
+        let color = isOcc ? COLORS.occupied : accentColor
+        if (isSelected) color = COLORS.selected
 
-          // Seat back
-          const backGeom = new THREE.BoxGeometry(0.04, 0.45, 0.35)
-          const back = new THREE.Mesh(backGeom, seatMat)
-          back.position.set(x - 0.18, -0.45, z)
-          scene.add(back)
-          scene.add(seat)
+        const seatMat = new THREE.MeshPhongMaterial({
+          color,
+          emissive: isOcc ? 0x000000 : new THREE.Color(color).multiplyScalar(0.12).getHex(),
+        })
+
+        // seat bottom
+        const seatGeom = new THREE.BoxGeometry(cfg.seatWidth, cfg.seatWidth * 1.3, cfg.seatWidth)
+        const seatMesh = new THREE.Mesh(seatGeom, seatMat)
+        const x = startX + r * cfg.rowSpacing
+        
+        seatMesh.position.set(x, -0.7, currentZ)
+        
+        // Add userData for interaction
+        seatMesh.userData = { isSeat: true, seat, isAvailable: !isOcc }
+        seatMeshesRef.current.push(seatMesh)
+
+        // seat back
+        const backGeom = new THREE.BoxGeometry(0.04, cfg.seatWidth * 1.2, cfg.seatWidth)
+        const back = new THREE.Mesh(backGeom, seatMat)
+        back.position.set(x - cfg.seatWidth * 0.5, -0.45, currentZ)
+
+        // Add userData to back as well so clicking it works
+        back.userData = { isSeat: true, seat, isAvailable: !isOcc, parentMesh: seatMesh }
+        seatMeshesRef.current.push(back)
+
+        // armrests
+        if (cabinClass === 'business' || cabinClass === 'first') {
+          const armGeom = new THREE.BoxGeometry(cfg.seatWidth * 0.8, 0.03, 0.04)
+          const armMat = new THREE.MeshPhongMaterial({ color: 0x475569 })
+          for (const dz of [-1, 1]) {
+            const arm = new THREE.Mesh(armGeom, armMat)
+            arm.position.set(x, -0.55, currentZ + dz * cfg.seatWidth * 0.55)
+            scene.add(arm)
+          }
+        }
+
+        scene.add(seatMesh)
+        scene.add(back)
+
+        currentZ += cfg.seatSpacing
+        if (aisleAfter.includes(ci)) {
+            currentZ += cfg.seatSpacing * 0.8 // Aisle gap
         }
       }
 
-      // Row number label (tiny plane-style indicator)
-      if (row % 4 === 0) {
-        const labelGeom = new THREE.BoxGeometry(0.02, 0.02, 0.15)
-        const labelMat = new THREE.MeshBasicMaterial({ color: 0x64748b })
-        const label = new THREE.Mesh(labelGeom, labelMat)
-        label.position.set(startX + row * rowSpacing, -0.94, 0)
-        scene.add(label)
+      // row indicator
+      if (r % Math.max(2, Math.ceil(rowsCount / 8)) === 0) {
+        const indGeom = new THREE.BoxGeometry(0.02, 0.02, 0.15)
+        const indMat = new THREE.MeshBasicMaterial({ color: 0x64748b })
+        const ind = new THREE.Mesh(indGeom, indMat)
+        ind.position.set(startX + r * cfg.rowSpacing, -0.94, 0)
+        scene.add(ind)
       }
     }
 
-    // ── Overhead bins (subtle) ──
-    for (let side = 0; side < 2; side++) {
-      const binGeom = new THREE.BoxGeometry(11, 0.3, 0.6)
-      const binMat = new THREE.MeshPhongMaterial({ color: 0x1e293b, transparent: true, opacity: 0.7 })
+    // ── Overhead bins ──
+    for (const side of [-1, 1]) {
+      const binGeom = new THREE.BoxGeometry(fuselageLength - 2, 0.3, 0.6)
+      const binMat = new THREE.MeshPhongMaterial({ color: COLORS.bins, transparent: true, opacity: 0.65 })
       const bin = new THREE.Mesh(binGeom, binMat)
-      bin.position.set(0, 0.8, (side === 0 ? -1 : 1) * 1.5)
+      bin.position.set(0, 0.8, side * (cfg.fuselageRadius * 0.7))
       scene.add(bin)
     }
 
+    // ── Class zone label (floating text plane) ──
+    const labelCanvas = document.createElement('canvas')
+    labelCanvas.width = 512
+    labelCanvas.height = 64
+    const ctx = labelCanvas.getContext('2d')
+    if (ctx) {
+      ctx.fillStyle = 'transparent'
+      ctx.fillRect(0, 0, 512, 64)
+      ctx.font = 'bold 28px Inter, sans-serif'
+      ctx.fillStyle = `#${accentColor.toString(16).padStart(6, '0')}`
+      ctx.textAlign = 'center'
+      ctx.fillText(cfg.label.toUpperCase(), 256, 42)
+    }
+    const labelTex = new THREE.CanvasTexture(labelCanvas)
+    const labelGeom = new THREE.PlaneGeometry(3, 0.4)
+    const labelMat = new THREE.MeshBasicMaterial({ map: labelTex, transparent: true, side: THREE.DoubleSide })
+    const labelMesh = new THREE.Mesh(labelGeom, labelMat)
+    labelMesh.position.set(0, 1.5, 0)
+    scene.add(labelMesh)
+
     return scene
-  }, [])
+  }, [cabinClass, seatMap, selectedSeatId])
+
+  // Sync selected seat colors without recreating scene
+  useEffect(() => {
+      if (!isLoaded) return;
+      const accentColor = getAvailableColor(cabinClass as string);
+
+      seatMeshesRef.current.forEach(mesh => {
+          if (!mesh.userData.isSeat || !mesh.userData.seat) return;
+          const seat = mesh.userData.seat as Seat;
+          const isAvailable = mesh.userData.isAvailable;
+          const isSelected = seat.seatId === selectedSeatId;
+
+          let color = !isAvailable ? COLORS.occupied : accentColor;
+          if (isSelected) color = COLORS.selected;
+
+          const mat = mesh.material as THREE.MeshPhongMaterial;
+          mat.color.setHex(color);
+          mat.emissive.setHex(!isAvailable ? 0x000000 : new THREE.Color(color).multiplyScalar(0.12).getHex());
+      });
+  }, [selectedSeatId, isLoaded, cabinClass]);
 
   useEffect(() => {
     if (!isOpen || !canvasRef.current) return
@@ -138,31 +304,25 @@ export function CabinPreview3D({ isOpen, onClose, aircraft = 'Airbus A320neo', c
     const width = container.clientWidth
     const height = container.clientHeight
 
-    // Camera
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100)
     camera.position.set(0, zoom.current, 0)
     camera.lookAt(0, 0, 0)
     cameraRef.current = camera
 
-    // Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setSize(width, height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     container.appendChild(renderer.domElement)
     rendererRef.current = renderer
 
-    // Scene
     const scene = createCabin()
     sceneRef.current = scene
 
     setIsLoaded(true)
 
-    // Animation loop
     function animate() {
       animFrameRef.current = requestAnimationFrame(animate)
-
       if (cameraRef.current && sceneRef.current) {
-        // Orbit around the cabin based on rotation values
         const cam = cameraRef.current
         cam.position.x = zoom.current * Math.sin(rotation.current.y) * Math.cos(rotation.current.x)
         cam.position.y = zoom.current * Math.sin(rotation.current.x)
@@ -173,7 +333,6 @@ export function CabinPreview3D({ isOpen, onClose, aircraft = 'Airbus A320neo', c
     }
     animate()
 
-    // Handle resize
     function handleResize() {
       if (!container || !renderer || !camera) return
       const w = container.clientWidth
@@ -195,24 +354,49 @@ export function CabinPreview3D({ isOpen, onClose, aircraft = 'Airbus A320neo', c
     }
   }, [isOpen, createCabin])
 
-  // Mouse controls
+  // ── Mouse / pointer controls ──
   const handlePointerDown = (e: React.PointerEvent) => {
     isDragging.current = true
+    hasMoved.current = false
     lastMouse.current = { x: e.clientX, y: e.clientY }
   }
+
   const handlePointerMove = (e: React.PointerEvent) => {
     if (!isDragging.current) return
     const dx = e.clientX - lastMouse.current.x
     const dy = e.clientY - lastMouse.current.y
+    if (Math.abs(dx) > 2 || Math.abs(dy) > 2) hasMoved.current = true
     rotation.current.y += dx * 0.005
     rotation.current.x = Math.max(-1.2, Math.min(0.1, rotation.current.x - dy * 0.005))
     lastMouse.current = { x: e.clientX, y: e.clientY }
   }
-  const handlePointerUp = () => { isDragging.current = false }
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    isDragging.current = false
+    if (!hasMoved.current && canvasRef.current && cameraRef.current && onSeatSelected) {
+      // Handle click for selection
+      const rect = canvasRef.current.getBoundingClientRect()
+      mouse.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
+      mouse.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
+
+      raycaster.current.setFromCamera(mouse.current, cameraRef.current)
+      
+      if (sceneRef.current) {
+          const intersects = raycaster.current.intersectObjects(sceneRef.current.children, true)
+          for (const hit of intersects) {
+              const userData = hit.object.userData
+              if (userData.isSeat && userData.seat && userData.isAvailable) {
+                  onSeatSelected(userData.seat)
+                  break // stop after first hit
+              }
+          }
+      }
+    }
+  }
+
   const handleWheel = (e: React.WheelEvent) => {
     zoom.current = Math.max(4, Math.min(15, zoom.current + e.deltaY * 0.01))
   }
-
   const resetView = () => {
     rotation.current = { x: -0.5, y: 0 }
     zoom.current = 8
@@ -220,9 +404,12 @@ export function CabinPreview3D({ isOpen, onClose, aircraft = 'Airbus A320neo', c
 
   if (!isOpen) return null
 
+  const cfg = getCabinConfig(cabinClass as string)
+  const accentHex = `#${getAvailableColor(cabinClass as string).toString(16).padStart(6, '0')}`
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-4xl mx-4 glass rounded-3xl overflow-hidden shadow-2xl">
+      <div className="relative w-full max-w-4xl mx-4 glass rounded-3xl overflow-hidden shadow-2xl flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-slate-800/50">
           <div className="flex items-center gap-3">
@@ -230,8 +417,8 @@ export function CabinPreview3D({ isOpen, onClose, aircraft = 'Airbus A320neo', c
               <Move3D className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-slate-50">3D Cabin Preview</h3>
-              <p className="text-xs text-slate-400">{aircraft} · {cabinClass} Layout</p>
+              <h3 className="text-lg font-bold text-slate-50">Interactive 3D Cabin</h3>
+              <p className="text-xs text-slate-400">{aircraft} · <span style={{ color: accentHex }}>{cfg.label}</span> Layout</p>
             </div>
           </div>
 
@@ -269,33 +456,42 @@ export function CabinPreview3D({ isOpen, onClose, aircraft = 'Airbus A320neo', c
         {/* 3D Canvas */}
         <div
           ref={canvasRef}
-          className="w-full h-[450px] cursor-grab active:cursor-grabbing"
+          className="w-full h-[60vh] min-h-[400px] cursor-pointer active:cursor-grabbing"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
-          onPointerLeave={handlePointerUp}
+          onPointerLeave={() => {
+              isDragging.current = false;
+          }}
           onWheel={handleWheel}
         />
 
         {/* Legend + instructions */}
-        <div className="p-4 border-t border-slate-800/50 flex flex-wrap items-center justify-between gap-4">
+        <div className="p-4 border-t border-slate-800/50 flex flex-wrap items-center justify-between gap-4 bg-slate-900/50">
           <div className="flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-sm" style={{ background: '#38bdf8' }} />
+              <span className="h-3 w-3 rounded-sm" style={{ background: accentHex }} />
               <span className="text-slate-400">Available</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-sm" style={{ background: '#475569' }} />
+              <span className="h-3 w-3 rounded-sm" style={{ background: '#334155' }} />
               <span className="text-slate-400">Occupied</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-sm" style={{ background: '#f59e0b' }} />
-              <span className="text-slate-400">Business</span>
+              <span className="h-3 w-3 rounded-sm bg-emerald-500" />
+              <span className="text-slate-400">Selected</span>
             </div>
           </div>
-          <p className="text-xs text-slate-500">
-            Drag to rotate · Scroll to zoom · {isLoaded ? '3D loaded' : 'Loading...'}
-          </p>
+          <div className="text-right">
+              {selectedSeatId && (
+                  <p className="text-sm font-bold text-emerald-400 mb-0.5">
+                    Seat {seatMap?.seats.find(s => s.seatId === selectedSeatId)?.label} Selected
+                  </p>
+              )}
+              <p className="text-xs text-slate-500">
+                Click a seat to select · Drag to rotate · Scroll to zoom
+              </p>
+          </div>
         </div>
       </div>
     </div>

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
-import { ArrowLeft, User, CreditCard, Shield, Check, Plane, Clock, AlertCircle, ChevronRight, Lock, Move3D, MapPin } from 'lucide-react'
+import { ArrowLeft, User, CreditCard, Shield, Check, Plane, Clock, AlertCircle, ChevronRight, Lock, MapPin, Armchair } from 'lucide-react'
 import type { FlightOption } from '../types/flight'
-import { CabinPreview3D } from '../components/cabin/CabinPreview3D'
+import type { Seat } from '../types/seat'
 import { AirportMap } from '../components/airport/AirportMap'
+import { SeatSelectionPanel } from '../components/seats/SeatSelectionPanel'
 
 interface PassengerInfo {
     firstName: string
@@ -34,8 +35,8 @@ export function BookingPage() {
     const [currentStep, setCurrentStep] = useState(1)
     const [isProcessing, setIsProcessing] = useState(false)
     const [agreedToTerms, setAgreedToTerms] = useState(false)
-    const [showCabinPreview, setShowCabinPreview] = useState(false)
     const [showAirportMap, setShowAirportMap] = useState(false)
+    const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null)
 
     const [passenger, setPassenger] = useState<PassengerInfo>({
         firstName: '',
@@ -81,7 +82,7 @@ export function BookingPage() {
     }
 
     const handleNextStep = () => {
-        if (currentStep < 3) {
+        if (currentStep < 4) {
             setCurrentStep(currentStep + 1)
         }
     }
@@ -105,6 +106,7 @@ export function BookingPage() {
             bookingId,
             flight,
             passenger,
+            selectedSeat: selectedSeat ? { label: selectedSeat.label, position: selectedSeat.position, price: selectedSeat.price, type: selectedSeat.type } : null,
             bookedAt: new Date().toISOString(),
         }))
 
@@ -126,14 +128,17 @@ export function BookingPage() {
         )
     }
 
+    // 4-step flow: Passenger → Seat Selection → Payment → Review
     const steps = [
         { number: 1, title: 'Passenger Details', icon: User },
-        { number: 2, title: 'Payment', icon: CreditCard },
-        { number: 3, title: 'Review & Confirm', icon: Check },
+        { number: 2, title: 'Seat Selection', icon: Armchair },
+        { number: 3, title: 'Payment', icon: CreditCard },
+        { number: 4, title: 'Review & Confirm', icon: Check },
     ]
 
     const isStep1Valid = passenger.firstName && passenger.lastName && passenger.email
-    const isStep2Valid = payment.cardNumber && payment.expiryDate && payment.cvv && payment.cardholderName
+    const isStep3Valid = payment.cardNumber && payment.expiryDate && payment.cvv && payment.cardholderName
+    const totalPrice = flight.price.total + (selectedSeat?.price ?? 0)
 
     return (
         <div className="min-h-screen">
@@ -158,14 +163,6 @@ export function BookingPage() {
                     <div className="flex items-center gap-3 mt-3">
                         <button
                             type="button"
-                            onClick={() => setShowCabinPreview(true)}
-                            className="btn-secondary text-xs flex items-center gap-1.5"
-                        >
-                            <Move3D className="h-3.5 w-3.5" />
-                            View Cabin in 3D
-                        </button>
-                        <button
-                            type="button"
                             onClick={() => setShowAirportMap(true)}
                             className="btn-secondary text-xs flex items-center gap-1.5"
                         >
@@ -174,14 +171,6 @@ export function BookingPage() {
                         </button>
                     </div>
                 </div>
-
-                {/* 3D Cabin Preview Modal */}
-                <CabinPreview3D
-                    isOpen={showCabinPreview}
-                    onClose={() => setShowCabinPreview(false)}
-                    aircraft={flight.segments[0]?.aircraft}
-                    cabinClass={flight.cabin}
-                />
 
                 {/* Airport Map Modal */}
                 <AirportMap
@@ -312,15 +301,41 @@ export function BookingPage() {
                                         disabled={!isStep1Valid}
                                         className={`btn-primary flex items-center gap-2 ${!isStep1Valid ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     >
-                                        Continue to Payment
+                                        Continue to Seat Selection
                                         <ChevronRight className="h-4 w-4" />
                                     </button>
                                 </div>
                             </div>
                         )}
 
-                        {/* Step 2: Payment */}
+                        {/* Step 2: Seat Selection */}
                         {currentStep === 2 && (
+                            <div className="space-y-4 animate-fade-in">
+                                <SeatSelectionPanel
+                                    flightId={flight.id}
+                                    cabinClass={flight.cabin}
+                                    aircraft={flight.segments[0]?.aircraft}
+                                    selectedSeat={selectedSeat}
+                                    onSeatSelected={setSelectedSeat}
+                                />
+
+                                <div className="flex justify-between pt-2">
+                                    <button onClick={handlePrevStep} className="btn-secondary">
+                                        Back
+                                    </button>
+                                    <button
+                                        onClick={handleNextStep}
+                                        className="btn-primary flex items-center gap-2"
+                                    >
+                                        {selectedSeat ? 'Continue to Payment' : 'Skip & Auto-assign'}
+                                        <ChevronRight className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Step 3: Payment */}
+                        {currentStep === 3 && (
                             <div className="glass rounded-2xl p-6 animate-fade-in">
                                 <h2 className="text-lg font-semibold text-slate-50 flex items-center gap-2 mb-6">
                                     <CreditCard className="h-5 w-5 text-sky-400" />
@@ -390,8 +405,8 @@ export function BookingPage() {
                                     </button>
                                     <button
                                         onClick={handleNextStep}
-                                        disabled={!isStep2Valid}
-                                        className={`btn-primary flex items-center gap-2 ${!isStep2Valid ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        disabled={!isStep3Valid}
+                                        className={`btn-primary flex items-center gap-2 ${!isStep3Valid ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     >
                                         Review Booking
                                         <ChevronRight className="h-4 w-4" />
@@ -400,8 +415,8 @@ export function BookingPage() {
                             </div>
                         )}
 
-                        {/* Step 3: Review & Confirm */}
-                        {currentStep === 3 && (
+                        {/* Step 4: Review & Confirm */}
+                        {currentStep === 4 && (
                             <div className="glass rounded-2xl p-6 animate-fade-in">
                                 <h2 className="text-lg font-semibold text-slate-50 flex items-center gap-2 mb-6">
                                     <Check className="h-5 w-5 text-sky-400" />
@@ -416,6 +431,26 @@ export function BookingPage() {
                                     </p>
                                     <p className="text-sm text-slate-400">{passenger.email}</p>
                                 </div>
+
+                                {/* Seat summary */}
+                                {selectedSeat && (
+                                    <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
+                                        <h3 className="text-sm font-medium text-slate-300 mb-2">Selected Seat</h3>
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-10 w-10 rounded-lg bg-sky-500 flex items-center justify-center text-white font-bold shadow-lg shadow-sky-500/20">
+                                                {selectedSeat.label}
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-semibold text-slate-50">
+                                                    Seat {selectedSeat.label} · {selectedSeat.position.charAt(0).toUpperCase() + selectedSeat.position.slice(1)}
+                                                </p>
+                                                <p className="text-xs text-slate-400">
+                                                    {selectedSeat.price > 0 ? formatter.format(selectedSeat.price) : 'Free — no extra charge'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Payment summary */}
                                 <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
@@ -462,7 +497,7 @@ export function BookingPage() {
                                         ) : (
                                             <>
                                                 <Lock className="h-4 w-4" />
-                                                Pay {formatter.format(flight.price.total)}
+                                                Pay {formatter.format(totalPrice)}
                                             </>
                                         )}
                                     </button>
@@ -515,9 +550,21 @@ export function BookingPage() {
                                     <span className="text-slate-400">Carrier charges</span>
                                     <span className="text-slate-200">{formatter.format(flight.price.carrierCharges)}</span>
                                 </div>
+                                {selectedSeat && selectedSeat.price > 0 && (
+                                    <div className="flex justify-between">
+                                        <span className="text-amber-300">Seat {selectedSeat.label} surcharge</span>
+                                        <span className="text-amber-300">{formatter.format(selectedSeat.price)}</span>
+                                    </div>
+                                )}
+                                {selectedSeat && selectedSeat.price === 0 && (
+                                    <div className="flex justify-between">
+                                        <span className="text-emerald-300">Seat {selectedSeat.label}</span>
+                                        <span className="text-emerald-300">Free</span>
+                                    </div>
+                                )}
                                 <div className="flex justify-between pt-3 border-t border-slate-800/50">
                                     <span className="font-semibold text-slate-50">Total</span>
-                                    <span className="text-xl font-bold text-sky-400">{formatter.format(flight.price.total)}</span>
+                                    <span className="text-xl font-bold text-sky-400">{formatter.format(totalPrice)}</span>
                                 </div>
                             </div>
 
