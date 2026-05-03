@@ -27,11 +27,25 @@ public class FlightController {
     }
 
     @GetMapping("/flights/search")
-    public List<FlightSearchResponse> searchFlights(
+    public ResponseEntity<java.util.Map<String, Object>> searchFlights(
             @RequestParam String from,
             @RequestParam String to,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return flightService.searchFlights(from, to, date);
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(required = false) String tripType,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate returnDate) {
+        
+        if ("ROUND_TRIP".equalsIgnoreCase(tripType) || "ROUNDTRIP".equalsIgnoreCase(tripType)) {
+            if (returnDate != null) {
+                return ResponseEntity.ok(flightService.searchRoundTripFlights(from, to, date, returnDate));
+            }
+        }
+        
+        java.util.Map<String, Object> response = new java.util.HashMap<>();
+        List<FlightSearchResponse> outboundFlights = flightService.searchFlights(from, to, date);
+        response.put("results", outboundFlights);
+        response.put("tripType", "oneway");
+        
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/flights/{id}/fare-breakdown")

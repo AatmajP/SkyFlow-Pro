@@ -32,6 +32,7 @@ export function BookingPage() {
     const navigate = useNavigate()
     const { flightId } = useParams()
     const [flight, setFlight] = useState<FlightOption | null>(null)
+    const [returnFlight, setReturnFlight] = useState<FlightOption | null>(null)
     const [currentStep, setCurrentStep] = useState(1)
     const [isProcessing, setIsProcessing] = useState(false)
     const [agreedToTerms, setAgreedToTerms] = useState(false)
@@ -59,6 +60,10 @@ export function BookingPage() {
         const stored = sessionStorage.getItem('selectedFlight')
         if (stored) {
             setFlight(JSON.parse(stored))
+        }
+        const storedReturn = sessionStorage.getItem('returnFlight')
+        if (storedReturn) {
+            setReturnFlight(JSON.parse(storedReturn))
         }
     }, [flightId])
 
@@ -105,6 +110,7 @@ export function BookingPage() {
         sessionStorage.setItem('bookingConfirmation', JSON.stringify({
             bookingId,
             flight,
+            returnFlight,
             passenger,
             selectedSeat: selectedSeat ? { label: selectedSeat.label, position: selectedSeat.position, price: selectedSeat.price, type: selectedSeat.type } : null,
             bookedAt: new Date().toISOString(),
@@ -138,7 +144,7 @@ export function BookingPage() {
 
     const isStep1Valid = passenger.firstName && passenger.lastName && passenger.email
     const isStep3Valid = payment.cardNumber && payment.expiryDate && payment.cvv && payment.cardholderName
-    const totalPrice = flight.price.total + (selectedSeat?.price ?? 0)
+    const totalPrice = flight.price.total + (returnFlight ? returnFlight.price.total : 0) + (selectedSeat?.price ?? 0)
 
     return (
         <div className="min-h-screen">
@@ -513,6 +519,7 @@ export function BookingPage() {
 
                             {/* Flight details */}
                             <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
+                                <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">Outbound</div>
                                 <div className="flex items-center gap-3">
                                     <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
                                         <Plane className="h-5 w-5 text-white" />
@@ -536,19 +543,46 @@ export function BookingPage() {
                                 </div>
                             </div>
 
+                            {returnFlight && (
+                                <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
+                                    <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">Return</div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                                            <Plane className="h-5 w-5 text-white rotate-[135deg]" />
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold text-slate-50">
+                                                {returnFlight.from} → {returnFlight.to}
+                                            </p>
+                                            <p className="text-xs text-slate-400">
+                                                {returnFlight.segments[0]?.marketingCarrier}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="mt-3 pt-3 border-t border-slate-700/50 flex items-center gap-2 text-xs text-slate-400">
+                                        <Clock className="h-3.5 w-3.5" />
+                                        <span>
+                                            {Math.floor(returnFlight.totalDurationMinutes / 60)}h {returnFlight.totalDurationMinutes % 60}m
+                                        </span>
+                                        <span className="text-slate-600">•</span>
+                                        <span>{returnFlight.stops === 0 ? 'Non-stop' : `${returnFlight.stops} stop`}</span>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Price breakdown */}
                             <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
                                     <span className="text-slate-400">Base fare</span>
-                                    <span className="text-slate-200">{formatter.format(flight.price.baseFare)}</span>
+                                    <span className="text-slate-200">{formatter.format(flight.price.baseFare + (returnFlight?.price.baseFare ?? 0))}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-slate-400">Taxes & fees</span>
-                                    <span className="text-slate-200">{formatter.format(flight.price.taxesAndFees)}</span>
+                                    <span className="text-slate-200">{formatter.format(flight.price.taxesAndFees + (returnFlight?.price.taxesAndFees ?? 0))}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-slate-400">Carrier charges</span>
-                                    <span className="text-slate-200">{formatter.format(flight.price.carrierCharges)}</span>
+                                    <span className="text-slate-200">{formatter.format(flight.price.carrierCharges + (returnFlight?.price.carrierCharges ?? 0))}</span>
                                 </div>
                                 {selectedSeat && selectedSeat.price > 0 && (
                                     <div className="flex justify-between">

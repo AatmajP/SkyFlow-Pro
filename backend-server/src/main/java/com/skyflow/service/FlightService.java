@@ -101,6 +101,19 @@ public class FlightService {
         return responses;
     }
 
+    public Map<String, Object> searchRoundTripFlights(String from, String to, LocalDate date, LocalDate returnDate) {
+        Map<String, Object> result = new HashMap<>();
+        List<FlightSearchResponse> outbound = searchFlights(from, to, date);
+        List<FlightSearchResponse> returnFlights = searchFlights(to, from, returnDate);
+
+        result.put("results", outbound); // For backward compatibility
+        result.put("outboundFlights", outbound);
+        result.put("returnFlights", returnFlights);
+        result.put("tripType", "roundtrip");
+
+        return result;
+    }
+
     public FareBreakdownResponse getFareBreakdown(Long flightId, String seatClass, String seatType) {
         Flight flight = flightRepository.findById(flightId)
                 .orElseThrow(() -> new RuntimeException("Flight not found"));
