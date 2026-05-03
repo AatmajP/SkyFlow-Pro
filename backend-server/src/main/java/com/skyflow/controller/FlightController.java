@@ -60,4 +60,70 @@ public class FlightController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/api/flights/timeline")
+    public List<java.util.Map<String, Object>> getTimeline(
+            @RequestParam String from,
+            @RequestParam String to,
+            @RequestParam(required = false) String date) {
+
+        java.util.List<java.util.Map<String, Object>> timeline = new java.util.ArrayList<>();
+        LocalDate baseDate = (date != null && !date.isEmpty()) ? LocalDate.parse(date) : LocalDate.now();
+
+        java.util.Optional<City> originOpt = cityService.getCitiesByTag(null).stream().filter(c -> c.getCode().equalsIgnoreCase(from)).findFirst();
+        java.util.Optional<City> destOpt = cityService.getCitiesByTag(null).stream().filter(c -> c.getCode().equalsIgnoreCase(to)).findFirst();
+
+        if (originOpt.isEmpty() || destOpt.isEmpty()) {
+            // Return some default structure if cities not found
+            for (int i = -3; i <= 3; i++) {
+                LocalDate d = baseDate.plusDays(i);
+                java.util.Map<String, Object> dayMap = new java.util.HashMap<>();
+                dayMap.put("date", d.toString());
+                dayMap.put("price", null);
+                timeline.add(dayMap);
+            }
+            return timeline;
+        }
+
+        City origin = originOpt.get();
+        City dest = destOpt.get();
+
+        // 7 days window (e.g., -3 to +3 days around date)
+        LocalDateTime start = baseDate.minusDays(3).atStartOfDay();
+        LocalDateTime end = baseDate.plusDays(3).atTime(23, 59, 59);
+
+        // This assumes flightService exposes a way to get flights or we can just call searchFlights for each day
+        // But since we can't modify FlightRepository here easily, we'll just loop and call searchFlights per day
+        double minAll = Double.MAX_VALUE;
+        java.util.Map<LocalDate, Double> pricesMap = new java.util.HashMap<>();
+
+        for (int i = -3; i <= 3; i++) {
+            LocalDate d = baseDate.plusDays(i);
+            List<FlightSearchResponse> dailyFlights = flightService.searchFlights(from, to, d);
+            if (!dailyFlights.isEmpty()) {
+                double minPriceOfDay = dailyFlights.stream()
+                        .mapToDouble(f -> f.getClassPrices().getOrDefault("Economy", 99999.0))
+                        .min().orElse(99999.0);
+                pricesMap.put(d, minPriceOfDay);
+                if (minPriceOfDay < minAll) minAll = minPriceOfDay;
+            }
+        }
+
+        for (int i = -3; i <= 3; i++) {
+            LocalDate d = baseDate.plusDays(i);
+            java.util.Map<String, Object> dayMap = new java.util.HashMap<>();
+            dayMap.put("date", d.toString());
+            if (pricesMap.containsKey(d)) {
+                double price = pricesMap.get(d);
+                dayMap.put("price", Math.round(price));
+                dayMap.put("isCheapest", price == minAll);
+            } else {
+                dayMap.put("price", null);
+                dayMap.put("isCheapest", false);
+            }
+            timeline.add(dayMap);
+        }
+
+        return timeline;
+    }
 }

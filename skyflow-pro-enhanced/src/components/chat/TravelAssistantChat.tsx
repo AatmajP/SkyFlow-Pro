@@ -9,7 +9,6 @@ import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { MessageCircle, X, Send, Sparkles, Plane, ArrowRight } from 'lucide-react'
 import {
-  getDestinationSuggestions,
   CATEGORY_CONFIG,
   type AssistantResponse,
   type Suggestion,
@@ -48,7 +47,12 @@ export function TravelAssistantChat() {
     }
   }, [isOpen])
 
-  const handleSend = () => {
+  const [chatState, setChatState] = useState<any>({
+    awaiting: 'none',
+    origin: 'DEL'
+  })
+
+  const handleSend = async () => {
     const trimmed = input.trim()
     if (!trimmed) return
 
@@ -61,9 +65,14 @@ export function TravelAssistantChat() {
     setMessages(prev => [...prev, userMsg])
     setInput('')
 
-    // Simulate brief "thinking" delay for realism
-    setTimeout(() => {
-      const response: AssistantResponse = getDestinationSuggestions(trimmed)
+    // Show "typing" indicator or just wait
+    // We'll just wait for the promise
+    
+    try {
+      const { response, newState } = await import('../../services/travelAssistant').then(m => m.processChat(trimmed, chatState))
+      
+      setChatState(newState)
+
       const assistantMsg: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
@@ -71,7 +80,14 @@ export function TravelAssistantChat() {
         suggestions: response.suggestions,
       }
       setMessages(prev => [...prev, assistantMsg])
-    }, 400)
+    } catch (err) {
+      console.error(err)
+      setMessages(prev => [...prev, {
+        id: `err-${Date.now()}`,
+        role: 'assistant',
+        text: 'Sorry, I ran into an error looking that up.'
+      }])
+    }
   }
 
   const handleExplore = (airportCode: string) => {
@@ -171,7 +187,14 @@ export function TravelAssistantChat() {
                                 {catCfg.emoji} {catCfg.label}
                               </span>
                             </div>
-                            <p className="text-xs text-slate-400 leading-relaxed">{s.reason}</p>
+                            <div className="flex items-center justify-between mt-2">
+                              <p className="text-xs text-slate-400 leading-relaxed max-w-[70%]">{s.reason}</p>
+                              {s.price && (
+                                <p className="text-sm font-bold text-emerald-400">
+                                  ₹{s.price.toLocaleString('en-IN')}
+                                </p>
+                              )}
+                            </div>
                             <div className="flex items-center gap-1 mt-2 text-xs text-sky-400 opacity-0 group-hover:opacity-100 transition-opacity">
                               <Plane className="h-3 w-3" />
                               <span>Search flights</span>

@@ -283,9 +283,10 @@ export function GlobalSearchHeader() {
           </div>
         </div>
 
-        {/* Flex Date Strip */}
         {form.departureDate ? (
           <FlexDateStrip
+            from={form.from}
+            to={form.to}
             selectedDate={form.departureDate}
             flexDays={form.flexDays}
             onSelect={(nextDate) => handleChange('departureDate', nextDate)}
