@@ -1,5 +1,5 @@
 import { GlobalSearchHeader } from '../components/global-search/GlobalSearchHeader'
-import { DestinationDiscovery } from '../components/search/DestinationDiscovery'
+import { SmartDiscovery } from '../components/search/SmartDiscovery'
 import { Plane, Shield, Tag, Clock, Star, Users, Zap, Globe } from 'lucide-react'
 
 const features = [
@@ -101,9 +101,9 @@ export function SearchPage() {
           </div>
         </section>
 
-        {/* Destination Discovery — Novelty Feature */}
+        {/* Smart Discovery Section */}
         <section className="mb-16">
-          <DestinationDiscovery />
+          <SmartDiscovery />
         </section>
 
         {/* Features Grid */}
