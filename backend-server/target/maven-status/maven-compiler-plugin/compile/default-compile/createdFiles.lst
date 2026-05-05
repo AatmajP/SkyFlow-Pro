@@ -10,6 +10,7 @@ com\skyflow\repository\SeatRepository.class
 com\skyflow\exception\UnauthorizedException.class
 com\skyflow\service\ChatService.class
 com\skyflow\repository\UserRepository.class
+com\skyflow\controller\DiscoveryController.class
 com\skyflow\model\entity\Flight.class
 com\skyflow\model\entity\Airline.class
 com\skyflow\util\ApiResponse$ApiResponseBuilder.class
@@ -21,7 +22,6 @@ com\skyflow\security\AuthTokenFilter.class
 com\skyflow\repository\NotificationRepository.class
 com\skyflow\exception\ResourceNotFoundException.class
 com\skyflow\model\entity\Notification.class
-com\skyflow\controller\FlightController.class
 com\skyflow\repository\FlightRepository.class
 com\skyflow\exception\GlobalExceptionHandler.class
 com\skyflow\config\SecurityConfig.class
