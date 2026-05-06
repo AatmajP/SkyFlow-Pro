@@ -22,6 +22,7 @@ com\skyflow\security\AuthTokenFilter.class
 com\skyflow\repository\NotificationRepository.class
 com\skyflow\exception\ResourceNotFoundException.class
 com\skyflow\model\entity\Notification.class
+com\skyflow\controller\FlightController.class
 com\skyflow\repository\FlightRepository.class
 com\skyflow\exception\GlobalExceptionHandler.class
 com\skyflow\config\SecurityConfig.class

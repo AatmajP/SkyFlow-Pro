@@ -1,7 +1,9 @@
 import { Search, ArrowRightLeft, Calendar, Users, Briefcase, Info } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FlexDateStrip } from '../calendar/FlexDateStrip'
+import { AirportDropdownPortal } from './AirportDropdownPortal'
+import { AIRPORTS } from '../../mocks/mockSearchResults'
 
 type TripType = 'oneway' | 'roundtrip' | 'multicity'
 type CabinClass = 'economy' | 'premium' | 'business' | 'first'
@@ -24,12 +26,25 @@ const cabinLabels: Record<CabinClass, string> = {
   first: 'First Class',
 }
 
+function getTodayStr() {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
 export function GlobalSearchHeader() {
   const navigate = useNavigate()
   const [isSearching, setIsSearching] = useState(false)
+  const [fromDropdownOpen, setFromDropdownOpen] = useState(false)
+  const [toDropdownOpen, setToDropdownOpen] = useState(false)
+  const today = getTodayStr()
+
+  // Refs for portal positioning
+  const fromInputRef = useRef<HTMLDivElement>(null)
+  const toInputRef = useRef<HTMLDivElement>(null)
+
   const [form, setForm] = useState<GlobalSearchForm>({
-    from: 'JFK',
-    to: 'LAX',
+    from: 'DEL',
+    to: 'BOM',
     departureDate: '',
     returnDate: '',
     tripType: 'roundtrip',
@@ -42,18 +57,25 @@ export function GlobalSearchHeader() {
     key: K,
     value: GlobalSearchForm[K],
   ) => {
-    setForm((prev) => ({ ...prev, [key]: value }))
+    setForm((prev) => {
+      const next = { ...prev, [key]: value }
+      if (key === 'departureDate' && next.returnDate && next.returnDate < String(value)) {
+        next.returnDate = ''
+      }
+      return next
+    })
   }
 
   const swapLocations = () => {
     setForm((prev) => ({ ...prev, from: prev.to, to: prev.from }))
   }
 
+  const handleFromClose = useCallback(() => setFromDropdownOpen(false), [])
+  const handleToClose = useCallback(() => setToDropdownOpen(false), [])
+
   const handleSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault()
     setIsSearching(true)
-
-    // Simulate a brief loading state for better UX
     await new Promise((resolve) => setTimeout(resolve, 800))
 
     const params = new URLSearchParams()
@@ -71,6 +93,11 @@ export function GlobalSearchHeader() {
     setIsSearching(false)
   }
 
+  const getAirportLabel = (code: string) => {
+    const airport = AIRPORTS.find((a) => a.code === code)
+    return airport ? `${airport.city} (${airport.code})` : code
+  }
+
   return (
     <section
       aria-label="Flight search"
@@ -84,7 +111,7 @@ export function GlobalSearchHeader() {
         {/* Trip Type Selector */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="inline-flex rounded-2xl bg-slate-900/80 p-1 ring-1 ring-slate-800">
-            {(['oneway', 'roundtrip', 'multicity'] as TripType[]).map((type) => (
+            {(['oneway', 'roundtrip'] as TripType[]).map((type) => (
               <button
                 key={type}
                 type="button"
@@ -95,7 +122,7 @@ export function GlobalSearchHeader() {
                   }`}
                 aria-pressed={form.tripType === type}
               >
-                {type === 'multicity' ? 'Multi-city' : type === 'oneway' ? 'One Way' : 'Round Trip'}
+                {type === 'oneway' ? 'One Way' : 'Round Trip'}
               </button>
             ))}
           </div>
@@ -112,20 +139,36 @@ export function GlobalSearchHeader() {
         {/* Main Search Fields */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr,auto,1fr]">
           {/* From Field */}
-          <div className="relative">
+          <div ref={fromInputRef} className="relative">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
               From
             </label>
             <input
               required
               value={form.from}
-              onChange={(e) => handleChange('from', e.target.value.toUpperCase())}
+              onChange={(e) => {
+                handleChange('from', e.target.value.toUpperCase())
+                setFromDropdownOpen(true)
+              }}
+              onFocus={() => setFromDropdownOpen(true)}
               placeholder="City or airport code"
               className="input-premium pr-12"
+              autoComplete="off"
             />
             <div className="absolute bottom-3 right-3 text-slate-500">
               <Briefcase className="h-5 w-5" />
             </div>
+            {form.from && (
+              <p className="text-xs text-slate-500 mt-1">{getAirportLabel(form.from)}</p>
+            )}
+            {/* Portal-based dropdown — no overlap issues */}
+            <AirportDropdownPortal
+              query={form.from}
+              isOpen={fromDropdownOpen}
+              onSelect={(code) => handleChange('from', code)}
+              onClose={handleFromClose}
+              anchorRef={fromInputRef}
+            />
           </div>
 
           {/* Swap Button */}
@@ -141,26 +184,40 @@ export function GlobalSearchHeader() {
           </div>
 
           {/* To Field */}
-          <div className="relative">
+          <div ref={toInputRef} className="relative">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
               To
             </label>
             <input
               required
               value={form.to}
-              onChange={(e) => handleChange('to', e.target.value.toUpperCase())}
+              onChange={(e) => {
+                handleChange('to', e.target.value.toUpperCase())
+                setToDropdownOpen(true)
+              }}
+              onFocus={() => setToDropdownOpen(true)}
               placeholder="City or airport code"
               className="input-premium pr-12"
+              autoComplete="off"
             />
             <div className="absolute bottom-3 right-3 text-slate-500">
               <Briefcase className="h-5 w-5" />
             </div>
+            {form.to && (
+              <p className="text-xs text-slate-500 mt-1">{getAirportLabel(form.to)}</p>
+            )}
+            <AirportDropdownPortal
+              query={form.to}
+              isOpen={toDropdownOpen}
+              onSelect={(code) => handleChange('to', code)}
+              onClose={handleToClose}
+              anchorRef={toInputRef}
+            />
           </div>
         </div>
 
         {/* Date and Passenger Fields */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Departure Date */}
           <div className="relative">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
               <Calendar className="inline h-3 w-3 mr-1" />
@@ -169,13 +226,13 @@ export function GlobalSearchHeader() {
             <input
               type="date"
               required
+              min={today}
               value={form.departureDate}
               onChange={(e) => handleChange('departureDate', e.target.value)}
               className="input-premium"
             />
           </div>
 
-          {/* Return Date - Only for roundtrip */}
           {form.tripType === 'roundtrip' && (
             <div className="relative">
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
@@ -184,6 +241,7 @@ export function GlobalSearchHeader() {
               </label>
               <input
                 type="date"
+                min={form.departureDate || today}
                 value={form.returnDate}
                 onChange={(e) => handleChange('returnDate', e.target.value)}
                 className="input-premium"
@@ -191,7 +249,6 @@ export function GlobalSearchHeader() {
             </div>
           )}
 
-          {/* Passengers */}
           <div className="relative">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
               <Users className="inline h-3 w-3 mr-1" />
@@ -208,7 +265,6 @@ export function GlobalSearchHeader() {
             />
           </div>
 
-          {/* Cabin Class */}
           <div className="relative">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
               Cabin Class
@@ -227,9 +283,10 @@ export function GlobalSearchHeader() {
           </div>
         </div>
 
-        {/* Flex Date Strip */}
         {form.departureDate ? (
           <FlexDateStrip
+            from={form.from}
+            to={form.to}
             selectedDate={form.departureDate}
             flexDays={form.flexDays}
             onSelect={(nextDate) => handleChange('departureDate', nextDate)}

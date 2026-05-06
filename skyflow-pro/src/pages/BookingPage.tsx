@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
-import { ArrowLeft, User, CreditCard, Shield, Check, Plane, Clock, ChevronRight, Lock, Sparkles } from 'lucide-react'
+import { ArrowLeft, User, CreditCard, Shield, Check, Plane, Clock, AlertCircle, ChevronRight, Lock, MapPin, Armchair } from 'lucide-react'
 import type { FlightOption } from '../types/flight'
-import { useBookingStore } from '../stores/bookingStore' // Import booking store
-import { SeatMap } from '../components/booking/SeatMap'
-import type { Seat } from '../services/seatService'
+import type { Seat } from '../types/seat'
+import { AirportMap } from '../components/airport/AirportMap'
+import { SeatSelectionPanel } from '../components/seats/SeatSelectionPanel'
 
 interface PassengerInfo {
     firstName: string
@@ -22,9 +22,9 @@ interface PaymentInfo {
     cardholderName: string
 }
 
-const formatter = new Intl.NumberFormat('en-US', {
+const formatter = new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'INR',
     maximumFractionDigits: 0,
 })
 
@@ -32,9 +32,11 @@ export function BookingPage() {
     const navigate = useNavigate()
     const { flightId } = useParams()
     const [flight, setFlight] = useState<FlightOption | null>(null)
+    const [returnFlight, setReturnFlight] = useState<FlightOption | null>(null)
     const [currentStep, setCurrentStep] = useState(1)
     const [isProcessing, setIsProcessing] = useState(false)
     const [agreedToTerms, setAgreedToTerms] = useState(false)
+    const [showAirportMap, setShowAirportMap] = useState(false)
     const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null)
 
     const [passenger, setPassenger] = useState<PassengerInfo>({
@@ -58,6 +60,10 @@ export function BookingPage() {
         const stored = sessionStorage.getItem('selectedFlight')
         if (stored) {
             setFlight(JSON.parse(stored))
+        }
+        const storedReturn = sessionStorage.getItem('returnFlight')
+        if (storedReturn) {
+            setReturnFlight(JSON.parse(storedReturn))
         }
     }, [flightId])
 
@@ -92,55 +98,35 @@ export function BookingPage() {
         }
     }
 
-    const { addBooking } = useBookingStore()
-
     const handleSubmit = async () => {
-        if (!flight) return
-
         setIsProcessing(true)
         // Simulate payment processing
         await new Promise((resolve) => setTimeout(resolve, 2000))
 
-        const totalWithSeat = flight.price.total + (selectedSeat?.price || 0)
-
-        const bookingData = {
-            flight,
-            passengers: [{
-                ...passenger,
-                title: 'Mr/Ms' // Default title as it's not collected in the form
-            }],
-            totalAmount: totalWithSeat,
-            seat: selectedSeat
-        }
-
-        // Add to persistent store for notifications/history
-        addBooking(bookingData)
-
+        // Generate booking ID
         const bookingId = `SKY${Date.now().toString(36).toUpperCase()}`
 
-        // Store booking details in session for ConfirmationPage
+        // Store booking details
         sessionStorage.setItem('bookingConfirmation', JSON.stringify({
             bookingId,
             flight,
+            returnFlight,
             passenger,
-            seat: selectedSeat,
-            totalAmount: totalWithSeat,
+            selectedSeat: selectedSeat ? { label: selectedSeat.label, position: selectedSeat.position, price: selectedSeat.price, type: selectedSeat.type } : null,
             bookedAt: new Date().toISOString(),
         }))
-
-        // Dispatch custom event for immediate UI updates if needed
-        window.dispatchEvent(new CustomEvent('booking-completed', { detail: { bookingId, ...bookingData } }))
 
         navigate(`/confirmation/${bookingId}`)
     }
 
     if (!flight) {
         return (
-            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-                <div className="bg-white rounded-3xl p-8 border border-slate-200 text-center max-w-md animate-scale-in shadow-sm">
-                    <h2 className="text-xl font-bold text-slate-900">No flight selected</h2>
-                    <p className="text-sm font-medium text-slate-500 mt-2">Please search for and select a flight first.</p>
-                    <Link to="/" className="btn-primary inline-flex mt-8 w-full justify-center">
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="glass rounded-2xl p-8 text-center max-w-md">
+                    <AlertCircle className="h-12 w-12 text-amber-400 mx-auto mb-4" />
+                    <h2 className="text-xl font-semibold text-slate-50">No flight selected</h2>
+                    <p className="text-sm text-slate-400 mt-2">Please search for and select a flight first.</p>
+                    <Link to="/" className="btn-primary inline-flex mt-6">
                         Search Flights
                     </Link>
                 </div>
@@ -148,55 +134,72 @@ export function BookingPage() {
         )
     }
 
+    // 4-step flow: Passenger → Seat Selection → Payment → Review
     const steps = [
-        { number: 1, title: 'Passenger', icon: User },
-        { number: 2, title: 'Seat', icon: Plane },
+        { number: 1, title: 'Passenger Details', icon: User },
+        { number: 2, title: 'Seat Selection', icon: Armchair },
         { number: 3, title: 'Payment', icon: CreditCard },
-        { number: 4, title: 'Confirm', icon: Check },
+        { number: 4, title: 'Review & Confirm', icon: Check },
     ]
 
     const isStep1Valid = passenger.firstName && passenger.lastName && passenger.email
-    const isStep2Valid = selectedSeat !== null // Seat must be selected
     const isStep3Valid = payment.cardNumber && payment.expiryDate && payment.cvv && payment.cardholderName
-
-    const totalWithSeat = flight.price.total + (selectedSeat?.price || 0)
+    const totalPrice = flight.price.total + (returnFlight ? returnFlight.price.total : 0) + (selectedSeat?.price ?? 0)
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen">
+            {/* Background */}
+            <div className="fixed top-20 right-20 h-96 w-96 rounded-full bg-sky-500/5 blur-3xl pointer-events-none" />
+            <div className="fixed bottom-20 left-20 h-72 w-72 rounded-full bg-purple-500/5 blur-3xl pointer-events-none" />
 
             <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
                 {/* Back button */}
                 <Link
                     to="/results"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors mb-6 group"
+                    className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-sky-400 transition-colors mb-6"
                 >
-                    <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                    <ArrowLeft className="h-4 w-4" />
                     Back to results
                 </Link>
 
                 {/* Header */}
-                <div className="mb-8 animate-fade-in-up">
-                    <h1 className="text-3xl font-extrabold text-slate-900 sm:text-4xl tracking-tight">Complete Your Booking</h1>
-                    <p className="text-slate-500 font-medium mt-2 flex items-center gap-2">
-                        <Lock className="h-4 w-4 text-emerald-500" />
-                        Secure checkout · Your data is encrypted
-                    </p>
+                <div className="mb-8 animate-fade-in">
+                    <h1 className="text-3xl font-bold text-slate-50">Complete Your Booking</h1>
+                    <p className="text-slate-400 mt-1">Secure checkout · Your data is encrypted</p>
+                    <div className="flex items-center gap-3 mt-3">
+                        <button
+                            type="button"
+                            onClick={() => setShowAirportMap(true)}
+                            className="btn-secondary text-xs flex items-center gap-1.5"
+                        >
+                            <MapPin className="h-3.5 w-3.5" />
+                            Airport Map
+                        </button>
+                    </div>
                 </div>
 
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                {/* Airport Map Modal */}
+                <AirportMap
+                    isOpen={showAirportMap}
+                    onClose={() => setShowAirportMap(false)}
+                    airportCode={flight.from}
+                />
+
+                {/* Progress steps */}
+                <div className="glass rounded-2xl p-4 mb-8 animate-fade-in">
                     <div className="flex items-center justify-between">
                         {steps.map((step, idx) => (
                             <div key={step.number} className="flex items-center flex-1">
                                 <div
-                                    className={`flex items-center gap-3 ${currentStep >= step.number ? 'text-slate-900' : 'text-slate-400'
+                                    className={`flex items-center gap-3 ${currentStep >= step.number ? 'text-sky-400' : 'text-slate-500'
                                         }`}
                                 >
                                     <div
-                                        className={`h-11 w-11 rounded-xl flex items-center justify-center transition-all duration-300 ${currentStep > step.number
-                                            ? 'bg-slate-900 text-white'
-                                            : currentStep === step.number
-                                                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
-                                                : 'bg-slate-100 text-slate-400'
+                                        className={`h-10 w-10 rounded-xl flex items-center justify-center transition-all ${currentStep > step.number
+                                                ? 'bg-emerald-500 text-white'
+                                                : currentStep === step.number
+                                                    ? 'bg-sky-500 text-white'
+                                                    : 'bg-slate-800 text-slate-500'
                                             }`}
                                     >
                                         {currentStep > step.number ? (
@@ -206,18 +209,15 @@ export function BookingPage() {
                                         )}
                                     </div>
                                     <div className="hidden sm:block">
-                                        <p className={`text-sm font-bold ${currentStep >= step.number ? 'text-slate-900' : 'text-slate-400'}`}>
+                                        <p className={`text-sm font-medium ${currentStep >= step.number ? 'text-slate-50' : 'text-slate-500'}`}>
                                             Step {step.number}
                                         </p>
-                                        <p className="text-xs font-semibold text-slate-500">{step.title}</p>
+                                        <p className="text-xs text-slate-500">{step.title}</p>
                                     </div>
                                 </div>
                                 {idx < steps.length - 1 && (
                                     <div className="flex-1 mx-4">
-                                        <div className={`h-1 rounded-full transition-all duration-500 ${currentStep > step.number
-                                            ? 'bg-emerald-500'
-                                            : 'bg-slate-100'
-                                            }`} />
+                                        <div className={`h-1 rounded-full ${currentStep > step.number ? 'bg-emerald-500' : 'bg-slate-800'}`} />
                                     </div>
                                 )}
                             </div>
@@ -230,44 +230,84 @@ export function BookingPage() {
                     <div className="lg:col-span-2">
                         {/* Step 1: Passenger Details */}
                         {currentStep === 1 && (
-                            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8 animate-fade-in-up">
-                                <h2 className="text-xl font-bold text-slate-900 flex items-center gap-3 mb-8">
-                                    <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center">
-                                        <User className="h-5 w-5 text-slate-800" />
-                                    </div>
+                            <div className="glass rounded-2xl p-6 animate-fade-in">
+                                <h2 className="text-lg font-semibold text-slate-50 flex items-center gap-2 mb-6">
+                                    <User className="h-5 w-5 text-sky-400" />
                                     Passenger Information
                                 </h2>
 
-                                <div className="grid gap-5 sm:grid-cols-2">
-                                    {[
-                                        { label: 'First Name *', field: 'firstName' as const, type: 'text', placeholder: 'John' },
-                                        { label: 'Last Name *', field: 'lastName' as const, type: 'text', placeholder: 'Doe' },
-                                        { label: 'Email Address *', field: 'email' as const, type: 'email', placeholder: 'john@example.com' },
-                                        { label: 'Phone Number', field: 'phone' as const, type: 'tel', placeholder: '+1 (555) 000-0000' },
-                                        { label: 'Date of Birth', field: 'dateOfBirth' as const, type: 'date', placeholder: '' },
-                                        { label: 'Passport Number', field: 'passportNumber' as const, type: 'text', placeholder: 'AB1234567' },
-                                    ].map((input) => (
-                                        <div key={input.field} className="group">
-                                            <label className="text-xs font-bold uppercase tracking-wide text-slate-500 block mb-2">{input.label}</label>
-                                            <input
-                                                type={input.type}
-                                                value={passenger[input.field]}
-                                                onChange={(e) => handlePassengerChange(input.field, input.field === 'passportNumber' ? e.target.value.toUpperCase() : e.target.value)}
-                                                className="input-cinematic"
-                                                placeholder={input.placeholder}
-                                                required={input.label.includes('*')}
-                                            />
-                                        </div>
-                                    ))}
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    <div>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">First Name *</label>
+                                        <input
+                                            type="text"
+                                            value={passenger.firstName}
+                                            onChange={(e) => handlePassengerChange('firstName', e.target.value)}
+                                            className="input-premium"
+                                            placeholder="John"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">Last Name *</label>
+                                        <input
+                                            type="text"
+                                            value={passenger.lastName}
+                                            onChange={(e) => handlePassengerChange('lastName', e.target.value)}
+                                            className="input-premium"
+                                            placeholder="Doe"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">Email Address *</label>
+                                        <input
+                                            type="email"
+                                            value={passenger.email}
+                                            onChange={(e) => handlePassengerChange('email', e.target.value)}
+                                            className="input-premium"
+                                            placeholder="john@example.com"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">Phone Number</label>
+                                        <input
+                                            type="tel"
+                                            value={passenger.phone}
+                                            onChange={(e) => handlePassengerChange('phone', e.target.value)}
+                                            className="input-premium"
+                                            placeholder="+1 (555) 000-0000"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">Date of Birth</label>
+                                        <input
+                                            type="date"
+                                            value={passenger.dateOfBirth}
+                                            onChange={(e) => handlePassengerChange('dateOfBirth', e.target.value)}
+                                            className="input-premium"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">Passport Number</label>
+                                        <input
+                                            type="text"
+                                            value={passenger.passportNumber}
+                                            onChange={(e) => handlePassengerChange('passportNumber', e.target.value.toUpperCase())}
+                                            className="input-premium"
+                                            placeholder="AB1234567"
+                                        />
+                                    </div>
                                 </div>
 
-                                <div className="mt-8 pt-6 border-t border-slate-100 flex justify-end">
+                                <div className="mt-6 pt-6 border-t border-slate-800/50 flex justify-end">
                                     <button
                                         onClick={handleNextStep}
                                         disabled={!isStep1Valid}
                                         className={`btn-primary flex items-center gap-2 ${!isStep1Valid ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     >
-                                        Select Seat
+                                        Continue to Seat Selection
                                         <ChevronRight className="h-4 w-4" />
                                     </button>
                                 </div>
@@ -276,23 +316,24 @@ export function BookingPage() {
 
                         {/* Step 2: Seat Selection */}
                         {currentStep === 2 && (
-                            <div className="space-y-6">
-                                <SeatMap
+                            <div className="space-y-4 animate-fade-in">
+                                <SeatSelectionPanel
                                     flightId={flight.id}
+                                    cabinClass={flight.cabin}
+                                    aircraft={flight.segments[0]?.aircraft}
                                     selectedSeat={selectedSeat}
                                     onSeatSelected={setSelectedSeat}
                                 />
 
-                                <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 flex justify-between">
+                                <div className="flex justify-between pt-2">
                                     <button onClick={handlePrevStep} className="btn-secondary">
                                         Back
                                     </button>
                                     <button
                                         onClick={handleNextStep}
-                                        disabled={!isStep2Valid}
-                                        className={`btn-primary flex items-center gap-2 ${!isStep2Valid ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        className="btn-primary flex items-center gap-2"
                                     >
-                                        {selectedSeat ? 'Continue to Payment' : 'Select a seat to continue'}
+                                        {selectedSeat ? 'Continue to Payment' : 'Skip & Auto-assign'}
                                         <ChevronRight className="h-4 w-4" />
                                     </button>
                                 </div>
@@ -301,52 +342,56 @@ export function BookingPage() {
 
                         {/* Step 3: Payment */}
                         {currentStep === 3 && (
-                            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8 animate-fade-in-up">
-                                <h2 className="text-xl font-bold text-slate-900 flex items-center gap-3 mb-8">
-                                    <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center">
-                                        <CreditCard className="h-5 w-5 text-slate-800" />
-                                    </div>
+                            <div className="glass rounded-2xl p-6 animate-fade-in">
+                                <h2 className="text-lg font-semibold text-slate-50 flex items-center gap-2 mb-6">
+                                    <CreditCard className="h-5 w-5 text-sky-400" />
                                     Payment Details
                                 </h2>
 
-                                <div className="space-y-5">
-                                    {[
-                                        { label: 'Cardholder Name *', field: 'cardholderName' as const, type: 'text', placeholder: 'John Doe', maxLength: undefined },
-                                        { label: 'Card Number *', field: 'cardNumber' as const, type: 'text', placeholder: '4242 4242 4242 4242', maxLength: 19 },
-                                    ].map((input) => (
-                                        <div key={input.field} className="group">
-                                            <label className="text-xs font-bold uppercase tracking-wide text-slate-500 block mb-2">{input.label}</label>
-                                            <input
-                                                type={input.type}
-                                                value={payment[input.field]}
-                                                onChange={(e) => handlePaymentChange(input.field, input.field === 'cardNumber' ? formatCardNumber(e.target.value) : e.target.value)}
-                                                className="input-cinematic"
-                                                placeholder={input.placeholder}
-                                                maxLength={input.maxLength}
-                                                required
-                                            />
-                                        </div>
-                                    ))}
-                                    <div className="grid grid-cols-2 gap-5">
-                                        <div className="group">
-                                            <label className="text-xs font-bold uppercase tracking-wide text-slate-500 block mb-2">Expiry Date *</label>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">Cardholder Name *</label>
+                                        <input
+                                            type="text"
+                                            value={payment.cardholderName}
+                                            onChange={(e) => handlePaymentChange('cardholderName', e.target.value)}
+                                            className="input-premium"
+                                            placeholder="John Doe"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">Card Number *</label>
+                                        <input
+                                            type="text"
+                                            value={payment.cardNumber}
+                                            onChange={(e) => handlePaymentChange('cardNumber', formatCardNumber(e.target.value))}
+                                            className="input-premium"
+                                            placeholder="4242 4242 4242 4242"
+                                            maxLength={19}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-xs font-medium text-slate-400 block mb-2">Expiry Date *</label>
                                             <input
                                                 type="text"
                                                 value={payment.expiryDate}
                                                 onChange={(e) => handlePaymentChange('expiryDate', e.target.value)}
-                                                className="input-cinematic"
+                                                className="input-premium"
                                                 placeholder="MM/YY"
                                                 maxLength={5}
                                                 required
                                             />
                                         </div>
-                                        <div className="group">
-                                            <label className="text-xs font-bold uppercase tracking-wide text-slate-500 block mb-2">CVV *</label>
+                                        <div>
+                                            <label className="text-xs font-medium text-slate-400 block mb-2">CVV *</label>
                                             <input
                                                 type="password"
                                                 value={payment.cvv}
                                                 onChange={(e) => handlePaymentChange('cvv', e.target.value)}
-                                                className="input-cinematic"
+                                                className="input-premium"
                                                 placeholder="•••"
                                                 maxLength={4}
                                                 required
@@ -355,14 +400,12 @@ export function BookingPage() {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-3">
-                                    <div className="h-8 w-8 rounded-lg bg-white shadow-sm flex items-center justify-center shrink-0">
-                                        <Lock className="h-4 w-4 text-slate-700" />
-                                    </div>
-                                    <p className="text-sm font-semibold text-slate-700">Your payment is secured with 256-bit SSL encryption</p>
+                                <div className="mt-4 p-3 rounded-lg bg-sky-950/30 border border-sky-500/20 flex items-center gap-2">
+                                    <Lock className="h-4 w-4 text-sky-400" />
+                                    <p className="text-xs text-sky-300">Your payment is secured with 256-bit SSL encryption</p>
                                 </div>
 
-                                <div className="mt-8 pt-6 border-t border-slate-100 flex justify-between">
+                                <div className="mt-6 pt-6 border-t border-slate-800/50 flex justify-between">
                                     <button onClick={handlePrevStep} className="btn-secondary">
                                         Back
                                     </button>
@@ -380,81 +423,87 @@ export function BookingPage() {
 
                         {/* Step 4: Review & Confirm */}
                         {currentStep === 4 && (
-                            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8 animate-fade-in-up">
-                                <h2 className="text-xl font-bold text-slate-900 flex items-center gap-3 mb-8">
-                                    <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center">
-                                        <Sparkles className="h-5 w-5 text-slate-800" />
-                                    </div>
+                            <div className="glass rounded-2xl p-6 animate-fade-in">
+                                <h2 className="text-lg font-semibold text-slate-50 flex items-center gap-2 mb-6">
+                                    <Check className="h-5 w-5 text-sky-400" />
                                     Review Your Booking
                                 </h2>
 
                                 {/* Passenger summary */}
-                                <div className="p-5 rounded-2xl bg-slate-50 mb-4 border border-slate-100">
-                                    <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Passenger</h3>
-                                    <p className="text-xl font-bold text-slate-900">
+                                <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
+                                    <h3 className="text-sm font-medium text-slate-300 mb-2">Passenger</h3>
+                                    <p className="text-lg font-semibold text-slate-50">
                                         {passenger.firstName} {passenger.lastName}
                                     </p>
-                                    <p className="text-sm font-medium text-slate-500">{passenger.email}</p>
+                                    <p className="text-sm text-slate-400">{passenger.email}</p>
                                 </div>
 
-                                <div className="p-5 rounded-2xl bg-slate-50 mb-4 border border-slate-100">
-                                    <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Seat Selected</h3>
-                                    <p className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                                        <Plane className="h-5 w-5 text-slate-500 rotate-90" />
-                                        {selectedSeat?.seatNumber}
-                                    </p>
-                                    <p className="text-sm font-medium text-slate-500">
-                                        {selectedSeat?.type === 'STANDARD' ? 'Standard Seat' :
-                                            selectedSeat?.type === 'PREFERRED' ? 'Preferred Seat' : 'Premium / Extra Legroom'}
-                                    </p>
-                                </div>
+                                {/* Seat summary */}
+                                {selectedSeat && (
+                                    <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
+                                        <h3 className="text-sm font-medium text-slate-300 mb-2">Selected Seat</h3>
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-10 w-10 rounded-lg bg-sky-500 flex items-center justify-center text-white font-bold shadow-lg shadow-sky-500/20">
+                                                {selectedSeat.label}
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-semibold text-slate-50">
+                                                    Seat {selectedSeat.label} · {selectedSeat.position.charAt(0).toUpperCase() + selectedSeat.position.slice(1)}
+                                                </p>
+                                                <p className="text-xs text-slate-400">
+                                                    {selectedSeat.price > 0 ? formatter.format(selectedSeat.price) : 'Free — no extra charge'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Payment summary */}
-                                <div className="p-5 rounded-2xl bg-slate-50 mb-6 border border-slate-100">
-                                    <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Payment Method</h3>
-                                    <p className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                                        <CreditCard className="h-5 w-5 text-slate-500" />
+                                <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
+                                    <h3 className="text-sm font-medium text-slate-300 mb-2">Payment Method</h3>
+                                    <p className="text-lg font-semibold text-slate-50 flex items-center gap-2">
+                                        <CreditCard className="h-5 w-5 text-slate-400" />
                                         •••• •••• •••• {payment.cardNumber.slice(-4)}
                                     </p>
-                                    <p className="text-sm font-medium text-slate-500">{payment.cardholderName}</p>
+                                    <p className="text-sm text-slate-400">{payment.cardholderName}</p>
                                 </div>
 
                                 {/* Terms */}
-                                <div className="p-5 rounded-2xl bg-slate-100 border border-slate-200 mb-8">
-                                    <label className="flex items-start gap-4 cursor-pointer">
+                                <div className="p-4 rounded-xl bg-slate-800/30 mb-6">
+                                    <label className="flex items-start gap-3 cursor-pointer">
                                         <input
                                             type="checkbox"
                                             checked={agreedToTerms}
                                             onChange={(e) => setAgreedToTerms(e.target.checked)}
-                                            className="mt-1 h-5 w-5 rounded border-slate-300 bg-white text-slate-900 focus:ring-slate-900 cursor-pointer"
+                                            className="mt-1 h-4 w-4 rounded border-slate-600 bg-slate-800 text-sky-500 focus:ring-sky-500"
                                         />
-                                        <span className="text-sm font-medium text-slate-700 leading-relaxed">
-                                            I agree to the <button className="font-bold border-b border-slate-900 hover:text-slate-900 pb-0.5">Terms of Service</button>,{' '}
-                                            <button className="font-bold border-b border-slate-900 hover:text-slate-900 pb-0.5">Privacy Policy</button>, and the airline's{' '}
-                                            <button className="font-bold border-b border-slate-900 hover:text-slate-900 pb-0.5">fare rules</button>.
+                                        <span className="text-sm text-slate-400">
+                                            I agree to the <button className="text-sky-400 hover:underline">Terms of Service</button>,{' '}
+                                            <button className="text-sky-400 hover:underline">Privacy Policy</button>, and the airline's{' '}
+                                            <button className="text-sky-400 hover:underline">fare rules</button>.
                                         </span>
                                     </label>
                                 </div>
 
-                                <div className="mt-8 pt-6 border-t border-slate-100 flex justify-between">
+                                <div className="mt-6 pt-6 border-t border-slate-800/50 flex justify-between">
                                     <button onClick={handlePrevStep} className="btn-secondary">
                                         Back
                                     </button>
                                     <button
                                         onClick={handleSubmit}
                                         disabled={!agreedToTerms || isProcessing}
-                                        className={`btn-gradient flex items-center gap-2 min-w-[200px] justify-center ${!agreedToTerms || isProcessing ? 'opacity-50 cursor-not-allowed' : ''
+                                        className={`btn-primary flex items-center gap-2 min-w-[180px] justify-center ${!agreedToTerms || isProcessing ? 'opacity-50 cursor-not-allowed' : ''
                                             }`}
                                     >
                                         {isProcessing ? (
                                             <>
-                                                <div className="h-5 w-5 border-2 border-slate-400 border-t-white rounded-full animate-spin" />
+                                                <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                                 Processing...
                                             </>
                                         ) : (
                                             <>
                                                 <Lock className="h-4 w-4" />
-                                                Pay {formatter.format(totalWithSeat)}
+                                                Pay {formatter.format(totalPrice)}
                                             </>
                                         )}
                                     </button>
@@ -465,72 +514,108 @@ export function BookingPage() {
 
                     {/* Sidebar - Flight Summary */}
                     <div className="lg:col-span-1">
-                        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sticky top-24 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                            <h3 className="text-xs font-bold text-slate-500 mb-5 uppercase tracking-widest">Flight Summary</h3>
+                        <div className="glass rounded-2xl p-5 sticky top-24 animate-fade-in">
+                            <h3 className="text-sm font-semibold text-slate-300 mb-4">Flight Summary</h3>
 
                             {/* Flight details */}
-                            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 mb-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="h-12 w-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-sm shrink-0">
-                                        <Plane className="h-6 w-6 text-slate-800" />
+                            <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
+                                <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">Outbound</div>
+                                <div className="flex items-center gap-3">
+                                    <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
+                                        <Plane className="h-5 w-5 text-white" />
                                     </div>
                                     <div>
-                                        <p className="font-extrabold text-slate-900 text-lg">
+                                        <p className="font-semibold text-slate-50">
                                             {flight.from} → {flight.to}
                                         </p>
-                                        <p className="text-sm font-medium text-slate-500">
+                                        <p className="text-xs text-slate-400">
                                             {flight.segments[0]?.marketingCarrier}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="mt-4 pt-4 border-t border-slate-200 flex items-center gap-2 text-sm font-semibold text-slate-500">
-                                    <Clock className="h-4 w-4" />
+                                <div className="mt-3 pt-3 border-t border-slate-700/50 flex items-center gap-2 text-xs text-slate-400">
+                                    <Clock className="h-3.5 w-3.5" />
                                     <span>
                                         {Math.floor(flight.totalDurationMinutes / 60)}h {flight.totalDurationMinutes % 60}m
                                     </span>
-                                    <span className="text-slate-300">•</span>
+                                    <span className="text-slate-600">•</span>
                                     <span>{flight.stops === 0 ? 'Non-stop' : `${flight.stops} stop`}</span>
                                 </div>
                             </div>
 
+                            {returnFlight && (
+                                <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
+                                    <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">Return</div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                                            <Plane className="h-5 w-5 text-white rotate-[135deg]" />
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold text-slate-50">
+                                                {returnFlight.from} → {returnFlight.to}
+                                            </p>
+                                            <p className="text-xs text-slate-400">
+                                                {returnFlight.segments[0]?.marketingCarrier}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="mt-3 pt-3 border-t border-slate-700/50 flex items-center gap-2 text-xs text-slate-400">
+                                        <Clock className="h-3.5 w-3.5" />
+                                        <span>
+                                            {Math.floor(returnFlight.totalDurationMinutes / 60)}h {returnFlight.totalDurationMinutes % 60}m
+                                        </span>
+                                        <span className="text-slate-600">•</span>
+                                        <span>{returnFlight.stops === 0 ? 'Non-stop' : `${returnFlight.stops} stop`}</span>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Price breakdown */}
-                            <div className="space-y-4 text-sm font-medium">
+                            <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
-                                    <span className="text-slate-500">Base fare</span>
-                                    <span className="text-slate-900">{formatter.format(flight.price.baseFare)}</span>
+                                    <span className="text-slate-400">Base fare</span>
+                                    <span className="text-slate-200">{formatter.format(flight.price.baseFare + (returnFlight?.price.baseFare ?? 0))}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-slate-500">Taxes & fees</span>
-                                    <span className="text-slate-900">{formatter.format(flight.price.taxesAndFees)}</span>
+                                    <span className="text-slate-400">Taxes & fees</span>
+                                    <span className="text-slate-200">{formatter.format(flight.price.taxesAndFees + (returnFlight?.price.taxesAndFees ?? 0))}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-slate-500">Carrier charges</span>
-                                    <span className="text-slate-900">{formatter.format(flight.price.carrierCharges)}</span>
+                                    <span className="text-slate-400">Carrier charges</span>
+                                    <span className="text-slate-200">{formatter.format(flight.price.carrierCharges + (returnFlight?.price.carrierCharges ?? 0))}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-slate-500">Seat selection</span>
-                                    <span className={selectedSeat?.price ? "text-slate-900" : "text-emerald-600"}>
-                                        {selectedSeat ? (selectedSeat.price > 0 ? formatter.format(selectedSeat.price) : 'Free') : 'Not selected'}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between pt-5 mt-2 border-t border-slate-200">
-                                    <span className="font-bold text-slate-900">Total</span>
-                                    <span className="text-2xl font-black text-slate-900">{formatter.format(totalWithSeat)}</span>
+                                {selectedSeat && selectedSeat.price > 0 && (
+                                    <div className="flex justify-between">
+                                        <span className="text-amber-300">Seat {selectedSeat.label} surcharge</span>
+                                        <span className="text-amber-300">{formatter.format(selectedSeat.price)}</span>
+                                    </div>
+                                )}
+                                {selectedSeat && selectedSeat.price === 0 && (
+                                    <div className="flex justify-between">
+                                        <span className="text-emerald-300">Seat {selectedSeat.label}</span>
+                                        <span className="text-emerald-300">Free</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between pt-3 border-t border-slate-800/50">
+                                    <span className="font-semibold text-slate-50">Total</span>
+                                    <span className="text-xl font-bold text-sky-400">{formatter.format(totalPrice)}</span>
                                 </div>
                             </div>
 
                             {/* Trust badges */}
-                            <div className="mt-8 pt-6 border-t border-slate-100 space-y-4">
-                                {[
-                                    { icon: Shield, text: '100% Secure payment', color: 'text-emerald-600' },
-                                    { icon: Check, text: 'Instant confirmation', color: 'text-emerald-600' },
-                                    { icon: Check, text: '24/7 customer support', color: 'text-emerald-600' },
-                                ].map((badge, idx) => (
-                                    <div key={idx} className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                                        <badge.icon className={`h-5 w-5 ${badge.color}`} />
-                                        <span>{badge.text}</span>
-                                    </div>
-                                ))}
+                            <div className="mt-6 pt-4 border-t border-slate-800/50 space-y-2">
+                                <div className="flex items-center gap-2 text-xs text-slate-400">
+                                    <Shield className="h-4 w-4 text-emerald-500" />
+                                    <span>100% Secure payment</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-xs text-slate-400">
+                                    <Check className="h-4 w-4 text-emerald-500" />
+                                    <span>Instant confirmation</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-xs text-slate-400">
+                                    <Check className="h-4 w-4 text-emerald-500" />
+                                    <span>24/7 customer support</span>
+                                </div>
                             </div>
                         </div>
                     </div>

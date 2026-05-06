@@ -1,101 +1,128 @@
-import { useSearchParams, Link } from 'react-router-dom'
-import { ArrowLeft, Filter, Plane, RefreshCw, Check } from 'lucide-react'
+import { useSearchParams, Link, useNavigate } from 'react-router-dom'
+import { ArrowLeft, Filter, Plane, RefreshCw, CheckCircle, ArrowRight } from 'lucide-react'
 import { FlightResultsGrid } from '../components/results/FlightResultsGrid'
 import { useFlightSearch } from '../hooks/useFlightSearch'
-import { useState, useMemo, useEffect } from 'react'
-import { PostBookingTrust } from '../components/results/PostBookingTrust'
+import { useState, useMemo } from 'react'
+import { AIRPORTS } from '../mocks/mockSearchResults'
+import type { FlightOption } from '../types/flight'
 
-type SortOption = 'price' | 'duration' | 'departure' | 'arrival'
+type SortOption = 'price' | 'duration' | 'departure'
+
+const formatter = new Intl.NumberFormat('en-IN', {
+  style: 'currency',
+  currency: 'INR',
+  maximumFractionDigits: 0,
+})
 
 export function ResultsPage() {
+  const navigate = useNavigate()
   const [params] = useSearchParams()
-  const from = params.get('from') ?? 'JFK'
-  const to = params.get('to') ?? 'LAX'
+  const from = params.get('from') ?? 'DEL'
+  const to = params.get('to') ?? 'BOM'
   const date = params.get('date') ?? ''
+  const returnDate = params.get('return') ?? ''
   const flex = Number(params.get('flex') ?? 3)
   const adults = Number(params.get('adults') ?? 1)
   const cabin = params.get('cabin') ?? 'economy'
+  const tripType = params.get('tripType') ?? 'oneway'
 
-  const query = useFlightSearch({ from, to, date, flex, adults, cabin })
-  const results = query.data?.results ?? []
+  const query = useFlightSearch({ from, to, date, flex, adults, cabin, tripType, returnDate })
+  const data = query.data
+  const isRoundTrip = data?.tripType === 'roundtrip'
+
+  // Round trip selection state
+  const [selectedOutbound, setSelectedOutbound] = useState<FlightOption | null>(null)
+  const [selectedReturn, setSelectedReturn] = useState<FlightOption | null>(null)
+
+  // Which leg is the user currently viewing
+  const [activeLeg, setActiveLeg] = useState<'outbound' | 'return'>('outbound')
+
+  // Get the correct flight list based on trip type and active leg
+  const rawResults = useMemo(() => {
+    if (!data) return []
+    if (isRoundTrip) {
+      return activeLeg === 'outbound'
+        ? (data.outboundFlights ?? [])
+        : (data.returnFlights ?? [])
+    }
+    return data.results ?? []
+  }, [data, isRoundTrip, activeLeg])
 
   const [sortBy, setSortBy] = useState<SortOption>('price')
   const [showFilters, setShowFilters] = useState(false)
+  const [stopsFilter, setStopsFilter] = useState<string>('any')
+  const [airlineFilter, setAirlineFilter] = useState<string>('all')
+  const [timeFilter, setTimeFilter] = useState<string>('any')
+  const [priceFilter, setPriceFilter] = useState<string>('any')
 
-  // Filter States
-  const [activeFilters, setActiveFilters] = useState({
-    stops: 'Any',
-    airline: 'All airlines',
-    departureTime: 'Any time',
-    priceRange: 'Any price'
-  })
+  // Get airport display names
+  const fromAirport = AIRPORTS.find((a) => a.code === from)
+  const toAirport = AIRPORTS.find((a) => a.code === to)
 
-  // Pending filters (what the user is selecting before clicking Apply)
-  const [pendingFilters, setPendingFilters] = useState(activeFilters)
+  // Get unique airlines for filter dropdown
+  const uniqueAirlines = useMemo(() => {
+    const set = new Set<string>()
+    rawResults.forEach((f) => {
+      const carrier = f.segments[0]?.marketingCarrier
+      if (carrier) set.add(carrier)
+    })
+    return Array.from(set).sort()
+  }, [rawResults])
 
-  // Reset pending filters when opening filter panel
-  useEffect(() => {
-    if (showFilters) {
-      setPendingFilters(activeFilters)
+  // Apply filters and sorting
+  const results = useMemo(() => {
+    let filtered = [...rawResults]
+
+    // Stops filter
+    if (stopsFilter === 'nonstop') {
+      filtered = filtered.filter((f) => f.stops === 0)
+    } else if (stopsFilter === '1stop') {
+      filtered = filtered.filter((f) => f.stops === 1)
     }
-  }, [showFilters, activeFilters])
 
-  // Get unique airlines from results
-  const availableAirlines = useMemo(() => {
-    const airlines = new Set<string>()
-    results.forEach(flight => {
-      if (flight.segments[0]) {
-        airlines.add(flight.segments[0].marketingCarrier)
-      }
-    })
-    return Array.from(airlines).sort()
-  }, [results])
+    // Airline filter
+    if (airlineFilter !== 'all') {
+      filtered = filtered.filter((f) => f.segments[0]?.marketingCarrier === airlineFilter)
+    }
 
-  // Filter Logic
-  const filteredResults = useMemo(() => {
-    let filtered = results.filter(flight => {
-      // Stops
-      if (activeFilters.stops !== 'Any') {
-        if (activeFilters.stops === 'Non-stop' && flight.stops !== 0) return false
-        if (activeFilters.stops === '1 stop' && flight.stops !== 1) return false
-        if (activeFilters.stops === '2+ stops' && flight.stops < 2) return false
-      }
+    // Time filter
+    if (timeFilter !== 'any') {
+      filtered = filtered.filter((f) => {
+        const hour = new Date(f.segments[0]?.departureTime ?? '').getHours()
+        if (timeFilter === 'morning') return hour >= 6 && hour < 12
+        if (timeFilter === 'afternoon') return hour >= 12 && hour < 18
+        if (timeFilter === 'evening') return hour >= 18 || hour < 6
+        return true
+      })
+    }
 
-      // Airline
-      if (activeFilters.airline !== 'All airlines') {
-        if (flight.segments[0].marketingCarrier !== activeFilters.airline) return false
-      }
+    // Price filter
+    if (priceFilter !== 'any') {
+      filtered = filtered.filter((f) => {
+        if (priceFilter === 'under5k') return f.price.total < 5000
+        if (priceFilter === '5k-10k') return f.price.total >= 5000 && f.price.total <= 10000
+        if (priceFilter === 'above10k') return f.price.total > 10000
+        return true
+      })
+    }
 
-      // Departure Time
-      if (activeFilters.departureTime !== 'Any time') {
-        const hour = new Date(flight.segments[0].departureTime).getHours()
-        if (activeFilters.departureTime === 'Morning (6AM-12PM)' && (hour < 6 || hour >= 12)) return false
-        if (activeFilters.departureTime === 'Afternoon (12PM-6PM)' && (hour < 12 || hour >= 18)) return false
-        if (activeFilters.departureTime === 'Evening (6PM-12AM)' && (hour < 18)) return false
-      }
-
-      // Price Range
-      if (activeFilters.priceRange !== 'Any price') {
-        const price = flight.price.total
-        if (activeFilters.priceRange === 'Under $300' && price >= 300) return false
-        if (activeFilters.priceRange === '$300 - $500' && (price < 300 || price > 500)) return false
-        if (activeFilters.priceRange === '$500+' && price <= 500) return false
-      }
-
-      return true
-    })
-
-    // Sort Logic
-    return filtered.sort((a, b) => {
+    // Sort
+    filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'price': return a.price.total - b.price.total
-        case 'duration': return a.totalDurationMinutes - b.totalDurationMinutes
-        case 'departure': return new Date(a.segments[0].departureTime).getTime() - new Date(b.segments[0].departureTime).getTime()
-        case 'arrival': return new Date(a.segments[a.segments.length - 1].arrivalTime).getTime() - new Date(b.segments[b.segments.length - 1].arrivalTime).getTime()
-        default: return 0
+        case 'price':
+          return a.price.total - b.price.total
+        case 'duration':
+          return a.totalDurationMinutes - b.totalDurationMinutes
+        case 'departure':
+          return new Date(a.segments[0]?.departureTime ?? '').getTime() -
+                 new Date(b.segments[0]?.departureTime ?? '').getTime()
+        default:
+          return 0
       }
     })
-  }, [results, activeFilters, sortBy])
+
+    return filtered
+  }, [rawResults, sortBy, stopsFilter, airlineFilter, timeFilter, priceFilter])
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return 'Flexible dates'
@@ -103,48 +130,79 @@ export function ResultsPage() {
     return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
   }
 
-  const handleApplyFilters = () => {
-    setActiveFilters(pendingFilters)
+  const activeFilterCount = [stopsFilter !== 'any', airlineFilter !== 'all', timeFilter !== 'any', priceFilter !== 'any'].filter(Boolean).length
+
+  // Round trip total price
+  const roundTripTotal = (selectedOutbound?.price.total ?? 0) + (selectedReturn?.price.total ?? 0)
+
+  // Handle flight selection in round trip mode
+  const handleSelectFlight = (flight: FlightOption) => {
+    if (!isRoundTrip) return
+    if (activeLeg === 'outbound') {
+      setSelectedOutbound(flight)
+      // Auto-switch to return leg
+      setActiveLeg('return')
+    } else {
+      setSelectedReturn(flight)
+    }
+  }
+
+  const handleProceedToBooking = () => {
+    if (selectedOutbound && selectedReturn) {
+      sessionStorage.setItem('selectedFlight', JSON.stringify(selectedOutbound))
+      sessionStorage.setItem('returnFlight', JSON.stringify(selectedReturn))
+      navigate(`/booking/${selectedOutbound.id}`)
+    }
   }
 
   return (
-    <div className="relative min-h-screen bg-slate-50">
+    <div className="relative min-h-screen">
+      {/* Background decorations */}
+      <div className="fixed top-40 right-10 h-96 w-96 rounded-full bg-sky-500/5 blur-3xl pointer-events-none" />
+      <div className="fixed bottom-20 left-10 h-72 w-72 rounded-full bg-purple-500/5 blur-3xl pointer-events-none" />
 
       <div className="mx-auto flex max-w-6xl flex-col px-4 py-6 sm:px-6 lg:px-8">
         {/* Back button and header */}
         <div className="mb-6">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors mb-4 group"
+            className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-sky-400 transition-colors mb-4"
           >
-            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+            <ArrowLeft className="h-4 w-4" />
             New search
           </Link>
 
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="animate-fade-in">
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-500 flex items-center gap-2">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-sky-400 flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-500" />
                 </span>
-                Live Results
+                Live Results {isRoundTrip && '· Round Trip'}
               </p>
-              <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl flex items-center gap-3">
-                <span>{from}</span>
-                <span className="inline-flex items-center gap-1">
-                  <div className="h-10 w-10 rounded-2xl bg-slate-100 flex items-center justify-center">
-                    <Plane className="h-5 w-5 text-slate-800 rotate-90" />
-                  </div>
+              <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl flex items-center gap-3">
+                {from}
+                <span className="inline-flex items-center gap-1 text-sky-400">
+                  {isRoundTrip ? (
+                    <ArrowRight className="h-6 w-6" />
+                  ) : (
+                    <Plane className="h-6 w-6 rotate-90" />
+                  )}
                 </span>
-                <span>{to}</span>
+                {to}
               </h1>
-              <p className="mt-2 text-sm font-medium text-slate-500">
-                {formatDate(date)} • {adults} traveler{adults > 1 ? 's' : ''} • {cabin.charAt(0).toUpperCase() + cabin.slice(1)}
+              <p className="mt-1 text-sm text-slate-400">
+                {fromAirport ? `${fromAirport.city}` : from} → {toAirport ? `${toAirport.city}` : to}
+              </p>
+              <p className="mt-1 text-sm text-slate-400">
+                {formatDate(date)}
+                {isRoundTrip && returnDate && ` — ${formatDate(returnDate)}`}
+                {' '}• {adults} traveler{adults > 1 ? 's' : ''} • {cabin.charAt(0).toUpperCase() + cabin.slice(1)}
               </p>
             </div>
 
-            <div className="flex items-center gap-3 animate-hero-reveal" style={{ animationDelay: '0.15s' }}>
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => query.refetch()}
                 disabled={query.isLoading}
@@ -157,35 +215,151 @@ export function ResultsPage() {
           </div>
         </div>
 
+        {/* ── Round Trip Leg Selector ── */}
+        {isRoundTrip && (
+          <div className="mb-6 animate-fade-in">
+            <div className="glass rounded-2xl p-4">
+              <div className="flex items-center gap-4">
+                {/* Outbound tab */}
+                <button
+                  onClick={() => setActiveLeg('outbound')}
+                  className={`flex-1 flex items-center gap-3 p-4 rounded-xl border transition-all duration-300 ${
+                    activeLeg === 'outbound'
+                      ? 'border-sky-500/50 bg-sky-500/10'
+                      : 'border-slate-700/40 bg-slate-800/30 hover:bg-slate-800/60'
+                  }`}
+                >
+                  <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${
+                    selectedOutbound ? 'bg-emerald-500/20' : activeLeg === 'outbound' ? 'bg-sky-500/20' : 'bg-slate-800'
+                  }`}>
+                    {selectedOutbound ? (
+                      <CheckCircle className="h-5 w-5 text-emerald-400" />
+                    ) : (
+                      <Plane className="h-5 w-5 text-sky-400 -rotate-45" />
+                    )}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Outbound</p>
+                    <p className="text-sm font-semibold text-slate-200">
+                      {from} → {to} · {formatDate(date)}
+                    </p>
+                    {selectedOutbound && (
+                      <p className="text-xs text-emerald-400 mt-0.5">
+                        {selectedOutbound.segments[0]?.marketingCarrier} · {formatter.format(selectedOutbound.price.total)}
+                      </p>
+                    )}
+                  </div>
+                </button>
+
+                {/* Return tab */}
+                <button
+                  onClick={() => setActiveLeg('return')}
+                  className={`flex-1 flex items-center gap-3 p-4 rounded-xl border transition-all duration-300 ${
+                    activeLeg === 'return'
+                      ? 'border-sky-500/50 bg-sky-500/10'
+                      : 'border-slate-700/40 bg-slate-800/30 hover:bg-slate-800/60'
+                  }`}
+                >
+                  <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${
+                    selectedReturn ? 'bg-emerald-500/20' : activeLeg === 'return' ? 'bg-sky-500/20' : 'bg-slate-800'
+                  }`}>
+                    {selectedReturn ? (
+                      <CheckCircle className="h-5 w-5 text-emerald-400" />
+                    ) : (
+                      <Plane className="h-5 w-5 text-purple-400 rotate-[135deg]" />
+                    )}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Return</p>
+                    <p className="text-sm font-semibold text-slate-200">
+                      {to} → {from} · {formatDate(returnDate)}
+                    </p>
+                    {selectedReturn && (
+                      <p className="text-xs text-emerald-400 mt-0.5">
+                        {selectedReturn.segments[0]?.marketingCarrier} · {formatter.format(selectedReturn.price.total)}
+                      </p>
+                    )}
+                  </div>
+                </button>
+              </div>
+
+              {/* Total price when both are selected */}
+              {selectedOutbound && selectedReturn && (
+                <div className="mt-4 pt-4 border-t border-slate-800/50 flex items-center justify-between animate-fade-in">
+                  <div>
+                    <p className="text-xs text-slate-400 uppercase tracking-wider font-medium">Round Trip Total</p>
+                    <p className="text-2xl font-bold text-emerald-400">
+                      {formatter.format(roundTripTotal)}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      {formatter.format(selectedOutbound.price.total)} outbound + {formatter.format(selectedReturn.price.total)} return
+                    </p>
+                  </div>
+                  <button 
+                    onClick={handleProceedToBooking}
+                    className="btn-primary flex items-center gap-2"
+                  >
+                    Proceed to Booking
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Filters and Sort Bar */}
-        <div className="mb-6 bg-white rounded-3xl border border-slate-200 p-5 shadow-sm animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+        <div className="mb-6 glass rounded-2xl p-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`btn-secondary flex items-center gap-2 ${showFilters ? 'ring-2 ring-slate-900 bg-slate-50' : ''}`}
+                className={`btn-secondary flex items-center gap-2 ${showFilters ? 'ring-1 ring-sky-500/50' : ''}`}
               >
                 <Filter className="h-4 w-4" />
                 Filters
+                {activeFilterCount > 0 && (
+                  <span className="flex items-center justify-center h-5 w-5 rounded-full bg-sky-500 text-white text-[0.6rem] font-bold">
+                    {activeFilterCount}
+                  </span>
+                )}
               </button>
 
+              {/* Quick filters */}
               <div className="hidden sm:flex items-center gap-2">
-                <span className="text-xs font-semibold text-slate-500 ml-2 px-3 py-1 rounded-full bg-slate-100">
-                  {filteredResults.length} flights found
-                </span>
+                <button
+                  onClick={() => setStopsFilter(stopsFilter === 'nonstop' ? 'any' : 'nonstop')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    stopsFilter === 'nonstop'
+                      ? 'bg-sky-500/20 text-sky-300 ring-1 ring-sky-500/30'
+                      : 'bg-slate-800/50 text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  Non-stop only
+                </button>
+                <button
+                  onClick={() => setTimeFilter(timeFilter === 'morning' ? 'any' : 'morning')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    timeFilter === 'morning'
+                      ? 'bg-sky-500/20 text-sky-300 ring-1 ring-sky-500/30'
+                      : 'bg-slate-800/50 text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  Morning flights
+                </button>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500">Sort by:</span>
-              <div className="flex items-center gap-1 rounded-2xl bg-slate-100 p-1">
+              <div className="flex items-center gap-1 rounded-xl bg-slate-900/80 p-1">
                 {(['price', 'duration', 'departure'] as SortOption[]).map((option) => (
                   <button
                     key={option}
                     onClick={() => setSortBy(option)}
-                    className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 ${sortBy === option
-                      ? 'bg-white text-slate-900 shadow-sm'
-                      : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 ${sortBy === option
+                        ? 'bg-sky-500 text-white'
+                        : 'text-slate-400 hover:text-slate-200'
                       }`}
                   >
                     {option.charAt(0).toUpperCase() + option.slice(1)}
@@ -197,133 +371,177 @@ export function ResultsPage() {
 
           {/* Expanded filters */}
           {showFilters && (
-            <div className="mt-5 pt-5 border-t border-slate-100 animate-fade-in">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {[
-                  {
-                    label: 'Stops', field: 'stops', options: ['Any', 'Non-stop', '1 stop', '2+ stops'],
-                  },
-                  {
-                    label: 'Airlines', field: 'airline', options: ['All airlines', ...availableAirlines],
-                  },
-                  {
-                    label: 'Departure time', field: 'departureTime', options: ['Any time', 'Morning (6AM-12PM)', 'Afternoon (12PM-6PM)', 'Evening (6PM-12AM)'],
-                  },
-                  {
-                    label: 'Price range', field: 'priceRange', options: ['Any price', 'Under $300', '$300 - $500', '$500+'],
-                  },
-                ].map((filter) => (
-                  <div key={filter.field} className="group">
-                    <label className="text-xs font-bold tracking-wide text-slate-500 block mb-2 uppercase">{filter.label}</label>
-                    <select
-                      value={(pendingFilters as Record<string, string>)[filter.field]}
-                      onChange={(e) => setPendingFilters(prev => ({ ...prev, [filter.field]: e.target.value }))}
-                      className="input-cinematic text-sm"
-                    >
-                      {filter.options.map(opt => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
-                  </div>
-                ))}
+            <div className="mt-4 pt-4 border-t border-slate-800/50 grid grid-cols-2 sm:grid-cols-4 gap-4 animate-fade-in">
+              <div>
+                <label className="text-xs font-medium text-slate-400 block mb-2">Stops</label>
+                <select
+                  value={stopsFilter}
+                  onChange={(e) => setStopsFilter(e.target.value)}
+                  className="input-premium text-sm py-2"
+                >
+                  <option value="any">Any</option>
+                  <option value="nonstop">Non-stop</option>
+                  <option value="1stop">1 stop</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-medium text-slate-400 block mb-2">Airlines</label>
+                <select
+                  value={airlineFilter}
+                  onChange={(e) => setAirlineFilter(e.target.value)}
+                  className="input-premium text-sm py-2"
+                >
+                  <option value="all">All airlines</option>
+                  {uniqueAirlines.map((airline) => (
+                    <option key={airline} value={airline}>{airline}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-medium text-slate-400 block mb-2">Departure time</label>
+                <select
+                  value={timeFilter}
+                  onChange={(e) => setTimeFilter(e.target.value)}
+                  className="input-premium text-sm py-2"
+                >
+                  <option value="any">Any time</option>
+                  <option value="morning">Morning (6AM-12PM)</option>
+                  <option value="afternoon">Afternoon (12PM-6PM)</option>
+                  <option value="evening">Evening (6PM-6AM)</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-medium text-slate-400 block mb-2">Price range</label>
+                <select
+                  value={priceFilter}
+                  onChange={(e) => setPriceFilter(e.target.value)}
+                  className="input-premium text-sm py-2"
+                >
+                  <option value="any">Any price</option>
+                  <option value="under5k">Under ₹5,000</option>
+                  <option value="5k-10k">₹5,000 – ₹10,000</option>
+                  <option value="above10k">Above ₹10,000</option>
+                </select>
               </div>
 
-              <div className="mt-6 flex justify-end">
-                <button
-                  onClick={handleApplyFilters}
-                  className="btn-primary py-2.5 px-6 flex items-center gap-2"
-                >
-                  <Check className="h-4 w-4" />
-                  Apply Filters
-                </button>
-              </div>
+              {/* Reset filters */}
+              {activeFilterCount > 0 && (
+                <div className="col-span-2 sm:col-span-4">
+                  <button
+                    onClick={() => {
+                      setStopsFilter('any')
+                      setAirlineFilter('all')
+                      setTimeFilter('any')
+                      setPriceFilter('any')
+                    }}
+                    className="text-xs text-sky-400 hover:text-sky-300 transition-colors"
+                  >
+                    Clear all filters
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
 
-        <div className="grid lg:grid-cols-4 gap-6">
-          {/* Sidebar */}
-          <div className="hidden lg:block lg:col-span-1 space-y-6">
-            <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-5 sticky top-24 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <PostBookingTrust />
-            </div>
-          </div>
-
-          {/* Results */}
-          <main className="lg:col-span-3 flex flex-1 flex-col gap-6" id="main">
-            {query.isLoading ? (
-              <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-10 text-center animate-fade-in">
-                <div className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-slate-100 mb-5">
-                  <Plane className="h-10 w-10 text-slate-800 animate-pulse" />
+        {/* Results */}
+        <main className="flex flex-1 flex-col gap-6" id="main">
+          {query.isLoading ? (
+            <div className="glass rounded-2xl p-8 text-center animate-fade-in">
+              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-sky-500/10 mb-4">
+                <Plane className="h-8 w-8 text-sky-400 animate-pulse" />
+              </div>
+              <p className="text-lg font-semibold text-slate-50">Finding the best flights...</p>
+              <p className="text-sm text-slate-400 mt-1">
+                Searching {fromAirport?.city ?? from} to {toAirport?.city ?? to}
+              </p>
+              <div className="mt-6 max-w-xs mx-auto">
+                <div className="progress-bar">
+                  <div className="progress-bar-fill animate-shimmer" style={{ width: '60%' }} />
                 </div>
-                <p className="text-xl font-bold text-slate-900">Finding the best flights...</p>
-                <p className="text-sm font-medium text-slate-500 mt-2">Searching 500+ airlines for the lowest fares</p>
-                <div className="mt-8 max-w-xs mx-auto">
-                  <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
-                    <div className="h-full rounded-full bg-slate-800 animate-shimmer w-[60%]" />
+              </div>
+            </div>
+          ) : query.isError ? (
+            <div className="glass rounded-2xl border border-amber-500/30 bg-amber-950/20 p-8 text-center animate-fade-in">
+              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-amber-500/10 mb-4">
+                <RefreshCw className="h-8 w-8 text-amber-400" />
+              </div>
+              <p className="text-lg font-semibold text-amber-200">
+                We couldn't fetch fresh inventory right now
+              </p>
+              <p className="text-sm text-amber-300/70 mt-2 max-w-md mx-auto">
+                Try again in a moment. If this keeps happening, we'll fall back to cached results.
+              </p>
+              <button
+                onClick={() => query.refetch()}
+                className="mt-6 btn-primary"
+              >
+                Try Again
+              </button>
+            </div>
+          ) : (
+            <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              {/* Leg label for round trip */}
+              {isRoundTrip && (
+                <div className="mb-4 flex items-center gap-2 text-sm">
+                  <Plane className={`h-4 w-4 ${activeLeg === 'outbound' ? 'text-sky-400 -rotate-45' : 'text-purple-400 rotate-[135deg]'}`} />
+                  <span className="font-semibold text-slate-200">
+                    {activeLeg === 'outbound'
+                      ? `Outbound: ${fromAirport?.city ?? from} → ${toAirport?.city ?? to}`
+                      : `Return: ${toAirport?.city ?? to} → ${fromAirport?.city ?? from}`
+                    }
+                  </span>
+                  <span className="text-slate-500">·</span>
+                  <span className="text-slate-400">{formatDate(activeLeg === 'outbound' ? date : returnDate)}</span>
+                  {isRoundTrip && (
+                    <span className="ml-auto text-xs text-slate-500">
+                      Select a flight to {activeLeg === 'outbound' ? 'continue to return leg' : 'see total price'}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {results.length === 0 && rawResults.length > 0 ? (
+                <div className="glass rounded-2xl p-8 text-center">
+                  <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-slate-800/50 mb-4">
+                    <Filter className="h-8 w-8 text-slate-500" />
                   </div>
+                  <p className="text-lg font-semibold text-slate-200">No flights match your filters</p>
+                  <p className="text-sm text-slate-400 mt-2">
+                    {rawResults.length} flights available. Try adjusting your filters.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setStopsFilter('any')
+                      setAirlineFilter('all')
+                      setTimeFilter('any')
+                      setPriceFilter('any')
+                    }}
+                    className="mt-4 btn-secondary"
+                  >
+                    Clear all filters
+                  </button>
                 </div>
-              </div>
-            ) : query.isError ? (
-              <div className="bg-white border border-rose-200 rounded-3xl p-10 text-center animate-fade-in">
-                <div className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-rose-50 mb-5">
-                  <RefreshCw className="h-10 w-10 text-rose-500" />
-                </div>
-                <p className="text-xl font-bold text-slate-900">
-                  We couldn't fetch fresh inventory right now
-                </p>
-                <p className="text-sm text-slate-500 font-medium mt-2 max-w-md mx-auto">
-                  Try again in a moment. If this keeps happening, we'll fall back to cached results.
-                </p>
-                <button
-                  onClick={() => query.refetch()}
-                  className="mt-6 btn-primary"
-                >
-                  Try Again
-                </button>
-              </div>
-            ) : filteredResults.length === 0 ? (
-              <div className="bg-white border border-slate-200 rounded-3xl p-10 text-center animate-fade-in">
-                <div className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-slate-50 mb-5">
-                  <Filter className="h-10 w-10 text-slate-400" />
-                </div>
-                <p className="text-xl font-bold text-slate-900">No flights found</p>
-                <p className="text-sm text-slate-500 font-medium mt-2">Try adjusting your filters to see more results.</p>
-                <button
-                  onClick={() => {
-                    setActiveFilters({
-                      stops: 'Any',
-                      airline: 'All airlines',
-                      departureTime: 'Any time',
-                      priceRange: 'Any price'
-                    })
-                    setPendingFilters({
-                      stops: 'Any',
-                      airline: 'All airlines',
-                      departureTime: 'Any time',
-                      priceRange: 'Any price'
-                    })
-                  }}
-                  className="mt-6 text-slate-800 hover:text-black hover:underline text-sm font-bold transition-colors"
-                >
-                  Clear all filters
-                </button>
-              </div>
-            ) : (
-              <div className="animate-stagger-up" style={{ animationDelay: '0.2s' }}>
-                <FlightResultsGrid results={filteredResults} />
-              </div>
-            )}
-          </main>
-
-          {/* Footer */}
-          <footer className="mt-10 border-t border-slate-200 pt-6 lg:col-span-4">
-            <div className="flex flex-wrap items-center justify-between gap-4 text-sm font-medium text-slate-500">
-              <p>All prices include mandatory taxes & carrier fees. No checkout surprises.</p>
-              <p>Last updated: {new Date().toLocaleTimeString()}</p>
+              ) : (
+                <FlightResultsGrid
+                  results={results}
+                  onSelectFlight={isRoundTrip ? handleSelectFlight : undefined}
+                  selectedFlightId={
+                    activeLeg === 'outbound' ? selectedOutbound?.id : selectedReturn?.id
+                  }
+                />
+              )}
             </div>
-          </footer>
-        </div>
+          )}
+        </main>
+
+        {/* Footer */}
+        <footer className="mt-10 border-t border-slate-800/50 pt-6">
+          <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500">
+            <p>All prices include mandatory taxes & carrier fees. No checkout surprises.</p>
+            <p>Last updated: {new Date().toLocaleTimeString()}</p>
+          </div>
+        </footer>
       </div>
     </div>
   )

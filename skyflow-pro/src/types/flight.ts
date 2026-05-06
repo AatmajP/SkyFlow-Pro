@@ -19,6 +19,16 @@ export interface PriceTransparency {
   carbonEstimateKg: number
 }
 
+/** Per-class price summary for the FlightCard class selector */
+export interface ClassPrice {
+  cabin: CabinClass
+  label: string
+  total: number
+  baseFare: number
+  taxesAndFees: number
+  carrierCharges: number
+}
+
 export interface FlightSegment {
   id: string
   marketingCarrier: string
@@ -49,9 +59,11 @@ export interface FlightOption {
   segments: FlightSegment[]
   layovers: Layover[]
   price: PriceTransparency
+  /** Prices for all cabin classes — enables dynamic class switching on card */
+  classPrices: ClassPrice[]
   baggagePolicy: string
   alliance: string | null
   fareBrand: string
-  scarcity?: string // Scarcity message like "Only 2 seats left"
+  seatsLeft?: number
+  tags?: string[]
 }
-

@@ -1,15 +1,16 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { SkipLink } from './components/ui/SkipLink'
-import { NavbarEnhanced as Navbar } from './components/ui/NavbarEnhanced'
+import { Navbar } from './components/ui/Navbar'
 import { ResultsPage } from './pages/ResultsPage'
 import { SearchPage } from './pages/SearchPage'
 import { BookingPage } from './pages/BookingPage'
 import { ConfirmationPage } from './pages/ConfirmationPage'
 import { Toaster } from './components/ui/Toaster'
+import { TravelAssistantChat } from './components/chat/TravelAssistantChat'
 
 function App() {
   return (
-    <div className="min-h-screen text-slate-900">
+    <div className="min-h-screen text-slate-50">
       <SkipLink />
       <Navbar />
       <Routes>
@@ -19,6 +20,7 @@ function App() {
         <Route path="/confirmation/:bookingId" element={<ConfirmationPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <TravelAssistantChat />
       <Toaster />
     </div>
   )

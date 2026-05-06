@@ -20,6 +20,6 @@ function renderWithProviders(initialUrl: string) {
 test('renders results header from URL params', async () => {
   renderWithProviders('/results?from=JFK&to=LAX&date=2026-02-20&flex=3&adults=1&cabin=economy')
 
-  expect(await screen.findByText(/JFK → LAX/i)).toBeInTheDocument()
+  expect(await screen.findByText(/New York → Los Angeles/i)).toBeInTheDocument()
 })
 
