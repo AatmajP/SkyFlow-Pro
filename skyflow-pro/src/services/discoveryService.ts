@@ -24,45 +24,51 @@ export interface LiveDeal {
 const client = createHttpClient()
 
 export const DiscoveryService = {
-  async getTimeline(from: string, to: string): Promise<TimelineDay[]> {
+  async getTimeline(from: string, to: string, date?: string, tripType?: string): Promise<TimelineDay[]> {
     const useMock = (import.meta.env.VITE_USE_MOCKS?.toString() ?? 'true') === 'true'
 
     const fallback = async (): Promise<TimelineDay[]> => {
       const timeline: TimelineDay[] = []
-      const today = new Date()
+      const base = date ? new Date(date) : new Date()
       let minPrice = Infinity
       
       // Generate some mock prices
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(today)
-        d.setDate(today.getDate() + i)
+      for (let i = -3; i <= 3; i++) {
+        const d = new Date(base)
+        d.setDate(base.getDate() + i)
         const dateStr = d.toISOString().split('T')[0]
         
         let hash = 0
         const seedStr = `${from}-${to}-${dateStr}`
         for (let j = 0; j < seedStr.length; j++) hash = (hash * 31 + seedStr.charCodeAt(j)) >>> 0
         
-        const price = 2800 + (hash % 4000)
+        let price = 2800 + (hash % 4000)
+        if (tripType === 'roundtrip') price *= 1.8
+        
         if (price < minPrice) minPrice = price
         
         timeline.push({
           date: dateStr,
-          price,
+          price: Math.round(price),
           isCheapest: false
         })
       }
       
       return timeline.map(day => ({
         ...day,
-        isCheapest: day.price === minPrice
+        isCheapest: Math.abs((day.price || 0) - minPrice) < 1
       }))
     }
 
     if (useMock) return fallback()
 
+    const params = new URLSearchParams({ from, to })
+    if (date) params.set('date', date)
+    if (tripType) params.set('tripType', tripType)
+
     return await requestWithResilience<TimelineDay[]>(
       client,
-      { method: 'GET', url: `/discovery/timeline?from=${from}&to=${to}` },
+      { method: 'GET', url: `/api/flights/timeline?${params.toString()}` },
       { breakerKey: 'DiscoveryService.getTimeline', retries: 2, fallback }
     )
   },

@@ -1,6 +1,8 @@
 import { useSearchParams, Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Filter, Plane, RefreshCw, CheckCircle, ArrowRight } from 'lucide-react'
 import { FlightResultsGrid } from '../components/results/FlightResultsGrid'
+import { PriceTimeline } from '../components/search/PriceTimeline'
+import { MainFooter } from '../components/ui/MainFooter'
 import { useFlightSearch } from '../hooks/useFlightSearch'
 import { useState, useMemo } from 'react'
 import { AIRPORTS } from '../mocks/mockSearchResults'
@@ -213,6 +215,21 @@ export function ResultsPage() {
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Price Timeline Section */}
+        <div className="mb-8 animate-fade-in" style={{ animationDelay: '0.05s' }}>
+          <PriceTimeline 
+            from={from} 
+            to={to} 
+            date={date} 
+            tripType={tripType} 
+            onSelectDate={(newDate) => {
+              const newParams = new URLSearchParams(params)
+              newParams.set('date', newDate)
+              navigate({ pathname: '/results', search: newParams.toString() })
+            }}
+          />
         </div>
 
         {/* ── Round Trip Leg Selector ── */}
@@ -536,12 +553,7 @@ export function ResultsPage() {
         </main>
 
         {/* Footer */}
-        <footer className="mt-10 border-t border-slate-800/50 pt-6">
-          <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500">
-            <p>All prices include mandatory taxes & carrier fees. No checkout surprises.</p>
-            <p>Last updated: {new Date().toLocaleTimeString()}</p>
-          </div>
-        </footer>
+        <MainFooter />
       </div>
     </div>
   )

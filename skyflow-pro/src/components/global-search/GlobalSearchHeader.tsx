@@ -1,7 +1,7 @@
 import { Search, ArrowRightLeft, Calendar, Users, Briefcase, Info } from 'lucide-react'
 import { useState, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FlexDateStrip } from '../calendar/FlexDateStrip'
+import { PriceTimeline } from '../search/PriceTimeline'
 import { AirportDropdownPortal } from './AirportDropdownPortal'
 import { AIRPORTS } from '../../mocks/mockSearchResults'
 
@@ -284,21 +284,21 @@ export function GlobalSearchHeader() {
         </div>
 
         {form.departureDate ? (
-          <FlexDateStrip
+          <PriceTimeline
             from={form.from}
             to={form.to}
-            selectedDate={form.departureDate}
-            flexDays={form.flexDays}
-            onSelect={(nextDate) => handleChange('departureDate', nextDate)}
+            date={form.departureDate}
+            tripType={form.tripType}
+            onSelectDate={(nextDate) => handleChange('departureDate', nextDate)}
           />
         ) : (
-          <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/30 p-6 text-center">
+          <div className="glass rounded-2xl border border-dashed border-slate-700 bg-slate-900/30 p-6 text-center">
             <Calendar className="mx-auto h-10 w-10 text-slate-600 mb-3" />
             <p className="text-sm text-slate-400">
               Select a departure date to see the cheapest days nearby
             </p>
             <p className="text-xs text-slate-500 mt-1">
-              We'll show you prices ±{form.flexDays} days around your chosen date
+              We'll show you prices ±3 days around your chosen date
             </p>
           </div>
         )}

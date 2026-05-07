@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
-import { TrendingDown, TrendingUp, Clock, ArrowRight, Zap, Bell, Sparkles, CalendarDays, MapPin } from 'lucide-react'
-import { useDiscoveryTimeline, useDiscoveryQuickPicks, useDiscoveryDeals } from '../../hooks/useDiscovery'
+import { ArrowRight, Zap, Bell, Sparkles, MapPin } from 'lucide-react'
+import { useDiscoveryQuickPicks, useDiscoveryDeals } from '../../hooks/useDiscovery'
+import { PriceTimeline } from './PriceTimeline'
 
 const formatter = new Intl.NumberFormat('en-IN', {
   style: 'currency',
@@ -13,7 +14,6 @@ export function SmartDiscovery() {
   const defaultFrom = 'DEL'
   const defaultTo = 'BOM'
 
-  const { data: timelineData, isLoading: isLoadingTimeline } = useDiscoveryTimeline(defaultFrom, defaultTo)
   const { data: quickPicks, isLoading: isLoadingPicks } = useDiscoveryQuickPicks(defaultFrom)
   const { data: deals, isLoading: isLoadingDeals } = useDiscoveryDeals(defaultFrom)
 
@@ -37,16 +37,6 @@ export function SmartDiscovery() {
     }
     
     navigate({ pathname: '/results', search: params.toString() })
-  }
-
-  const getDayOfWeek = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('en-US', { weekday: 'short' })
-  }
-
-  const getMonthDay = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
   return (
@@ -137,84 +127,14 @@ export function SmartDiscovery() {
         </section>
 
         {/* Smart Travel Timeline */}
-        <section className="lg:col-span-7 glass rounded-2xl p-6 flex flex-col">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
-                <CalendarDays className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-slate-50">Price Timeline</h2>
-                <p className="text-xs text-slate-400">{defaultFrom} → {defaultTo} · 7 Day Forecast</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex-1 flex items-end gap-2 sm:gap-4 mt-auto pt-8">
-            {!isLoadingTimeline && timelineData && (() => {
-              const prices = timelineData.map(d => d.price || 0).filter(p => p > 0)
-              const maxPrice = Math.max(...prices)
-              const minPrice = Math.min(...prices)
-
-              return timelineData.map((day, idx) => {
-                if (!day.price) return null
-                
-                // Calculate height percentage (min 20%, max 100%)
-                const heightPct = 20 + ((day.price - minPrice) / (maxPrice - minPrice || 1)) * 80
-                
-                const isExpensive = day.price > minPrice * 1.3
-
-                return (
-                  <div key={idx} className="flex-1 flex flex-col items-center group relative cursor-pointer" onClick={() => handleSearch(defaultFrom, defaultTo, day.date)}>
-                    {/* Tooltip */}
-                    <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 border border-slate-700 text-white text-xs py-1 px-2 rounded pointer-events-none z-10 whitespace-nowrap shadow-xl">
-                      {getMonthDay(day.date)}: {formatter.format(day.price)}
-                    </div>
-                    
-                    {/* Bar */}
-                    <div className="w-full relative flex flex-col justify-end h-32 sm:h-40 bg-slate-800/30 rounded-t-lg overflow-hidden group-hover:bg-slate-800/50 transition-colors">
-                      <div 
-                        className={`w-full rounded-t-lg transition-all duration-500 relative ${
-                          day.isCheapest ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 
-                          isExpensive ? 'bg-amber-500/70' : 
-                          'bg-sky-500/70'
-                        }`}
-                        style={{ height: `${heightPct}%` }}
-                      >
-                        {day.isCheapest && (
-                          <div className="absolute -top-6 left-1/2 -translate-x-1/2">
-                            <TrendingDown className="h-4 w-4 text-emerald-400 animate-bounce" />
-                          </div>
-                        )}
-                        {isExpensive && (
-                          <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <TrendingUp className="h-4 w-4 text-amber-400" />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {/* Labels */}
-                    <div className="mt-3 text-center w-full border-t border-slate-700/50 pt-2">
-                      <p className={`text-[0.65rem] uppercase tracking-wider font-semibold ${day.isCheapest ? 'text-emerald-400' : 'text-slate-500'}`}>
-                        {getDayOfWeek(day.date)}
-                      </p>
-                      <p className="text-xs font-bold text-slate-200 mt-0.5 truncate">
-                        {formatter.format(day.price).replace('.00', '')}
-                      </p>
-                    </div>
-                  </div>
-                )
-              })
-            })()}
-            {isLoadingTimeline && (
-              <div className="w-full flex gap-4 h-40 items-end">
-                {[1, 2, 3, 4, 5, 6, 7].map(i => (
-                  <div key={i} className="flex-1 bg-slate-800/50 rounded-t-lg animate-pulse" style={{ height: `${20 + Math.random() * 80}%` }} />
-                ))}
-              </div>
-            )}
-          </div>
+        <section className="lg:col-span-7">
+          <PriceTimeline 
+            from={defaultFrom} 
+            to={defaultTo} 
+            date={new Date().toISOString().split('T')[0]} 
+            tripType="oneway" 
+            onSelectDate={(dateStr) => handleSearch(defaultFrom, defaultTo, dateStr)} 
+          />
         </section>
       </div>
     </div>

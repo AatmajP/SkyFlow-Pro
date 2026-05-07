@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Plane, Menu, X, User, Bell, Settings } from 'lucide-react'
+import { NotificationDrawer } from './NotificationDrawer'
+import { SettingsDrawer } from './SettingsDrawer'
 
 export function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -10,6 +12,9 @@ export function Navbar() {
         { path: '/', label: 'Search Flights' },
         { path: '/results', label: 'Results' },
     ]
+
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
     return (
         <nav className="sticky top-0 z-50 glass border-b border-slate-800/50">
@@ -49,6 +54,7 @@ export function Navbar() {
                     <div className="flex items-center gap-2">
                         {/* Notification bell */}
                         <button
+                            onClick={() => setIsNotificationsOpen(true)}
                             className="relative p-2 rounded-lg text-slate-400 hover:text-slate-50 hover:bg-slate-800/50 transition-all duration-300"
                             aria-label="Notifications"
                         >
@@ -58,11 +64,15 @@ export function Navbar() {
 
                         {/* Settings */}
                         <button
+                            onClick={() => setIsSettingsOpen(true)}
                             className="p-2 rounded-lg text-slate-400 hover:text-slate-50 hover:bg-slate-800/50 transition-all duration-300"
                             aria-label="Settings"
                         >
                             <Settings className="h-5 w-5" />
                         </button>
+
+                        <NotificationDrawer isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
+                        <SettingsDrawer isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
 
                         {/* User menu */}
                         <div className="hidden sm:flex items-center gap-3 ml-2 pl-4 border-l border-slate-800">

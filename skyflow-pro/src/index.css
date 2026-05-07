@@ -9,6 +9,14 @@
   --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 50%, #ec4899 100%);
   --gradient-card: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
   --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --bg-color: #020617; /* slate-950 */
+  --text-color: #f8fafc; /* slate-50 */
+}
+
+:root.light {
+  color-scheme: light;
+  --bg-color: #f8fafc;
+  --text-color: #0f172a;
 }
 
 * {
@@ -21,7 +29,9 @@ html {
 }
 
 body {
-  @apply min-h-screen bg-slate-950 text-slate-50 antialiased;
+  @apply min-h-screen antialiased;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   background-image:
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.15), transparent),
     radial-gradient(ellipse 80% 50% at 80% 50%, rgba(139, 92, 246, 0.1), transparent),
@@ -31,6 +41,18 @@ body {
 #root {
   @apply min-h-screen;
 }
+
+.light .glass {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.light .text-slate-400 { color: #64748b; }
+.light .text-slate-500 { color: #475569; }
+.light .bg-slate-900 { background-color: #f1f5f9; }
+.light .bg-slate-800 { background-color: #e2e8f0; }
+
 
 /* Custom animations */
 @keyframes float {

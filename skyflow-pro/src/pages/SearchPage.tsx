@@ -1,5 +1,6 @@
 import { GlobalSearchHeader } from '../components/global-search/GlobalSearchHeader'
 import { SmartDiscovery } from '../components/search/SmartDiscovery'
+import { MainFooter } from '../components/ui/MainFooter'
 import { Plane, Shield, Tag, Clock, Star, Users, Zap, Globe } from 'lucide-react'
 
 const features = [
@@ -154,28 +155,7 @@ export function SearchPage() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-slate-800/50 pt-8 animate-fade-in">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500 to-purple-600">
-                <Plane className="h-4 w-4 text-white" />
-              </div>
-              <span className="text-sm font-semibold gradient-text">SkyFlow Pro</span>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500">
-              <span>v2.0 · Enhanced Edition</span>
-              <span>•</span>
-              <span>Built for transparency</span>
-              <span>•</span>
-              <span>WCAG AA Compliant</span>
-            </div>
-            <div className="flex gap-3">
-              <button className="btn-secondary text-xs">Privacy</button>
-              <button className="btn-secondary text-xs">Terms</button>
-              <button className="btn-secondary text-xs">Contact</button>
-            </div>
-          </div>
-        </footer>
+        <MainFooter />
       </div>
     </div>
   )
