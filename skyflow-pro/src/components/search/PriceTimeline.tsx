@@ -6,6 +6,7 @@ interface PriceTimelineProps {
   from: string
   to: string
   date: string
+  cabin: string
   tripType: string
   onSelectDate: (date: string) => void
 }
@@ -16,8 +17,8 @@ const formatter = new Intl.NumberFormat('en-IN', {
   maximumFractionDigits: 0,
 })
 
-export function PriceTimeline({ from, to, date, tripType, onSelectDate }: PriceTimelineProps) {
-  const { data: timelineData, isLoading, refetch } = useDiscoveryTimeline(from, to, date, tripType)
+export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }: PriceTimelineProps) {
+  const { data: timelineData, isLoading, refetch } = useDiscoveryTimeline(from, to, date, cabin, tripType)
 
   const getDayOfWeek = (dateStr: string) => {
     const d = new Date(dateStr)

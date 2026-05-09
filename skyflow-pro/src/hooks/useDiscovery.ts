@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { DiscoveryService } from '../services/discoveryService'
 
-export function useDiscoveryTimeline(from: string, to: string, date?: string, tripType?: string) {
+export function useDiscoveryTimeline(from: string, to: string, date?: string, cabin?: string, tripType?: string) {
   return useQuery({
-    queryKey: ['discovery', 'timeline', from, to, date, tripType],
-    queryFn: () => DiscoveryService.getTimeline(from, to, date, tripType),
+    queryKey: ['discovery', 'timeline', from, to, date, cabin, tripType],
+    queryFn: () => DiscoveryService.getTimeline(from, to, date, cabin, tripType),
     staleTime: 5 * 60 * 1000,
     enabled: !!from && !!to,
   })

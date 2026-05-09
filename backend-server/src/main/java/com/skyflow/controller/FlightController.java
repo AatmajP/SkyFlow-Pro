@@ -68,10 +68,19 @@ public class FlightController {
             @RequestParam String from,
             @RequestParam String to,
             @RequestParam(required = false) String date,
+            @RequestParam(required = false) String cabin,
             @RequestParam(required = false, defaultValue = "oneway") String tripType) {
 
         java.util.List<java.util.Map<String, Object>> timeline = new java.util.ArrayList<>();
         LocalDate baseDate = (date != null && !date.isEmpty()) ? LocalDate.parse(date) : LocalDate.now();
+        
+        String cabinClass = "Economy";
+        if (cabin != null) {
+            if (cabin.equalsIgnoreCase("premium")) cabinClass = "Premium Economy";
+            else if (cabin.equalsIgnoreCase("business")) cabinClass = "Business";
+            else if (cabin.equalsIgnoreCase("first")) cabinClass = "First Class";
+        }
+        final String finalCabinClass = cabinClass;
 
         // Check if cities exist
         java.util.Optional<City> originOpt = cityService.getCitiesByTag(null).stream()
@@ -85,7 +94,15 @@ public class FlightController {
                 LocalDate d = baseDate.plusDays(i);
                 java.util.Map<String, Object> dayMap = new java.util.HashMap<>();
                 dayMap.put("date", d.toString());
-                dayMap.put("price", 2500 + (Math.abs(d.hashCode()) % 3000));
+                
+                long seed = (from + to + d.toString() + finalCabinClass).hashCode();
+                java.util.Random rnd = new java.util.Random(seed);
+                double price = 2500 + rnd.nextInt(3000);
+                if (finalCabinClass.contains("Premium")) price *= 1.4;
+                if (finalCabinClass.contains("Business")) price *= 2.5;
+                if (finalCabinClass.contains("First")) price *= 4.5;
+                
+                dayMap.put("price", Math.round(price));
                 dayMap.put("isCheapest", i == -1);
                 timeline.add(dayMap);
             }
@@ -102,7 +119,7 @@ public class FlightController {
             
             if (!dailyFlights.isEmpty()) {
                 double minPriceOfDay = dailyFlights.stream()
-                        .mapToDouble(f -> f.getClassPrices().getOrDefault("Economy", 99999.0))
+                        .mapToDouble(f -> f.getClassPrices().getOrDefault(finalCabinClass, 99999.0))
                         .min().orElse(99999.0);
                 
                 // If roundtrip, add some return flight logic (simplified)
@@ -114,9 +131,14 @@ public class FlightController {
                 if (minPriceOfDay < minAll) minAll = minPriceOfDay;
             } else {
                 // If no real flights, generate a pseudo-random price based on route and date for the timeline
-                long seed = (from + to + d.toString()).hashCode();
+                long seed = (from + to + d.toString() + finalCabinClass).hashCode();
                 java.util.Random rnd = new java.util.Random(seed);
                 double pseudoPrice = 3000 + rnd.nextInt(5000);
+                
+                if (finalCabinClass.contains("Premium")) pseudoPrice *= 1.4;
+                if (finalCabinClass.contains("Business")) pseudoPrice *= 2.5;
+                if (finalCabinClass.contains("First")) pseudoPrice *= 4.5;
+
                 if ("ROUND_TRIP".equalsIgnoreCase(tripType) || "ROUNDTRIP".equalsIgnoreCase(tripType)) {
                     pseudoPrice *= 1.8;
                 }

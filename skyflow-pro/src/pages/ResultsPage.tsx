@@ -1,7 +1,8 @@
 import { useSearchParams, Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Filter, Plane, RefreshCw, CheckCircle, ArrowRight } from 'lucide-react'
+import { ArrowLeft, Filter, Plane, RefreshCw, CheckCircle, ArrowRight, Sparkles } from 'lucide-react'
 import { FlightResultsGrid } from '../components/results/FlightResultsGrid'
 import { PriceTimeline } from '../components/search/PriceTimeline'
+import { SmartTravelInsights } from '../components/results/SmartTravelInsights'
 import { MainFooter } from '../components/ui/MainFooter'
 import { useFlightSearch } from '../hooks/useFlightSearch'
 import { useState, useMemo } from 'react'
@@ -223,12 +224,28 @@ export function ResultsPage() {
             from={from} 
             to={to} 
             date={date} 
+            cabin={cabin}
             tripType={tripType} 
             onSelectDate={(newDate) => {
               const newParams = new URLSearchParams(params)
               newParams.set('date', newDate)
               navigate({ pathname: '/results', search: newParams.toString() })
             }}
+          />
+        </div>
+
+        {/* Smart Travel Insights Section */}
+        <div className="mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="flex items-center gap-2 mb-4">
+            <Sparkles className="h-5 w-5 text-sky-400" />
+            <h2 className="text-xl font-bold text-slate-100">Smart Travel Insights</h2>
+          </div>
+          <SmartTravelInsights 
+            from={from} 
+            to={to} 
+            date={date} 
+            cabin={cabin} 
+            tripType={tripType} 
           />
         </div>
 

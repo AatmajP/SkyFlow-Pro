@@ -24,7 +24,7 @@ export interface LiveDeal {
 const client = createHttpClient()
 
 export const DiscoveryService = {
-  async getTimeline(from: string, to: string, date?: string, tripType?: string): Promise<TimelineDay[]> {
+  async getTimeline(from: string, to: string, date?: string, cabin?: string, tripType?: string): Promise<TimelineDay[]> {
     const useMock = (import.meta.env.VITE_USE_MOCKS?.toString() ?? 'true') === 'true'
 
     const fallback = async (): Promise<TimelineDay[]> => {
@@ -39,10 +39,16 @@ export const DiscoveryService = {
         const dateStr = d.toISOString().split('T')[0]
         
         let hash = 0
-        const seedStr = `${from}-${to}-${dateStr}`
+        const seedStr = `${from}-${to}-${dateStr}-${cabin}`
         for (let j = 0; j < seedStr.length; j++) hash = (hash * 31 + seedStr.charCodeAt(j)) >>> 0
         
         let price = 2800 + (hash % 4000)
+        
+        // Cabin class multipliers
+        if (cabin === 'premium') price *= 1.4
+        if (cabin === 'business') price *= 2.5
+        if (cabin === 'first') price *= 4.5
+        
         if (tripType === 'roundtrip') price *= 1.8
         
         if (price < minPrice) minPrice = price
@@ -64,6 +70,7 @@ export const DiscoveryService = {
 
     const params = new URLSearchParams({ from, to })
     if (date) params.set('date', date)
+    if (cabin) params.set('cabin', cabin)
     if (tripType) params.set('tripType', tripType)
 
     return await requestWithResilience<TimelineDay[]>(

@@ -3,6 +3,7 @@ export interface SkyNotification {
   title: string
   message: string
   type: 'info' | 'success' | 'warning' | 'error'
+  category: 'booking' | 'fare' | 'checkin' | 'gate'
   timestamp: string
   read: boolean
 }
@@ -10,34 +11,47 @@ export interface SkyNotification {
 export const MOCK_NOTIFICATIONS: SkyNotification[] = [
   {
     id: '1',
-    title: 'Price Dropped!',
-    message: 'Fare dropped by ₹1,200 for your searched route BLR → BOM. Book now to save!',
+    title: 'Fare Alert: Price Drop',
+    message: 'Fare dropped by ₹1,200 for your route BLR → BOM. Book now to save!',
     type: 'success',
-    timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 mins ago
+    category: 'fare',
+    timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
     read: false
   },
   {
     id: '2',
-    title: 'Only 3 seats left',
-    message: 'Flight AI-804 from DEL to BOM is filling up fast. Secure your seat today.',
+    title: 'Urgent: Seat Availability',
+    message: 'Only 3 seats left for flight AI-804 (DEL → BOM). Secure your seat now.',
     type: 'warning',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
+    category: 'booking',
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
     read: false
   },
   {
     id: '3',
-    title: 'Booking Confirmed',
-    message: 'Your booking for New Delhi to Mumbai (SKY-9928) is successfully confirmed.',
+    title: 'Check-in Open',
+    message: 'Web check-in is now open for your flight SKY-9928 to Mumbai.',
     type: 'info',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
-    read: true
+    category: 'checkin',
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
+    read: false
   },
   {
     id: '4',
-    title: 'Gate Reminder',
-    message: 'Your flight AI-102 departs from Gate 4B in 45 minutes.',
+    title: 'Booking Confirmed',
+    message: 'Booking reference #SKY-9928 has been successfully confirmed.',
+    type: 'success',
+    category: 'booking',
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+    read: true
+  },
+  {
+    id: '5',
+    title: 'Gate Update',
+    message: 'Your flight AI-102 will now depart from Gate 4B.',
     type: 'info',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
+    category: 'gate',
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
     read: true
   }
 ]

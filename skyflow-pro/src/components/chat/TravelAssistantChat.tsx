@@ -1,17 +1,13 @@
-/**
- * TravelAssistantChat — AI mood-based destination suggestion panel.
- *
- * Renders as a floating chat button + expandable panel.
- * Uses the travelAssistant service for structured suggestions.
- */
 import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { useNavigate } from 'react-router-dom'
-import { MessageCircle, X, Send, Sparkles, Plane, ArrowRight } from 'lucide-react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { MessageCircle, X, Send, Sparkles, Plane, ArrowRight, Bot, User, Loader2 } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   CATEGORY_CONFIG,
-  type AssistantResponse,
+  processChat,
   type Suggestion,
+  type ChatState
 } from '../../services/travelAssistant'
 
 interface ChatMessage {
@@ -23,40 +19,39 @@ interface ChatMessage {
 
 export function TravelAssistantChat() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [isOpen, setIsOpen] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome',
       role: 'assistant',
-      text: '✨ Hi! I\'m your AI travel assistant. Tell me how you\'re feeling and I\'ll suggest the perfect destination!\n\nTry: "I feel stressed", "beach vacation", "romantic trip", or "adventure"',
+      text: '✨ Welcome to SkyFlow Intelligence! I\'m your personal travel curator.\n\nTell me about your vibe—are you looking for a romantic escape, a high-energy city, or perhaps a snowy mountain retreat?',
     },
   ])
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Auto-scroll to bottom
+  const [chatState, setChatState] = useState<ChatState>({
+    awaiting: 'none',
+    origin: searchParams.get('from') || 'DEL'
+  })
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+  }, [messages, isTyping])
 
-  // Focus input when opened
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 200)
     }
   }, [isOpen])
 
-  const [chatState, setChatState] = useState<any>({
-    awaiting: 'none',
-    origin: 'DEL'
-  })
-
   const handleSend = async () => {
     const trimmed = input.trim()
     if (!trimmed) return
 
-    // Add user message
     const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
       role: 'user',
@@ -64,14 +59,16 @@ export function TravelAssistantChat() {
     }
     setMessages(prev => [...prev, userMsg])
     setInput('')
-
-    // Show "typing" indicator or just wait
-    // We'll just wait for the promise
+    setIsTyping(true)
     
     try {
-      const { response, newState } = await import('../../services/travelAssistant').then(m => m.processChat(trimmed, chatState))
+      const { response, newState } = await processChat(trimmed, chatState)
+      
+      // Artificial delay for realism
+      await new Promise(r => setTimeout(r, 1200))
       
       setChatState(newState)
+      setIsTyping(false)
 
       const assistantMsg: ChatMessage = {
         id: `assistant-${Date.now()}`,
@@ -81,11 +78,11 @@ export function TravelAssistantChat() {
       }
       setMessages(prev => [...prev, assistantMsg])
     } catch (err) {
-      console.error(err)
+      setIsTyping(false)
       setMessages(prev => [...prev, {
         id: `err-${Date.now()}`,
         role: 'assistant',
-        text: 'Sorry, I ran into an error looking that up.'
+        text: 'I apologize, but I encountered a momentary lapse in my systems. Could you try rephrasing that?'
       }])
     }
   }
@@ -94,13 +91,13 @@ export function TravelAssistantChat() {
     const today = new Date()
     const nextWeek = new Date(today)
     nextWeek.setDate(today.getDate() + 14)
-    const dateStr = `${nextWeek.getFullYear()}-${String(nextWeek.getMonth() + 1).padStart(2, '0')}-${String(nextWeek.getDate()).padStart(2, '0')}`
+    const dateStr = nextWeek.toISOString().split('T')[0]
 
     const params = new URLSearchParams({
-      from: 'DEL',
+      from: chatState.origin,
       to: airportCode,
       date: dateStr,
-      tripType: 'roundtrip',
+      tripType: 'oneway',
       adults: '1',
       cabin: 'economy',
       flex: '3',
@@ -116,123 +113,155 @@ export function TravelAssistantChat() {
     }
   }
 
-  // ── Floating button + chat panel (portal to body) ──
   return (
     <>
-      {/* Floating trigger button */}
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-2xl bg-gradient-to-br from-sky-500 to-purple-600 text-white shadow-lg shadow-sky-500/30 flex items-center justify-center hover:scale-105 transition-transform duration-200"
-          aria-label="Open AI Travel Assistant"
-        >
-          <MessageCircle className="h-6 w-6" />
-        </button>
-      )}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            onClick={() => setIsOpen(true)}
+            className="fixed bottom-6 right-6 z-[90] h-14 w-14 rounded-2xl bg-gradient-to-br from-sky-500 to-sky-600 text-white shadow-xl shadow-sky-500/20 flex items-center justify-center hover:shadow-sky-500/40 transition-shadow group"
+          >
+            <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+            <Bot className="h-6 w-6" />
+            <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 border-2 border-slate-900 rounded-full" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
-      {/* Chat panel — portalled to body */}
       {isOpen && createPortal(
-        <div className="fixed bottom-6 right-6 z-[99998] w-[380px] max-w-[calc(100vw-48px)] flex flex-col rounded-2xl border border-slate-700/60 shadow-2xl overflow-hidden" style={{ height: 520, background: 'rgba(15, 23, 42, 0.98)' }}>
+        <motion.div 
+          initial={{ opacity: 0, y: 40, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 40, scale: 0.95 }}
+          className="fixed bottom-6 right-6 z-[1000] w-[400px] max-w-[calc(100vw-32px)] flex flex-col rounded-3xl border border-slate-800 shadow-2xl overflow-hidden bg-slate-950/95 backdrop-blur-xl" 
+          style={{ height: 600 }}
+        >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800/80 bg-gradient-to-r from-sky-900/40 to-purple-900/40">
-            <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-sky-500 to-purple-600 flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-white" />
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/50">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-400">
+                <Sparkles className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-50">AI Travel Assistant</h3>
-                <p className="text-[0.6rem] text-slate-400">Mood-based suggestions</p>
+                <h3 className="text-sm font-bold text-slate-50">SkyFlow Assistant</h3>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Active Intelligence</p>
+                </div>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
+              className="p-2 rounded-xl hover:bg-slate-800 text-slate-500 hover:text-slate-200 transition-all"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
             {messages.map(msg => (
               <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] ${
-                  msg.role === 'user'
-                    ? 'bg-sky-500/20 border border-sky-500/30 rounded-2xl rounded-br-md px-4 py-2.5'
-                    : 'bg-slate-800/60 border border-slate-700/40 rounded-2xl rounded-bl-md px-4 py-2.5'
-                }`}>
-                  <p className="text-sm text-slate-200 whitespace-pre-line leading-relaxed">{msg.text}</p>
+                <div className={`flex gap-3 max-w-[90%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex-shrink-0 h-8 w-8 rounded-lg flex items-center justify-center ${
+                    msg.role === 'user' ? 'bg-sky-500 text-white' : 'bg-slate-800 text-sky-400'
+                  }`}>
+                    {msg.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                  </div>
+                  <div className={`space-y-3 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                    <div className={`inline-block px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                      msg.role === 'user'
+                        ? 'bg-sky-500 text-white rounded-tr-none'
+                        : 'bg-slate-800/80 text-slate-200 border border-slate-700/50 rounded-tl-none'
+                    }`}>
+                      <p className="whitespace-pre-line">{msg.text}</p>
+                    </div>
 
-                  {/* Suggestion cards */}
-                  {msg.suggestions && msg.suggestions.length > 0 && (
-                    <div className="mt-3 space-y-2">
-                      {msg.suggestions.map(s => {
-                        const catCfg = CATEGORY_CONFIG[s.category]
-                        return (
-                          <button
-                            key={s.airportCode}
-                            onClick={() => handleExplore(s.airportCode)}
-                            className="w-full text-left p-3 rounded-xl bg-slate-900/60 border border-slate-700/40 hover:border-sky-500/40 hover:bg-slate-800/80 transition-all duration-200 group"
-                          >
-                            <div className="flex items-center justify-between mb-1">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-md">
-                                  {s.airportCode}
-                                </span>
-                                <span className="text-sm font-semibold text-slate-100">
-                                  {s.city}, {s.country}
+                    {/* Suggestions */}
+                    {msg.suggestions && msg.suggestions.length > 0 && (
+                      <div className="grid gap-3 mt-4">
+                        {msg.suggestions.map(s => {
+                          const catCfg = CATEGORY_CONFIG[s.category]
+                          return (
+                            <motion.button
+                              key={s.airportCode}
+                              whileHover={{ x: 5 }}
+                              onClick={() => handleExplore(s.airportCode)}
+                              className="w-full text-left p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-sky-500/40 transition-colors group relative overflow-hidden"
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-[10px] font-black text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded uppercase tracking-tighter">
+                                    {s.airportCode}
+                                  </span>
+                                  <span className="text-sm font-bold text-slate-100">{s.city}</span>
+                                </div>
+                                <span className={`text-[10px] font-bold uppercase tracking-wider ${catCfg.color}`}>
+                                  {catCfg.emoji} {catCfg.label}
                                 </span>
                               </div>
-                              <span className={`text-[0.6rem] font-medium ${catCfg.color}`}>
-                                {catCfg.emoji} {catCfg.label}
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-between mt-2">
-                              <p className="text-xs text-slate-400 leading-relaxed max-w-[70%]">{s.reason}</p>
-                              {s.price && (
+                              <p className="text-xs text-slate-400 leading-relaxed pr-8">{s.reason}</p>
+                              <div className="mt-3 flex items-center justify-between">
                                 <p className="text-sm font-bold text-emerald-400">
-                                  ₹{s.price.toLocaleString('en-IN')}
+                                  ₹{s.price?.toLocaleString('en-IN')}
                                 </p>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-1 mt-2 text-xs text-sky-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <Plane className="h-3 w-3" />
-                              <span>Search flights</span>
-                              <ArrowRight className="h-3 w-3" />
-                            </div>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  )}
+                                <ArrowRight className="h-4 w-4 text-sky-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                              </div>
+                            </motion.button>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
+            
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="flex gap-3 max-w-[90%]">
+                  <div className="flex-shrink-0 h-8 w-8 rounded-lg bg-slate-800 flex items-center justify-center text-sky-400">
+                    <Bot className="h-4 w-4" />
+                  </div>
+                  <div className="bg-slate-800/80 border border-slate-700/50 rounded-2xl rounded-tl-none px-4 py-3 flex gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-500 animate-bounce [animation-delay:-0.3s]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-500 animate-bounce [animation-delay:-0.15s]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-500 animate-bounce" />
+                  </div>
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
           {/* Input */}
-          <div className="p-3 border-t border-slate-800/80">
-            <div className="flex items-center gap-2">
+          <div className="p-4 border-t border-slate-800 bg-slate-900/30">
+            <div className="flex items-center gap-3 bg-slate-800/50 border border-slate-700 rounded-2xl px-4 py-1.5 focus-within:border-sky-500/50 transition-colors">
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="How are you feeling today?"
-                className="flex-1 rounded-xl bg-slate-800/60 border border-slate-700/50 px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 outline-none focus:border-sky-500/50 transition-colors"
+                placeholder="Where should I go for my honeymoon?"
+                className="flex-1 bg-transparent py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none"
               />
               <button
                 onClick={handleSend}
-                disabled={!input.trim()}
-                className="h-10 w-10 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:bg-slate-700 disabled:text-slate-500 text-white flex items-center justify-center transition-colors"
+                disabled={!input.trim() || isTyping}
+                className="h-9 w-9 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-50 text-white flex items-center justify-center transition-colors"
               >
-                <Send className="h-4 w-4" />
+                {isTyping ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </button>
             </div>
+            <p className="text-[10px] text-slate-600 text-center mt-3 font-medium uppercase tracking-tight">
+              SkyFlow Pro Intelligence · Version 2.4
+            </p>
           </div>
-        </div>,
+        </motion.div>,
         document.body,
       )}
     </>

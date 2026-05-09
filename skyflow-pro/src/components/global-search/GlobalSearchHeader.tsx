@@ -288,6 +288,7 @@ export function GlobalSearchHeader() {
             from={form.from}
             to={form.to}
             date={form.departureDate}
+            cabin={form.cabin}
             tripType={form.tripType}
             onSelectDate={(nextDate) => handleChange('departureDate', nextDate)}
           />
