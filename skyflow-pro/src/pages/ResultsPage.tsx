@@ -563,6 +563,7 @@ export function ResultsPage() {
                   selectedFlightId={
                     activeLeg === 'outbound' ? selectedOutbound?.id : selectedReturn?.id
                   }
+                  isRoundTrip={isRoundTrip}
                 />
               )}
             </div>

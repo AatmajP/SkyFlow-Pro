@@ -150,7 +150,7 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
             </div>
 
             {/* List */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar bg-slate-950/20">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar bg-slate-950/20 min-h-0">
               {filteredNotifications.length > 0 ? (
                 filteredNotifications.map((n) => (
                   <motion.div

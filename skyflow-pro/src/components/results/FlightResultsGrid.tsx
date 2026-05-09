@@ -8,6 +8,7 @@ interface FlightResultsGridProps {
   results: FlightOption[]
   onSelectFlight?: (flight: FlightOption) => void
   selectedFlightId?: string
+  isRoundTrip?: boolean
 }
 
 const formatter = new Intl.NumberFormat('en-IN', {
@@ -16,7 +17,7 @@ const formatter = new Intl.NumberFormat('en-IN', {
   maximumFractionDigits: 0,
 })
 
-export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId }: FlightResultsGridProps) {
+export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, isRoundTrip }: FlightResultsGridProps) {
   // Compute badges dynamically from the data
   const badgeMap = useMemo(() => computeFlightBadges(results), [results])
 
@@ -63,7 +64,7 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId }:
               Best options for your route
             </p>
             <p className="mt-1 text-sm text-slate-400">
-              Viewing {results.length} curated options · All prices include taxes & fees
+              Viewing {results.length} curated options · {isRoundTrip ? 'Prices shown are for this leg only' : 'All prices include taxes & fees'}
             </p>
           </div>
 

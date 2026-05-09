@@ -45,7 +45,7 @@ export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }:
             <h2 className="text-lg font-bold text-slate-50 flex items-center gap-2">
               {from} <span className="text-slate-500">→</span> {to} · 7 Day Forecast
             </h2>
-            <p className="text-xs text-slate-400">Prices are based on Economy class · Updated live</p>
+            <p className="text-xs text-slate-400">Prices are based on {cabin.charAt(0).toUpperCase() + cabin.slice(1).replace('_', ' ')} class · Updated live</p>
           </div>
         </div>
         

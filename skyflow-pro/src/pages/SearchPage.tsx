@@ -44,7 +44,7 @@ const airlines = [
 
 export function SearchPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative min-h-screen overflow-x-hidden">
       {/* Decorative background elements */}
       <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl" />
       <div className="absolute top-40 right-20 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl" />

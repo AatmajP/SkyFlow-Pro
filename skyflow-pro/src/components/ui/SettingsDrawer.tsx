@@ -85,7 +85,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
             </div>
 
             {/* Internal Scroll Area */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar min-h-0">
               {/* Appearance */}
               <section>
                 <div className="flex items-center gap-2 mb-4">
