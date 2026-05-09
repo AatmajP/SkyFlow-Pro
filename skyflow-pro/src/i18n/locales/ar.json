@@ -1,0 +1,367 @@
+{
+  "common": {
+    "searchFlights": "البحث عن رحلات",
+    "results": "النتائج",
+    "guest": "ضيف",
+    "notifications": "التنبيهات",
+    "settings": "الإعدادات",
+    "cancel": "إلغاء",
+    "applyChanges": "تطبيق التغييرات",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ ما",
+    "duration": "{{h}} س {{m}} د",
+    "days": {
+      "monday": "الاثنين",
+      "tuesday": "الثلاثاء",
+      "wednesday": "الأربعاء",
+      "thursday": "الخميس",
+      "friday": "الجمعة",
+      "saturday": "السبت",
+      "sunday": "الأحد"
+    },
+    "positions": {
+      "window": "نافذة",
+      "aisle": "ممر",
+      "middle": "وسط"
+    },
+    "back": "رجوع",
+    "backToResults": "العودة إلى النتائج"
+  },
+  "nav": {
+    "toggleMenu": "تبديل القائمة"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "subtitle": "لوحة التحكم",
+    "appearance": "المظهر",
+    "lightMode": "الوضع الفاتح",
+    "darkMode": "الوضع الداكن",
+    "regional": "الإقليم والعملة",
+    "defaultCurrency": "العملة الافتراضية",
+    "preferredLanguage": "اللغة المفضلة",
+    "systemAlerts": "النظام والتنبيهات",
+    "accessibilityMode": "وضع سهولة الوصول",
+    "accessibilityDesc": "تباين محسّن وأهداف أكبر",
+    "smartNotifications": "التنبيهات الذكية",
+    "notificationsDesc": "انخفاض الأسعار وتحديثات الحجز"
+  },
+  "search": {
+    "title": "ابحث عن مغامرتك القادمة",
+    "subtitle": "ابحث في أكثر من 500 شركة طيران حول العالم",
+    "from": "من",
+    "to": "إلى",
+    "departure": "المغادرة",
+    "return": "العودة",
+    "passengers": "المسافرون",
+    "cabinClass": "درجة الكابينة",
+    "searchButton": "البحث عن رحلات",
+    "oneWay": "اتجاه واحد",
+    "roundTrip": "ذهاب وعودة",
+    "multiCity": "مدن متعددة",
+    "economy": "السياحية",
+    "premiumEconomy": "السياحية الممتازة",
+    "business": "الأعمال",
+    "first": "الدرجة الأولى",
+    "placeholderCity": "المدينة أو رمز المطار",
+    "timelineHint": "اختر تاريخ المغادرة لرؤية أرخص الأيام القريبة",
+    "timelineDesc": "سنعرض لك الأسعار ±3 أيام حول التاريخ المختار",
+    "flexible": "تواريخ مرنة"
+  },
+  "chat": {
+    "placeholder": "اسأل عن الرحلات، الطقس، أو نصائح السفر...",
+    "greeting": "✨ مرحباً بك في سكاي فلو إنتيليجنس! أنا منسق سفرك الشخصي.\n\nأخبرني عن رغبتك—هل تبحث عن ملاذ رومانسي، مدينة مفعمة بالحيوية، أو ربما منتجع جبلي ثلجي؟",
+    "title": "مساعد سكاي فلو",
+    "activeIntelligence": "الذكاء النشط",
+    "viewFlights": "عرض الرحلات",
+    "version": "سكاي فلو برو إنتيليجنس · v2.5.0",
+    "suggestions": {
+      "cheapest": "ابحث عن أرخص الرحلات إلى لندن",
+      "status": "التحقق من حالة الرحلة",
+      "weather": "كيف حال الطقس في باريس؟",
+      "relaxing": "🏖 شاطئ للاسترخاء",
+      "adventure": "🧗 مغامرة",
+      "luxury": "💎 إقامة فاخرة",
+      "nightlife": "🌃 حياة ليلية",
+      "cold": "❄️ شتاء ثلجي"
+    }
+  },
+  "notifications": {
+    "title": "التنبيهات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "noNotifications": "لا توجد تنبيهات جديدة"
+  },
+  "hero": {
+    "badge": "أسعار صادقة. لا توجد رسوم خفية.",
+    "titlePrefix": "ابحث عن تجربتك",
+    "titleSuffix": "المثالية للطيران",
+    "subtitle": "ابحث في أكثر من 50 وجهة في الهند وخارجها. كل رسوم مفصلة، كل مقعد مضمون."
+  },
+  "features": {
+    "title": "لماذا تختار سكاي فلو برو",
+    "subtitle": "جرب مستقبل حجز الرحلات",
+    "noHiddenFees": {
+      "title": "لا توجد رسوم خفية",
+      "desc": "كل تهمة مفصلة مقدماً. ما تراه هو ما تدفعه."
+    },
+    "priceGuarantee": {
+      "title": "ضمان أفضل سعر",
+      "desc": "نعرض لك أقل الأسعار عبر جميع شركات الطيران."
+    },
+    "realTime": {
+      "title": "تسعير فوري",
+      "desc": "تحديثات الأسعار المباشرة تضمن لك عدم تفويت أي عرض."
+    },
+    "instantBooking": {
+      "title": "حجز فوري",
+      "desc": "احجز مقاعدك في ثوانٍ مع الدفع السريع."
+    }
+  },
+  "stats": {
+    "destinations": "وجهة",
+    "airlines": "شركة طيران",
+    "dailyFlights": "رحلة يومية",
+    "userRating": "تقييم المستخدمين"
+  },
+  "trusted": {
+    "text": "موثوق به من قبل المسافرين حول العالم · سافر مع أفضل شركات الطيران في الهند"
+  },
+  "discovery": {
+    "liveDeals": "عروض مباشرة",
+    "fromPrefix": "من"
+  },
+  "results": {
+    "newSearch": "بحث جديد",
+    "liveResults": "نتائج مباشرة",
+    "roundTrip": "ذهاب وعودة",
+    "refresh": "تحديث",
+    "smartInsights": "رؤى السفر الذكية",
+    "outbound": "المغادرة",
+    "return": "العودة",
+    "total": "إجمالي الذهاب والعودة",
+    "proceed": "المتابعة للحجز",
+    "filters": "تصفية",
+    "sortBy": "فرز حسب",
+    "nonStopOnly": "رحلات مباشرة فقط",
+    "morningFlights": "رحلات صباحية",
+    "stops": "التوقفات",
+    "any": "أي عدد",
+    "nonstop": "بدون توقف",
+    "oneStop": "توقف واحد",
+    "airlines": "شركات الطيران",
+    "allAirlines": "جميع الشركات",
+    "departureTime": "وقت المغادرة",
+    "anyTime": "أي وقت",
+    "priceRange": "نطاق السعر",
+    "anyPrice": "أي سعر",
+    "clearAll": "مسح جميع الفلاتر",
+    "findingFlights": "جاري البحث عن أفضل الرحلات...",
+    "errorTitle": "لم نتمكن من جلب بيانات جديدة الآن",
+    "errorDesc": "حاول مرة أخرى بعد قليل. إذا استمر هذا، فسنعود إلى النتائج المخزنة مؤقتاً.",
+    "tryAgain": "إعادة المحاولة",
+    "noMatch": "لا توجد رحلات تطابق الفلاتر الخاصة بك",
+    "availableCount": "تتوفر {{count}} رحلة. حاول تعديل الفلاتر.",
+    "selectOutbound": "اختر رحلة للمتابعة إلى رحلة العودة",
+    "selectReturn": "اختر رحلة لرؤية السعر الإجمالي",
+    "noFlightsTitle": "لم يتم العثور على رحلات",
+    "noFlightsDesc": "حاول تعديل معايير البحث أو التواريخ المرنة للعثور على رحلات متاحة.",
+    "bestOptions": "أفضل الخيارات لمسارك",
+    "viewingCount": "عرض {{count}} من الخيارات المنسقة",
+    "legPrices": "الأسعار المعروضة هي لهذا الجزء فقط",
+    "allInclusive": "جميع الأسعار تشمل الضرائب والرسوم",
+    "lowestFrom": "الأقل من",
+    "fastest": "الأسرع",
+    "trend": {
+      "rising": "الأسعار في ارتفاع",
+      "stable": "أسعار جيدة اليوم",
+      "average": "تسعير متوسط"
+    },
+    "smartPicks": "اختيارات ذكية",
+    "badges": {
+      "cheapest": "الأرخص",
+      "fastest": "الأسرع",
+      "bestValue": "أفضل قيمة",
+      "recommended": "موصى به"
+    },
+    "showingAllCount": "عرض جميع النتائج البالغ عددها {{count}}",
+    "priceAvailability": "الأسعار والتوافر قد تتغير",
+    "priceSummary": "نطاق السعر: {{min}} – {{max}} · المتوسط: {{avg}}",
+    "card": {
+      "patroSpecial": "خاص بباترو",
+      "nonStop": "بدون توقف",
+      "stops": "توقف واحد",
+      "stops_plural": "{{count}} توقفات",
+      "checkedBag": "حقيبة شحن مشمولة",
+      "onlyLeft": "بقي {{count}} فقط!",
+      "perTraveler": "{{price}} للمسافر الواحد",
+      "discountApplied": "تم تطبيق خصم باترو 10%",
+      "surgePricing": "زيادة الأسعار نشطة",
+      "details": "التفاصيل",
+      "select": "اختيار",
+      "selected": "مختار",
+      "flexible": "مرن",
+      "restricted": "مقيد",
+      "mixed": "مختلط",
+      "carbon": "{{count}} كجم CO₂",
+      "fareBreakdown": "تفاصيل السعر",
+      "baseFare": "السعر الأساسي",
+      "taxesFees": "الضرائب والرسوم",
+      "carrierCharges": "رسوم الناقل",
+      "total": "الإجمالي",
+      "compareClasses": "مقارنة الدرجات",
+      "fareRules": "قواعد السعر",
+      "refund": "استرداد",
+      "baggage": "الأمتعة",
+      "aircraft": "الطائرة",
+      "refundability": "قابلية الاسترداد",
+      "lastChecked": "آخر فحص: {{time}}",
+      "ago": "منذ ({{count}} دقيقة)",
+      "classShort": {
+        "economy": "سياحية",
+        "premium_economy": "ممتازة",
+        "business": "أعمال",
+        "first": "أولى"
+      }
+    },
+    "booking": {
+      "title": "أكمل حجزك",
+      "subtitle": "دفع آمن · بياناتك مشفرة",
+      "airportMap": "خريطة المطار",
+      "noFlight": "لم يتم اختيار رحلة",
+      "noFlightDesc": "يرجى البحث عن رحلة واختيارها أولاً.",
+      "steps": {
+        "passenger": "تفاصيل المسافر",
+        "seats": "اختيار المقعد",
+        "payment": "الدفع",
+        "review": "المراجعة والتأكيد",
+        "step": "الخطوة {{number}}"
+      },
+      "passenger": {
+        "title": "معلومات المسافر",
+        "firstName": "الاسم الأول",
+        "lastName": "اسم العائلة",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "dob": "تاريخ الميلاد",
+        "passport": "رقم جواز السفر",
+        "continueSeats": "المتابعة لاختيار المقاعد"
+      },
+      "seats": {
+        "skip": "تخطي وتعيين تلقائي",
+        "continuePayment": "المتابعة للدفع"
+      },
+      "payment": {
+        "title": "تفاصيل الدفع",
+        "cardholder": "اسم صاحب البطاقة",
+        "cardNumber": "رقم البطاقة",
+        "expiry": "تاريخ الانتهاء",
+        "cvv": "رمز الأمان",
+        "secureInfo": "مدفوعاتك مؤمنة بتشفير SSL 256-بت",
+        "reviewBooking": "مراجعة الحجز"
+      },
+      "review": {
+        "title": "راجع حجزك",
+        "passenger": "المسافر",
+        "selectedSeat": "المقعد المختار",
+        "seatLabel": "المقعد {{label}} · {{position}}",
+        "freeSeat": "مجاني — لا توجد رسوم إضافية",
+        "paymentMethod": "طريقة الدفع",
+        "agreeTerms": "أوافق على <0>شروط الخدمة</0>، <1>سياسة الخصوصية</1>، و<2>قواعد السعر</2> الخاصة بشركة الطيران.",
+        "pay": "دفع {{price}}",
+        "processing": "جاري المعالجة..."
+      },
+      "summary": {
+        "title": "ملخص الرحلة",
+        "outbound": "ذهاب",
+        "return": "عودة",
+        "total": "الإجمالي",
+        "seatSurcharge": "رسوم إضافية للمقعد {{label}}"
+      },
+      "trust": {
+        "secure": "دفع آمن 100%",
+        "instant": "تأكيد فوري",
+        "support": "دعم فني 24/7"
+      }
+    },
+    "confirmation": {
+      "notFound": "لم يتم العثور على الحجز",
+      "notFoundDesc": "تعذر العثور على تأكيد الحجز.",
+      "goHome": "العودة للرئيسية",
+      "successTitle": "تم تأكيد الحجز!",
+      "successSubtitle": "تم حجز رحلتك بنجاح",
+      "confNumber": "رقم التأكيد:",
+      "totalPaid": "إجمالي المدفوع",
+      "departureDate": "تاريخ المغادرة",
+      "flightDuration": "مدة الرحلة",
+      "passenger": "المسافر",
+      "boardingPass": "بطاقة الصعود",
+      "checkInNote": "يفتح تسجيل الوصول قبل 24 ساعة من المغادرة",
+      "baggageAllowance": "الأمتعة المسموح بها",
+      "emailSent": "تم إرسال بريد التأكيد",
+      "emailSentDesc": "لقد أرسلنا تأكيد الحجز والتذكرة الإلكترونية إلى <0>{{email}}</0>",
+      "downloadTicket": "تحميل التذكرة",
+      "printItinerary": "طباعة خط الرحلة",
+      "shareDetails": "مشاركة التفاصيل",
+      "bookAnother": "هل تحتاج إلى حجز رحلة أخرى؟",
+      "searchNew": "البحث عن رحلات جديدة",
+      "supportNote": "هل تحتاج للمساعدة؟ تواصل مع الدعم الفني 24/7 على <0>support@skyflowpro.com</0>",
+      "bookedOn": "تم الحجز في {{date}}"
+    },
+    "demand": {
+      "veryHigh": "مرتفع جداً",
+      "peak": "ذروة",
+      "high": "مرتفع"
+    },
+    "perks": {
+      "priority": "أولوية الصعود",
+      "baggage": "أمتعة إضافية",
+      "sleepKit": "طقم نوم",
+      "recline": "إمالة أفضل",
+      "legroom": "مساحة أرجل إضافية",
+      "meals": "وجبات ممتازة"
+    },
+    "sort": {
+      "price": "السعر",
+      "duration": "المدة",
+      "departure": "المغادرة"
+    },
+    "underPrice": "أقل من {{price}}",
+    "abovePrice": "أعلى من {{price}}",
+    "searchingFromTo": "جاري البحث من {{from}} إلى {{to}}",
+    "insights": {
+      "fareTitle": "ذكاء الأسعار",
+      "demandTitle": "تحليلات الطلب",
+      "cabinTitle": "ذكاء الكابينة",
+      "optimizationTitle": "التحسين",
+      "upgradeTitle": "نصيحة الترقية",
+      "priceAlert": "تنبيه سعر لـ {{from}} ← {{to}}",
+      "fareRise": "قد <span class=\"text-amber-400 font-bold\">ترتفع الأسعار بنسبة {{percentage}}%</span> خلال الـ {{timeframe}} القادمة.",
+      "bestWindow": "أفضل نافذة للحجز",
+      "savingDay": "السفر في يوم <span class=\"text-emerald-400 font-bold\">{{day}}</span> قد يوفر لك <span class=\"text-emerald-400 font-bold\">{{amount}}</span>.",
+      "occupancy": "إشغال الرحلة",
+      "popularity": "شعبية المسار",
+      "trend": "الاتجاه",
+      "intensity": "تم اكتشاف كثافة حجز عالية في آخر 12 ساعة.",
+      "value": "القيمة {{score}}%",
+      "upgradeOffer": "تقدم <span class=\"text-purple-400 font-bold\">{{type}}</span> <span class=\"font-bold text-slate-100\">مساحة أرجل أكبر بنسبة {{legroom}}</span> مقابل <span class=\"text-emerald-400 font-bold\">{{fareDiff}} إضافية فقط</span>.",
+      "viewMatrix": "عرض مصفوفة المقارنة",
+      "onTime": "الرحلة المختارة لديها أداء في الوقت المحدد بنسبة 94%.",
+      "worthUpgrade": "هل تستحق الترقية؟",
+      "upgradeReason": "{{reason}} الترقية تبدأ من <span class=\"text-emerald-400 font-bold\">{{price}}</span>.",
+      "match": "طابق بنسبة {{score}}%",
+      "showOptions": "عرض خيارات الترقية",
+      "routeInsight": "رؤية المسار",
+      "upgradeCorridor": "مخزون درجة الأعمال متاح حالياً لمسار {{from}}←{{to}}.",
+      "upgradeLongHaul": "تم اكتشاف رحلة طويلة المدى. توفر مقاعد السرير في درجة الأعمال راحة أكبر بـ 4 أضعاف.",
+      "upgradeBusiness": "طلب مرتفع من قطاع الأعمال. احجز ترقيتك الآن للدخول إلى صالات كبار الشخصيات في {{to}}.",
+      "upgradeFirst": "أجنحة الدرجة الأولى متاحة. جرب الخصوصية التامة وعشاء 5 نجوم فوق السحاب.",
+      "12h": "12 ساعة",
+      "48h": "48 ساعة",
+      "bookWithin6h": "احجز خلال 6 ساعات",
+      "timingBusiness": "الرحلات الصباحية المبكرة (6-8 صباحاً) لديها أعلى أداء في الوقت المحدد لرجال الأعمال.",
+      "timingLeisure": "المغادرة في فترة بعد الظهر على هذا المسار عادة ما تكون أقل ازدحاماً.",
+      "routeLongHaul": "الرحلات المباشرة توفر لك حوالي 4.5 ساعة من وقت السفر مقارنة بخيارات التوقف.",
+      "routeNearby": "المخزون المباشر ينفد بسرعة. المطارات البديلة القريبة قد توفر 10%.",
+      "upgradeTitleValue": "ترقية {{type}}"
+    }
+  }
+}

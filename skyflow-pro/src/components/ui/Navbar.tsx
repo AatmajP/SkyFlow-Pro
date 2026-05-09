@@ -3,14 +3,16 @@ import { Link, useLocation } from 'react-router-dom'
 import { Plane, Menu, X, User, Bell, Settings } from 'lucide-react'
 import { NotificationDrawer } from './NotificationDrawer'
 import { SettingsDrawer } from './SettingsDrawer'
+import { useTranslation } from 'react-i18next'
 
 export function Navbar() {
+    const { t } = useTranslation()
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
     const location = useLocation()
 
     const navLinks = [
-        { path: '/', label: 'Search Flights' },
-        { path: '/results', label: 'Results' },
+        { path: '/', label: t('common.searchFlights') },
+        { path: '/results', label: t('common.results') },
     ]
 
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
@@ -56,7 +58,7 @@ export function Navbar() {
                         <button
                             onClick={() => setIsNotificationsOpen(true)}
                             className="relative p-2 rounded-lg text-slate-400 hover:text-slate-50 hover:bg-slate-800/50 transition-all duration-300"
-                            aria-label="Notifications"
+                            aria-label={t('common.notifications')}
                         >
                             <Bell className="h-5 w-5" />
                             <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-sky-500 animate-pulse" />
@@ -66,7 +68,7 @@ export function Navbar() {
                         <button
                             onClick={() => setIsSettingsOpen(true)}
                             className="p-2 rounded-lg text-slate-400 hover:text-slate-50 hover:bg-slate-800/50 transition-all duration-300"
-                            aria-label="Settings"
+                            aria-label={t('common.settings')}
                         >
                             <Settings className="h-5 w-5" />
                         </button>
@@ -74,21 +76,19 @@ export function Navbar() {
                         <NotificationDrawer isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
                         <SettingsDrawer isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
 
-                        {/* User menu */}
                         <div className="hidden sm:flex items-center gap-3 ml-2 pl-4 border-l border-slate-800">
                             <button className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-all duration-300">
                                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-purple-600">
                                     <User className="h-4 w-4 text-white" />
                                 </div>
-                                <span className="text-sm font-medium text-slate-300">Guest</span>
+                                <span className="text-sm font-medium text-slate-300">{t('common.guest')}</span>
                             </button>
                         </div>
 
-                        {/* Mobile menu button */}
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             className="md:hidden p-2 rounded-lg text-slate-400 hover:text-slate-50 hover:bg-slate-800/50 transition-all duration-300"
-                            aria-label="Toggle menu"
+                            aria-label={t('nav.toggleMenu')}
                         >
                             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                         </button>

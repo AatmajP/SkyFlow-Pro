@@ -7,6 +7,8 @@ import {
 import type { FlightOption, CabinClass } from '../../types/flight'
 import type { FlightBadge } from '../../utils/flightIntelligence'
 import { getBadgeConfig } from '../../utils/flightIntelligence'
+import { useTranslation } from 'react-i18next'
+import { useCurrency } from '../../context/CurrencyContext'
 
 interface FlightCardProps {
   flight: FlightOption
@@ -15,16 +17,15 @@ interface FlightCardProps {
   isSelected?: boolean
 }
 
-import { useCurrency } from '../../context/CurrencyContext'
 
-function formatDuration(minutes: number) {
+function formatDuration(minutes: number, t: any) {
   const h = Math.floor(minutes / 60)
   const m = minutes % 60
-  return `${h}h${m ? ` ${m}m` : ''}`
+  return t('common.duration', { h, m })
 }
 
-function formatTime(dateTime: string) {
-  return new Date(dateTime).toLocaleTimeString('en-US', {
+function formatTime(dateTime: string, lang: string) {
+  return new Date(dateTime).toLocaleTimeString(lang, {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
@@ -39,6 +40,8 @@ function getBadgeIcon(badge: FlightBadge) {
       return <Zap className="h-3 w-3" />
     case 'best-value':
       return <Award className="h-3 w-3" />
+    default:
+      return null
   }
 }
 
@@ -84,6 +87,7 @@ function getTagStyle(tag: string) {
 }
 
 export function FlightCard({ flight, badges = [], onSelect, isSelected }: FlightCardProps) {
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const { formatPrice } = useCurrency()
   const [isExpanded, setIsExpanded] = useState(false)
@@ -152,7 +156,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
       {isPatro && (
         <div className="absolute top-0 right-6 bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-[0.6rem] font-bold px-3 py-1 rounded-b-lg shadow-lg flex items-center gap-1 z-10">
           <Star className="h-3 w-3" />
-          Patro Special
+          {t('results.card.patroSpecial')}
         </div>
       )}
 
@@ -167,7 +171,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[0.7rem] font-semibold ring-1 badge-pill ${config.bgClass} ${config.textClass}`}
               >
                 {getBadgeIcon(badge)}
-                {config.label}
+                {t(`results.badges.${badge.replace('-','')}Value`, { defaultValue: config.label })}
               </span>
             )
           })}
@@ -213,12 +217,12 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                   <div className="text-center">
                     <p className="text-xl font-bold text-slate-50">{flight.from}</p>
                     <p className="text-xs text-slate-400">
-                      {flight.segments[0]?.departureTime && formatTime(flight.segments[0].departureTime)}
+                      {flight.segments[0]?.departureTime && formatTime(flight.segments[0].departureTime, i18n.language)}
                     </p>
                   </div>
 
                   <div className="flex flex-col items-center gap-1 min-w-[100px]">
-                    <p className="text-xs text-slate-500">{formatDuration(flight.totalDurationMinutes)}</p>
+                    <p className="text-xs text-slate-500">{formatDuration(flight.totalDurationMinutes, t)}</p>
                     <div className="relative flex items-center w-full">
                       <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-600 to-transparent" />
                       <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
@@ -226,7 +230,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                       </div>
                     </div>
                     <p className="text-xs font-medium text-slate-400">
-                      {flight.stops === 0 ? 'Non-stop' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
+                      {flight.stops === 0 ? t('results.card.nonStop') : t('results.card.stops', { count: flight.stops })}
                     </p>
                   </div>
 
@@ -234,7 +238,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                     <p className="text-xl font-bold text-slate-50">{flight.to}</p>
                     <p className="text-xs text-slate-400">
                       {flight.segments[flight.segments.length - 1]?.arrivalTime &&
-                        formatTime(flight.segments[flight.segments.length - 1].arrivalTime)}
+                        formatTime(flight.segments[flight.segments.length - 1].arrivalTime, i18n.language)}
                     </p>
                   </div>
                 </div>
@@ -242,11 +246,11 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                 <div className="hidden md:flex items-center gap-3 text-xs text-slate-400 ml-auto">
                   <div className="flex items-center gap-1.5">
                     <Clock3 className="h-3.5 w-3.5" />
-                    <span>{formatDuration(flight.totalDurationMinutes)}</span>
+                    <span>{formatDuration(flight.totalDurationMinutes, t)}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Luggage className="h-3.5 w-3.5" />
-                    <span>Checked bag included</span>
+                    <span>{t('results.card.checkedBag')}</span>
                   </div>
                 </div>
               </div>
@@ -260,7 +264,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                       className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.6rem] font-medium ring-1 ${getTagStyle(tag)}`}
                     >
                       {getTagIcon(tag)}
-                      {tag === 'surge' ? `Only ${flight.seatsLeft} left!` : tag.charAt(0).toUpperCase() + tag.slice(1)}
+                      {tag === 'surge' ? t('results.card.onlyLeft', { count: flight.seatsLeft }) : t(`results.tags.${tag}`, { defaultValue: tag.charAt(0).toUpperCase() + tag.slice(1) })}
                     </span>
                   ))}
                 </div>
@@ -281,17 +285,17 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                 {formatPrice(activeClassPrice.total)}
               </p>
               <p className="text-xs text-slate-400">
-                {formatPrice(activeClassPrice.total)} per traveler · {activeClassPrice.label ?? 'Economy'}
+                {t('results.card.perTraveler', { price: formatPrice(activeClassPrice.total) })} · {t(`search.${activeClassPrice.cabin}`, { defaultValue: activeClassPrice.label ?? 'Economy' })}
               </p>
               {isPatro && (
                 <p className="text-[0.65rem] text-emerald-400 font-medium mt-0.5">
-                  10% Patro discount applied
+                  {t('results.card.discountApplied')}
                 </p>
               )}
               {isSurge && (
                 <p className="text-[0.65rem] text-amber-400 font-medium mt-0.5 flex items-center gap-1 justify-end">
                   <AlertTriangle className="h-3 w-3" />
-                  Surge pricing active
+                  {t('results.card.surgePricing')}
                 </p>
               )}
             </div>
@@ -310,9 +314,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                   }`}
                 >
                   <p className="text-[0.55rem] font-medium leading-tight truncate">
-                    {cp.cabin === 'economy' ? 'Eco' :
-                     cp.cabin === 'premium_economy' ? 'Prem' :
-                     cp.cabin === 'business' ? 'Biz' : '1st'}
+                    {t(`results.card.classShort.${cp.cabin}`)}
                   </p>
                   <p className={`text-[0.6rem] font-bold mt-0.5 ${selectedCabin === cp.cabin ? 'text-white' : 'text-slate-300'}`}>
                     {formatPrice(cp.total)}
@@ -331,7 +333,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                     : 'text-slate-400 bg-slate-800/50 hover:bg-slate-800 hover:text-slate-200'
                 }`}
               >
-                Details
+                {t('results.card.details')}
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
               </button>
               <button
@@ -344,7 +346,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                   isSelected ? 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/25' : 'btn-primary'
                 } ${isSelectPressed && !isSelected ? 'btn-select-active' : ''}`}
               >
-                {isSelected ? 'Selected' : 'Select'}
+                {isSelected ? t('results.card.selected') : t('results.card.select')}
               </button>
             </div>
 
@@ -357,11 +359,11 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                     ? 'bg-amber-950/50 text-amber-300 ring-1 ring-amber-500/30'
                     : 'bg-slate-800/50 text-slate-300 ring-1 ring-slate-700'
               }`}>
-                {isHighRefund ? 'Flexible' : isLowRefund ? 'Restricted' : 'Mixed'}
+                {isHighRefund ? t('results.card.flexible') : isLowRefund ? t('results.card.restricted') : t('results.card.mixed')}
               </span>
               <span className="text-[0.65rem] text-slate-500 flex items-center gap-1">
                 <Leaf className="h-3 w-3 text-emerald-500" />
-                {price.carbonEstimateKg} kg CO₂
+                {t('results.card.carbon', { count: price.carbonEstimateKg })}
               </span>
             </div>
           </div>
@@ -385,23 +387,23 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
             <div className="space-y-3">
               <h4 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
                 <Shield className="h-4 w-4 text-sky-400" />
-                Fare Breakdown — {activeClassPrice.label}
+                {t('results.card.fareBreakdown')} — {t(`search.${activeClassPrice.cabin}`, { defaultValue: activeClassPrice.label })}
               </h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between group/row">
-                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Base fare</span>
+                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">{t('results.card.baseFare')}</span>
                   <span className="font-medium text-slate-200">{formatPrice(activeClassPrice.baseFare)}</span>
                 </div>
                 <div className="flex justify-between group/row">
-                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Taxes & fees</span>
+                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">{t('results.card.taxesFees')}</span>
                   <span className="font-medium text-slate-200">{formatPrice(activeClassPrice.taxesAndFees)}</span>
                 </div>
                 <div className="flex justify-between group/row">
-                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Carrier charges</span>
+                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">{t('results.card.carrierCharges')}</span>
                   <span className="font-medium text-slate-200">{formatPrice(activeClassPrice.carrierCharges)}</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-slate-800">
-                  <span className="font-semibold text-slate-200">Total</span>
+                  <span className="font-semibold text-slate-200">{t('results.card.total')}</span>
                   <span className="font-bold text-sky-400">{formatPrice(activeClassPrice.total)}</span>
                 </div>
               </div>
@@ -411,7 +413,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
             <div className="space-y-3">
               <h4 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
                 <Info className="h-4 w-4 text-sky-400" />
-                Compare Classes
+                {t('results.card.compareClasses')}
               </h4>
               <div className="space-y-1.5">
                 {(flight.classPrices ?? []).map((cp) => (
@@ -425,7 +427,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                         : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
                     }`}
                   >
-                    <span className="font-medium">{cp.label}</span>
+                    <span className="font-medium">{t(`search.${cp.cabin}`, { defaultValue: cp.label })}</span>
                     <span className={`font-bold ${selectedCabin === cp.cabin ? 'text-sky-300' : 'text-slate-300'}`}>
                       {formatPrice(cp.total)}
                     </span>
@@ -436,21 +438,21 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
 
             {/* Policies */}
             <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-slate-200">Fare Rules</h4>
+              <h4 className="text-sm font-semibold text-slate-200">{t('results.card.fareRules')}</h4>
               <div className="space-y-2 text-xs">
                 <p className="text-slate-400">
-                  <span className="font-medium text-slate-200">Refund:</span> {price.refundableLabel}
+                  <span className="font-medium text-slate-200">{t('results.card.refund')}:</span> {price.refundableLabel}
                 </p>
                 <p className="text-slate-400">
-                  <span className="font-medium text-slate-200">Baggage:</span> {flight.baggagePolicy}
+                  <span className="font-medium text-slate-200">{t('results.card.baggage')}:</span> {flight.baggagePolicy}
                 </p>
                 <p className="text-slate-400">
-                  <span className="font-medium text-slate-200">Aircraft:</span> {flight.segments[0]?.aircraft}
+                  <span className="font-medium text-slate-200">{t('results.card.aircraft')}:</span> {flight.segments[0]?.aircraft}
                 </p>
                 <div className="flex items-center gap-2 mt-2">
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-[0.65rem] text-slate-400">Refundability</span>
+                      <span className="text-[0.65rem] text-slate-400">{t('results.card.refundability')}</span>
                       <span className={`text-[0.65rem] font-semibold ${
                         isHighRefund ? 'text-emerald-400' : isLowRefund ? 'text-amber-400' : 'text-slate-300'
                       }`}>{price.refundabilityScore}/100</span>
@@ -467,9 +469,9 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                 </div>
               </div>
               <p className="text-[0.65rem] text-slate-500">
-                Last checked: {new Date(price.lastUpdated).toLocaleTimeString()}
+                {t('results.card.lastChecked', { time: new Date(price.lastUpdated).toLocaleTimeString(i18n.language) })}
                 {isStale && (
-                  <span className="ml-1 text-amber-400">({ageMinutes}m ago)</span>
+                  <span className="ml-1 text-amber-400">{t('results.card.ago', { count: ageMinutes })}</span>
                 )}
               </p>
             </div>

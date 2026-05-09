@@ -10,6 +10,7 @@ import {
   type ChatState
 } from '../../services/travelAssistant'
 import { useCurrency } from '../../context/CurrencyContext'
+import { useTranslation } from 'react-i18next'
 
 interface ChatMessage {
   id: string
@@ -19,6 +20,7 @@ interface ChatMessage {
 }
 
 export function TravelAssistantChat() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { formatPrice } = useCurrency()
   const [searchParams] = useSearchParams()
@@ -29,7 +31,7 @@ export function TravelAssistantChat() {
     {
       id: 'welcome',
       role: 'assistant',
-      text: '✨ Welcome to SkyFlow Intelligence! I\'m your personal travel curator.\n\nTell me about your vibe—are you looking for a romantic escape, a high-energy city, or perhaps a snowy mountain retreat?',
+      text: t('chat.greeting'),
     },
   ])
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -122,11 +124,11 @@ export function TravelAssistantChat() {
   }
 
   const suggestionChips = [
-    { label: '🏖 Relaxing Beach', mood: 'relaxing' },
-    { label: '🧗 Adventure', mood: 'adventure' },
-    { label: '💎 Luxury Stay', mood: 'luxury' },
-    { label: '🌃 Nightlife', mood: 'nightlife' },
-    { label: '❄️ Snowy Winter', mood: 'cold' },
+    { label: t('chat.suggestions.relaxing'), mood: 'relaxing' },
+    { label: t('chat.suggestions.adventure'), mood: 'adventure' },
+    { label: t('chat.suggestions.luxury'), mood: 'luxury' },
+    { label: t('chat.suggestions.nightlife'), mood: 'nightlife' },
+    { label: t('chat.suggestions.cold'), mood: 'cold' },
   ]
 
   const handleChipClick = (mood: string) => {
@@ -170,10 +172,10 @@ export function TravelAssistantChat() {
                 <Sparkles className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-50">SkyFlow Assistant</h3>
+                <h3 className="text-sm font-bold text-slate-50">{t('chat.title')}</h3>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Active Intelligence</p>
+                  <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{t('chat.activeIntelligence')}</p>
                 </div>
               </div>
             </div>
@@ -242,7 +244,7 @@ export function TravelAssistantChat() {
                                   Est. {formatPrice(s.price)}
                                 </p>
                                 <div className="flex items-center gap-1 text-[10px] font-bold text-sky-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                                  View Flights <ArrowRight className="h-3 w-3" />
+                                  {t('chat.viewFlights')} <ArrowRight className="h-3 w-3" />
                                 </div>
                               </div>
                             </motion.button>
@@ -296,7 +298,7 @@ export function TravelAssistantChat() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Suggest a honeymoon trip to Bali..."
+                placeholder={t('chat.placeholder')}
                 className="flex-1 bg-transparent py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none"
               />
               <button
@@ -308,7 +310,7 @@ export function TravelAssistantChat() {
               </button>
             </div>
             <p className="text-[10px] text-slate-600 text-center mt-3 font-medium uppercase tracking-widest">
-              SkyFlow Pro Intelligence · v2.5.0
+              {t('chat.version')}
             </p>
           </div>
         </motion.div>,

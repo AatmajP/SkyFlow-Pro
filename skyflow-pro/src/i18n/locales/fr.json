@@ -1,0 +1,367 @@
+{
+  "common": {
+    "searchFlights": "Rechercher des vols",
+    "results": "Résultats",
+    "guest": "Invité",
+    "notifications": "Notifications",
+    "settings": "Paramètres",
+    "cancel": "Annuler",
+    "applyChanges": "Appliquer les changements",
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "duration": "{{h}}h {{m}}m",
+    "days": {
+      "monday": "Lundi",
+      "tuesday": "Mardi",
+      "wednesday": "Mercredi",
+      "thursday": "Jeudi",
+      "friday": "Vendredi",
+      "saturday": "Samedi",
+      "sunday": "Dimanche"
+    },
+    "positions": {
+      "window": "Hublot",
+      "aisle": "Couloir",
+      "middle": "Milieu"
+    },
+    "back": "Retour",
+    "backToResults": "Retour aux résultats"
+  },
+  "nav": {
+    "toggleMenu": "Afficher le menu"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "subtitle": "Panneau de configuration",
+    "appearance": "Apparence",
+    "lightMode": "Mode Clair",
+    "darkMode": "Mode Sombre",
+    "regional": "Région & Devise",
+    "defaultCurrency": "Devise par défaut",
+    "preferredLanguage": "Langue préférée",
+    "systemAlerts": "Système & Alertes",
+    "accessibilityMode": "Mode Accessibilité",
+    "accessibilityDesc": "Contraste amélioré & cibles plus larges",
+    "smartNotifications": "Notifications Intelligentes",
+    "notificationsDesc": "Baisses de prix & mises à jour de réservation"
+  },
+  "search": {
+    "title": "Trouvez Votre Prochaine Aventure",
+    "subtitle": "Recherchez parmi plus de 500 compagnies aériennes",
+    "from": "De",
+    "to": "À",
+    "departure": "Départ",
+    "return": "Retour",
+    "passengers": "Passagers",
+    "cabinClass": "Classe de cabine",
+    "searchButton": "Rechercher des vols",
+    "oneWay": "Aller simple",
+    "roundTrip": "Aller-retour",
+    "multiCity": "Multi-destinations",
+    "economy": "Économique",
+    "premiumEconomy": "Économique Premium",
+    "business": "Affaires",
+    "first": "Première Classe",
+    "placeholderCity": "Ville ou code aéroport",
+    "timelineHint": "Sélectionnez une date de départ pour voir les jours les moins chers",
+    "timelineDesc": "Nous afficherons les prix à ±3 jours de la date choisie",
+    "flexible": "Dates flexibles"
+  },
+  "chat": {
+    "placeholder": "Posez vos questions sur les vols, la météo...",
+    "greeting": "✨ Bienvenue sur SkyFlow Intelligence ! Je suis votre curateur de voyage personnel.\n\nDites-moi ce qui vous tente : une escapade romantique, une ville dynamique ou peut-être un séjour à la montagne ?",
+    "title": "Assistant SkyFlow",
+    "activeIntelligence": "Intelligence Active",
+    "viewFlights": "Voir les vols",
+    "version": "SkyFlow Pro Intelligence · v2.5.0",
+    "suggestions": {
+      "cheapest": "Trouver les vols les moins chers pour Londres",
+      "status": "Vérifier le statut d'un vol",
+      "weather": "Quel temps fait-il à Paris ?",
+      "relaxing": "🏖 Plage relaxante",
+      "adventure": "🧗 Aventure",
+      "luxury": "💎 Séjour de luxe",
+      "nightlife": "🌃 Vie nocturne",
+      "cold": "❄️ Hiver enneigé"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "noNotifications": "Pas de nouvelles notifications"
+  },
+  "hero": {
+    "badge": "Tarifs transparents. Aucun frais caché.",
+    "titlePrefix": "Trouvez Votre",
+    "titleSuffix": "Expérience de Vol",
+    "subtitle": "Recherchez parmi plus de 50 destinations. Chaque frais est détaillé, chaque siège est garanti."
+  },
+  "features": {
+    "title": "Pourquoi choisir SkyFlow Pro",
+    "subtitle": "Découvrez le futur de la réservation de vols",
+    "noHiddenFees": {
+      "title": "Aucun frais caché",
+      "desc": "Chaque frais est détaillé d'avance. Ce que vous voyez est ce que vous payez."
+    },
+    "priceGuarantee": {
+      "title": "Garantie du meilleur prix",
+      "desc": "Nous vous montrons les tarifs les plus bas de toutes les compagnies."
+    },
+    "realTime": {
+      "title": "Prix en temps réel",
+      "desc": "Mises à jour en direct pour ne jamais rater une offre."
+    },
+    "instantBooking": {
+      "title": "Réservation instantanée",
+      "desc": "Sécurisez vos sièges en quelques secondes."
+    }
+  },
+  "stats": {
+    "destinations": "Destinations",
+    "airlines": "Compagnies",
+    "dailyFlights": "Vols quotidiens",
+    "userRating": "Note utilisateurs"
+  },
+  "trusted": {
+    "text": "Approuvé par des voyageurs du monde entier · Voyagez avec les meilleures compagnies"
+  },
+  "discovery": {
+    "liveDeals": "Offres en direct",
+    "fromPrefix": "dès"
+  },
+  "results": {
+    "newSearch": "Nouvelle recherche",
+    "liveResults": "Résultats en direct",
+    "roundTrip": "Aller-retour",
+    "refresh": "Actualiser",
+    "smartInsights": "Analyses intelligentes",
+    "outbound": "Aller",
+    "return": "Retour",
+    "total": "Total Aller-retour",
+    "proceed": "Procéder à la réservation",
+    "filters": "Filtres",
+    "sortBy": "Trier par",
+    "nonStopOnly": "Vols directs uniquement",
+    "morningFlights": "Vols du matin",
+    "stops": "Escales",
+    "any": "Peu importe",
+    "nonstop": "Direct",
+    "oneStop": "1 escale",
+    "airlines": "Compagnies",
+    "allAirlines": "Toutes",
+    "departureTime": "Heure de départ",
+    "anyTime": "N'importe quand",
+    "priceRange": "Fourchette de prix",
+    "anyPrice": "Tous les prix",
+    "clearAll": "Effacer les filtres",
+    "findingFlights": "Recherche des meilleurs vols...",
+    "errorTitle": "Impossible de récupérer les données actuelles",
+    "errorDesc": "Réessayez dans un instant. Si le problème persiste, nous utiliserons les résultats en cache.",
+    "tryAgain": "Réessayer",
+    "noMatch": "Aucun vol ne correspond à vos filtres",
+    "availableCount": "{{count}} vols disponibles. Ajustez vos filtres.",
+    "selectOutbound": "Sélectionnez un vol pour continuer vers le retour",
+    "selectReturn": "Sélectionnez un vol pour voir le prix total",
+    "noFlightsTitle": "Aucun vol trouvé",
+    "noFlightsDesc": "Essayez d'ajuster vos critères ou d'utiliser des dates flexibles.",
+    "bestOptions": "Meilleures options pour votre trajet",
+    "viewingCount": "Affichage de {{count}} options sélectionnées",
+    "legPrices": "Les prix affichés concernent uniquement ce trajet",
+    "allInclusive": "Tous les prix incluent taxes & frais",
+    "lowestFrom": "À partir de",
+    "fastest": "Le plus rapide",
+    "trend": {
+      "rising": "Prix à la hausse",
+      "stable": "Bons prix aujourd'hui",
+      "average": "Prix moyen"
+    },
+    "smartPicks": "Sélections intelligentes",
+    "badges": {
+      "cheapest": "Moins cher",
+      "fastest": "Plus rapide",
+      "bestValue": "Meilleur rapport qualité-prix",
+      "recommended": "Recommandé"
+    },
+    "showingAllCount": "Affichage des {{count}} résultats",
+    "priceAvailability": "Les prix et la disponibilité peuvent changer",
+    "priceSummary": "Fourchette : {{min}} – {{max}} · Moyenne : {{avg}}",
+    "card": {
+      "patroSpecial": "Spécial Patro",
+      "nonStop": "Direct",
+      "stops": "{{count}} escale",
+      "stops_plural": "{{count}} escales",
+      "checkedBag": "Bagage inclus",
+      "onlyLeft": "Plus que {{count}} !",
+      "perTraveler": "{{price}} par voyageur",
+      "discountApplied": "Remise Patro de 10% appliquée",
+      "surgePricing": "Tarification dynamique active",
+      "details": "Détails",
+      "select": "Sélectionner",
+      "selected": "Sélectionné",
+      "flexible": "Flexible",
+      "restricted": "Restreint",
+      "mixed": "Mixte",
+      "carbon": "{{count}} kg CO₂",
+      "fareBreakdown": "Détail du prix",
+      "baseFare": "Tarif de base",
+      "taxesFees": "Taxes & frais",
+      "carrierCharges": "Frais de transporteur",
+      "total": "Total",
+      "compareClasses": "Comparer les classes",
+      "fareRules": "Règles tarifaires",
+      "refund": "Remboursement",
+      "baggage": "Bagages",
+      "aircraft": "Appareil",
+      "refundability": "Remboursabilité",
+      "lastChecked": "Dernière vérification : {{time}}",
+      "ago": "(il y a {{count}}m)",
+      "classShort": {
+        "economy": "Eco",
+        "premium_economy": "Prem",
+        "business": "Aff",
+        "first": "1ère"
+      }
+    },
+    "booking": {
+      "title": "Complétez Votre Réservation",
+      "subtitle": "Paiement sécurisé · Vos données sont cryptées",
+      "airportMap": "Plan de l'aéroport",
+      "noFlight": "Aucun vol sélectionné",
+      "noFlightDesc": "Veuillez d'abord rechercher et sélectionner un vol.",
+      "steps": {
+        "passenger": "Détails Passager",
+        "seats": "Choix du Siège",
+        "payment": "Paiement",
+        "review": "Révision & Confirmation",
+        "step": "Étape {{number}}"
+      },
+      "passenger": {
+        "title": "Informations Passager",
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "email": "Adresse Email",
+        "phone": "Numéro de Téléphone",
+        "dob": "Date de Naissance",
+        "passport": "Numéro de Passeport",
+        "continueSeats": "Continuer vers le Choix du Siège"
+      },
+      "seats": {
+        "skip": "Passer & Auto-assigner",
+        "continuePayment": "Continuer vers le Paiement"
+      },
+      "payment": {
+        "title": "Détails du Paiement",
+        "cardholder": "Nom du Titulaire",
+        "cardNumber": "Numéro de Carte",
+        "expiry": "Expiration",
+        "cvv": "CVV",
+        "secureInfo": "Paiement sécurisé par cryptage SSL 256 bits",
+        "reviewBooking": "Réviser la Réservation"
+      },
+      "review": {
+        "title": "Révisez Votre Réservation",
+        "passenger": "Passager",
+        "selectedSeat": "Siège Sélectionné",
+        "seatLabel": "Siège {{label}} · {{position}}",
+        "freeSeat": "Gratuit — sans frais",
+        "paymentMethod": "Moyen de Paiement",
+        "agreeTerms": "J'accepte les <0>Conditions de Service</0>, la <1>Politique de Confidentialité</1> et les <2>règles tarifaires</2>.",
+        "pay": "Payer {{price}}",
+        "processing": "Traitement..."
+      },
+      "summary": {
+        "title": "Résumé du Vol",
+        "outbound": "Aller",
+        "return": "Retour",
+        "total": "Total",
+        "seatSurcharge": "Supplément siège {{label}}"
+      },
+      "trust": {
+        "secure": "Paiement 100% sécurisé",
+        "instant": "Confirmation instantanée",
+        "support": "Support 24/7"
+      }
+    },
+    "confirmation": {
+      "notFound": "Réservation non trouvée",
+      "notFoundDesc": "La confirmation de réservation n'a pas pu être trouvée.",
+      "goHome": "Retour à l'Accueil",
+      "successTitle": "Réservation Confirmée !",
+      "successSubtitle": "Votre vol a été réservé avec succès",
+      "confNumber": "Numéro de Confirmation :",
+      "totalPaid": "Total payé",
+      "departureDate": "Date de Départ",
+      "flightDuration": "Durée du Vol",
+      "passenger": "Passager",
+      "boardingPass": "Carte d'Embarquement",
+      "checkInNote": "L'enregistrement ouvre 24h avant le départ",
+      "baggageAllowance": "Franchise Bagages",
+      "emailSent": "Email de confirmation envoyé",
+      "emailSentDesc": "Confirmation et e-ticket envoyés à <0>{{email}}</0>",
+      "downloadTicket": "Télécharger l'e-ticket",
+      "printItinerary": "Imprimer l'itinéraire",
+      "shareDetails": "Partager les détails",
+      "bookAnother": "Besoin de réserver un autre vol ?",
+      "searchNew": "Rechercher des vols",
+      "supportNote": "Besoin d'aide ? Contactez le support 24/7 à <0>support@skyflowpro.com</0>",
+      "bookedOn": "Réservé le {{date}}"
+    },
+    "demand": {
+      "veryHigh": "Très Élevée",
+      "peak": "Pic",
+      "high": "Élevée"
+    },
+    "perks": {
+      "priority": "Embarquement Prioritaire",
+      "baggage": "Bagage Supplémentaire",
+      "sleepKit": "Kit de Sommeil",
+      "recline": "Meilleure Inclinaison",
+      "legroom": "Espace Jambes Extra",
+      "meals": "Repas Premium"
+    },
+    "sort": {
+      "price": "Prix",
+      "duration": "Durée",
+      "departure": "Départ"
+    },
+    "underPrice": "Moins de {{price}}",
+    "abovePrice": "Plus de {{price}}",
+    "searchingFromTo": "Recherche de {{from}} à {{to}}",
+    "insights": {
+      "fareTitle": "Intelligence Tarifaire",
+      "demandTitle": "Analyse de la Demande",
+      "cabinTitle": "Intelligence Cabine",
+      "optimizationTitle": "Optimisation",
+      "upgradeTitle": "Conseil de Surclassement",
+      "priceAlert": "Alerte de prix pour {{from}} → {{to}}",
+      "fareRise": "Les tarifs pourraient <span class=\"text-amber-400 font-bold\">augmenter de {{percentage}}%</span> d'ici {{timeframe}}.",
+      "bestWindow": "Meilleure Période de Réservation",
+      "savingDay": "Partir le <span class=\"text-emerald-400 font-bold\">{{day}}</span> pourrait vous faire économiser <span class=\"text-emerald-400 font-bold\">{{amount}}</span>.",
+      "occupancy": "Occupation du Vol",
+      "popularity": "Popularité du Trajet",
+      "trend": "Tendance",
+      "intensity": "Forte intensité de réservations détectée ces 12 dernières heures.",
+      "value": "Valeur {{score}}%",
+      "upgradeOffer": "<span class=\"text-purple-400 font-bold\">{{type}}</span> offre <span class=\"font-bold text-slate-100\">{{legroom}} de plus d'espace</span> pour seulement <span class=\"text-emerald-400 font-bold\">{{fareDiff}} de plus</span>.",
+      "viewMatrix": "Voir la Matrice de Comparaison",
+      "onTime": "Le vol sélectionné a une ponctualité de 94%.",
+      "worthUpgrade": "Le surclassement vaut-il le coup ?",
+      "upgradeReason": "{{reason}} Surclassements dès <span class=\"text-emerald-400 font-bold\">{{price}}</span>.",
+      "match": "{{score}}% de Match",
+      "showOptions": "Voir les Options de Surclassement",
+      "routeInsight": "Analyse du Trajet",
+      "upgradeCorridor": "L'inventaire Business est favorable pour l'axe {{from}}→{{to}}.",
+      "upgradeLongHaul": "Vol long-courrier. Les sièges-lits en Business offrent 4x plus de repos.",
+      "upgradeBusiness": "Forte demande corporate. Sécurisez votre surclassement pour accéder aux salons VIP à {{to}}.",
+      "upgradeFirst": "Suites Première disponibles. Confidentialité totale et dîner 5 étoiles.",
+      "12h": "12 heures",
+      "48h": "48 heures",
+      "bookWithin6h": "Réservez d'ici 6 heures",
+      "timingBusiness": "Les vols matinaux (6h-8h) sont les plus ponctuels pour les affaires.",
+      "timingLeisure": "Les départs d'après-midi sont typiquement moins encombrés.",
+      "routeLongHaul": "Les vols directs font gagner env. 4,5h vs options avec escale.",
+      "routeNearby": "Les vols directs partent vite. Des aéroports alternatifs peuvent économiser 10%.",
+      "upgradeTitleValue": "Surclassement {{type}}"
+    }
+  }
+}

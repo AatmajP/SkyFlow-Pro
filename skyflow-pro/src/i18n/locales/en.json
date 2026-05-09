@@ -1,0 +1,360 @@
+{
+  "common": {
+    "searchFlights": "Search Flights",
+    "results": "Results",
+    "guest": "Guest",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "cancel": "Cancel",
+    "applyChanges": "Apply Changes",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "duration": "{{h}}h {{m}}m",
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    }
+  },
+  "nav": {
+    "toggleMenu": "Toggle menu"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Configuration Panel",
+    "appearance": "Appearance",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "regional": "Regional & Currency",
+    "defaultCurrency": "Default Currency",
+    "preferredLanguage": "Preferred Language",
+    "systemAlerts": "System & Alerts",
+    "accessibilityMode": "Accessibility Mode",
+    "accessibilityDesc": "Enhanced contrast & larger targets",
+    "smartNotifications": "Smart Notifications",
+    "notificationsDesc": "Price drops & booking updates"
+  },
+  "search": {
+    "title": "Find Your Next Adventure",
+    "subtitle": "Search across 500+ airlines worldwide",
+    "from": "From",
+    "to": "To",
+    "departure": "Departure",
+    "return": "Return",
+    "passengers": "Passengers",
+    "cabinClass": "Cabin Class",
+    "searchButton": "Search Flights",
+    "oneWay": "One Way",
+    "roundTrip": "Round Trip",
+    "multiCity": "Multi City",
+    "economy": "Economy",
+    "premiumEconomy": "Premium Economy",
+    "business": "Business",
+    "first": "First Class",
+    "placeholderCity": "City or airport code",
+    "timelineHint": "Select a departure date to see the cheapest days nearby",
+    "timelineDesc": "We'll show you prices ±3 days around your chosen date",
+    "flexible": "Flexible dates"
+  },
+  "chat": {
+    "placeholder": "Ask about flights, weather, or travel tips...",
+    "greeting": "✨ Welcome to SkyFlow Intelligence! I'm your personal travel curator.\n\nTell me about your vibe—are you looking for a romantic escape, a high-energy city, or perhaps a snowy mountain retreat?",
+    "title": "SkyFlow Assistant",
+    "activeIntelligence": "Active Intelligence",
+    "viewFlights": "View Flights",
+    "version": "SkyFlow Pro Intelligence · v2.5.0",
+    "suggestions": {
+      "cheapest": "Find cheapest flights to London",
+      "status": "Check flight status",
+      "weather": "What's the weather in Paris?",
+      "relaxing": "🏖 Relaxing Beach",
+      "adventure": "🧗 Adventure",
+      "luxury": "💎 Luxury Stay",
+      "nightlife": "🌃 Nightlife",
+      "cold": "❄️ Snowy Winter"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "noNotifications": "No new notifications"
+  },
+  "hero": {
+    "badge": "Truth-first fares. No hidden fees.",
+    "titlePrefix": "Find Your Perfect",
+    "titleSuffix": "Flight Experience",
+    "subtitle": "Search 50+ destinations across India and beyond. Every fee itemized, every seat guaranteed."
+  },
+  "features": {
+    "title": "Why Choose SkyFlow Pro",
+    "subtitle": "Experience the future of flight booking",
+    "noHiddenFees": {
+      "title": "No Hidden Fees",
+      "desc": "Every charge itemized upfront. What you see is what you pay."
+    },
+    "priceGuarantee": {
+      "title": "Best Price Guarantee",
+      "desc": "We show you the lowest fares across all carriers."
+    },
+    "realTime": {
+      "title": "Real-time Pricing",
+      "desc": "Live fare updates ensure you never miss a deal."
+    },
+    "instantBooking": {
+      "title": "Instant Booking",
+      "desc": "Secure your seats in seconds with our fast checkout."
+    }
+  },
+  "stats": {
+    "destinations": "Destinations",
+    "airlines": "Airlines",
+    "dailyFlights": "Daily Flights",
+    "userRating": "User Rating"
+  },
+  "trusted": {
+    "text": "Trusted by travelers worldwide · Fly with India's best airlines"
+  },
+  "discovery": {
+    "liveDeals": "Live Deals",
+    "fromPrefix": "from"
+  },
+  "results": {
+    "newSearch": "New search",
+    "liveResults": "Live Results",
+    "roundTrip": "Round Trip",
+    "refresh": "Refresh",
+    "smartInsights": "Smart Travel Insights",
+    "outbound": "Outbound",
+    "return": "Return",
+    "total": "Round Trip Total",
+    "proceed": "Proceed to Booking",
+    "filters": "Filters",
+    "sortBy": "Sort by",
+    "nonStopOnly": "Non-stop only",
+    "morningFlights": "Morning flights",
+    "stops": "Stops",
+    "any": "Any",
+    "nonstop": "Non-stop",
+    "oneStop": "1 stop",
+    "airlines": "Airlines",
+    "allAirlines": "All airlines",
+    "departureTime": "Departure time",
+    "anyTime": "Any time",
+    "priceRange": "Price range",
+    "anyPrice": "Any price",
+    "clearAll": "Clear all filters",
+    "findingFlights": "Finding the best flights...",
+    "errorTitle": "We couldn't fetch fresh inventory right now",
+    "errorDesc": "Try again in a moment. If this keeps happening, we'll fall back to cached results.",
+    "tryAgain": "Try Again",
+    "noMatch": "No flights match your filters",
+    "availableCount": "{{count}} flights available. Try adjusting your filters.",
+    "selectOutbound": "Select a flight to continue to return leg",
+    "selectReturn": "Select a flight to see total price",
+    "noFlightsTitle": "No flights found",
+    "noFlightsDesc": "Try adjusting your search criteria or flexible dates to find available flights.",
+    "bestOptions": "Best options for your route",
+    "viewingCount": "Viewing {{count}} curated options",
+    "legPrices": "Prices shown are for this leg only",
+    "allInclusive": "All prices include taxes & fees",
+    "lowestFrom": "Lowest from",
+    "fastest": "Fastest",
+    "trend": {
+      "rising": "Prices trending up",
+      "stable": "Great prices today",
+      "average": "Average pricing"
+    },
+    "smartPicks": "Smart picks",
+    "badges": {
+      "cheapest": "Cheapest",
+      "fastest": "Fastest",
+      "bestValue": "Best Value",
+      "recommended": "Recommended"
+    },
+    "showingAllCount": "Showing all {{count}} results",
+    "priceAvailability": "Prices and availability may change",
+    "priceSummary": "Price range: {{min}} – {{max}} · Average: {{avg}}",
+    "card": {
+      "patroSpecial": "Patro Special",
+      "nonStop": "Non-stop",
+      "stops": "{{count}} stop",
+      "stops_plural": "{{count}} stops",
+      "checkedBag": "Checked bag included",
+      "onlyLeft": "Only {{count}} left!",
+      "perTraveler": "{{price}} per traveler",
+      "discountApplied": "10% Patro discount applied",
+      "surgePricing": "Surge pricing active",
+      "details": "Details",
+      "select": "Select",
+      "selected": "Selected",
+      "flexible": "Flexible",
+      "restricted": "Restricted",
+      "mixed": "Mixed",
+      "carbon": "{{count}} kg CO₂",
+      "fareBreakdown": "Fare Breakdown",
+      "baseFare": "Base fare",
+      "taxesFees": "Taxes & fees",
+      "carrierCharges": "Carrier charges",
+      "total": "Total",
+      "compareClasses": "Compare Classes",
+      "fareRules": "Fare Rules",
+      "refund": "Refund",
+      "baggage": "Baggage",
+      "aircraft": "Aircraft",
+      "refundability": "Refundability",
+      "lastChecked": "Last checked: {{time}}",
+      "ago": "({{count}}m ago)",
+      "classShort": {
+        "economy": "Eco",
+        "premium_economy": "Prem",
+        "business": "Biz",
+        "first": "1st"
+      }
+    },
+    "booking": {
+      "title": "Complete Your Booking",
+      "subtitle": "Secure checkout · Your data is encrypted",
+      "airportMap": "Airport Map",
+      "noFlight": "No flight selected",
+      "noFlightDesc": "Please search for and select a flight first.",
+      "steps": {
+        "passenger": "Passenger Details",
+        "seats": "Seat Selection",
+        "payment": "Payment",
+        "review": "Review & Confirm",
+        "step": "Step {{number}}"
+      },
+      "passenger": {
+        "title": "Passenger Information",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "dob": "Date of Birth",
+        "passport": "Passport Number",
+        "continueSeats": "Continue to Seat Selection"
+      },
+      "seats": {
+        "skip": "Skip & Auto-assign",
+        "continuePayment": "Continue to Payment"
+      },
+      "payment": {
+        "title": "Payment Details",
+        "cardholder": "Cardholder Name",
+        "cardNumber": "Card Number",
+        "expiry": "Expiry Date",
+        "cvv": "CVV",
+        "secureInfo": "Your payment is secured with 256-bit SSL encryption",
+        "reviewBooking": "Review Booking"
+      },
+      "review": {
+        "title": "Review Your Booking",
+        "passenger": "Passenger",
+        "selectedSeat": "Selected Seat",
+        "seatLabel": "Seat {{label}} · {{position}}",
+        "freeSeat": "Free — no extra charge",
+        "paymentMethod": "Payment Method",
+        "agreeTerms": "I agree to the <0>Terms of Service</0>, <1>Privacy Policy</1>, and the airline's <2>fare rules</2>.",
+        "pay": "Pay {{price}}",
+        "processing": "Processing..."
+      },
+      "summary": {
+        "title": "Flight Summary",
+        "outbound": "Outbound",
+        "return": "Return",
+        "total": "Total",
+        "seatSurcharge": "Seat {{label}} surcharge"
+      },
+      "trust": {
+        "secure": "100% Secure payment",
+        "instant": "Instant confirmation",
+        "support": "24/7 customer support"
+      }
+    },
+    "confirmation": {
+      "notFound": "Booking not found",
+      "notFoundDesc": "The booking confirmation could not be found.",
+      "goHome": "Go Home",
+      "successTitle": "Booking Confirmed!",
+      "successSubtitle": "Your flight has been successfully booked",
+      "confNumber": "Confirmation Number:",
+      "totalPaid": "Total paid",
+      "departureDate": "Departure Date",
+      "flightDuration": "Flight Duration",
+      "passenger": "Passenger",
+      "boardingPass": "Boarding Pass",
+      "checkInNote": "Check-in opens 24 hours before departure",
+      "baggageAllowance": "Baggage Allowance",
+      "emailSent": "Confirmation email sent",
+      "emailSentDesc": "We've sent your booking confirmation and e-ticket to <0>{{email}}</0>",
+      "downloadTicket": "Download E-Ticket",
+      "printItinerary": "Print Itinerary",
+      "shareDetails": "Share Details",
+      "bookAnother": "Need to book another flight?",
+      "searchNew": "Search New Flights",
+      "supportNote": "Need help? Contact our 24/7 customer support at <0>support@skyflowpro.com</0>",
+      "bookedOn": "Booked on {{date}}"
+    },
+    "demand": {
+      "veryHigh": "Very High",
+      "peak": "Peak",
+      "high": "High"
+    },
+    "perks": {
+      "priority": "Priority Boarding",
+      "baggage": "Extra Baggage",
+      "sleepKit": "Sleep Kit",
+      "recline": "Better Recline",
+      "legroom": "Extra Legroom",
+      "meals": "Premium Meals"
+    },
+    "sort": {
+      "price": "Price",
+      "duration": "Duration",
+      "departure": "Departure"
+    },
+    "underPrice": "Under {{price}}",
+    "abovePrice": "Above {{price}}",
+    "searchingFromTo": "Searching {{from}} to {{to}}",
+    "insights": {
+      "fareTitle": "Fare Intelligence",
+      "demandTitle": "Demand Analytics",
+      "cabinTitle": "Cabin Intelligence",
+      "optimizationTitle": "Optimization",
+      "upgradeTitle": "Upgrade Advisory",
+      "priceAlert": "Price alert for {{from}} → {{to}}",
+      "fareRise": "Fares may <span class=\"text-amber-400 font-bold\">rise {{percentage}}%</span> within the next {{timeframe}}.",
+      "bestWindow": "Best Booking Window",
+      "savingDay": "Flying on <span class=\"text-emerald-400 font-bold\">{{day}}</span> could save you <span class=\"text-emerald-400 font-bold\">{{amount}}</span>.",
+      "occupancy": "Flight Occupancy",
+      "popularity": "Route Popularity",
+      "trend": "Trend",
+      "intensity": "High intensity booking detected in the last 12 hours.",
+      "value": "Value {{score}}%",
+      "upgradeOffer": "<span class=\"text-purple-400 font-bold\">{{type}}</span> offers <span class=\"font-bold text-slate-100\">{{legroom}} more legroom</span> for only <span class=\"text-emerald-400 font-bold\">{{fareDiff}} higher fare</span>.",
+      "viewMatrix": "View Comparison Matrix",
+      "onTime": "Selected flight has 94% on-time performance.",
+      "worthUpgrade": "Is it worth upgrading?",
+      "upgradeReason": "{{reason}} Upgrades starting at <span class=\"text-emerald-400 font-bold\">{{price}}</span>.",
+      "match": "{{score}}% Match",
+      "showOptions": "Show Upgrade Options",
+      "routeInsight": "Route Insight",
+      "upgradeCorridor": "Business class inventory is currently favorable for the {{from}}→{{to}} corridor.",
+      "upgradeLongHaul": "Long-haul flight detected. Flat-bed seats in Business class offer 4x more rest for your arrival.",
+      "upgradeBusiness": "High business demand. Secure your upgrade now to access premium lounges in {{to}}.",
+      "upgradeFirst": "First Class suites available. Experience ultimate privacy and 5-star dining over the clouds.",
+      "12h": "12 hours",
+      "48h": "48 hours",
+      "bookWithin6h": "Book within 6 hours",
+      "timingBusiness": "Early morning flights (6-8 AM) have the highest on-time performance for business travelers.",
+      "timingLeisure": "Afternoon departures on this route are typically less crowded.",
+      "routeLongHaul": "Direct flights save you approx. 4.5 hours of travel time compared to layover options.",
+      "routeNearby": "Non-stop inventory is selling fast. Alternative nearby airports could save 10%.",
+      "upgradeTitleValue": "{{type}} Upgrade"
+    }
+  }
+}

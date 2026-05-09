@@ -8,11 +8,12 @@ interface SettingsDrawerProps {
 }
 
 import { useCurrency, type CurrencyCode } from '../../context/CurrencyContext'
+import { useTranslation } from 'react-i18next'
 
 export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
+  const { t, i18n } = useTranslation()
   const { currency, setCurrency } = useCurrency()
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark')
-  const [language, setLanguage] = useState(localStorage.getItem('language') || 'English')
   const [animations, setAnimations] = useState(localStorage.getItem('animations') !== 'false')
   const [notifications, setNotifications] = useState(localStorage.getItem('notification_pref') !== 'false')
   const [accessibility, setAccessibility] = useState(localStorage.getItem('accessibility_mode') === 'true')
@@ -22,8 +23,6 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
     if (theme === 'dark') document.documentElement.classList.add('dark')
     else document.documentElement.classList.remove('dark')
   }, [theme])
-
-  useEffect(() => localStorage.setItem('language', language), [language])
   useEffect(() => localStorage.setItem('animations', String(animations)), [animations])
   useEffect(() => localStorage.setItem('notification_pref', String(notifications)), [notifications])
   useEffect(() => localStorage.setItem('accessibility_mode', String(accessibility)), [accessibility])
@@ -45,7 +44,13 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
     { code: 'AED', label: 'UAE Dirham (د.إ)' },
   ]
 
-  const languages = ['English', 'Hindi', 'Spanish', 'French', 'German']
+  const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'hi', name: 'हिन्दी (Hindi)' },
+    { code: 'es', name: 'Español (Spanish)' },
+    { code: 'fr', name: 'Français (French)' },
+    { code: 'ar', name: 'العربية (Arabic)' }
+  ]
 
   return (
     <AnimatePresence>
@@ -74,8 +79,8 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                   <Settings className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-50 leading-none">Settings</h2>
-                  <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mt-1.5">Configuration Panel</p>
+                  <h2 className="text-lg font-bold text-slate-50 leading-none">{t('settings.title')}</h2>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mt-1.5">{t('settings.subtitle')}</p>
                 </div>
               </div>
               <button
@@ -92,7 +97,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
               <section>
                 <div className="flex items-center gap-2 mb-4">
                   <Sun className="h-4 w-4 text-amber-400" />
-                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Appearance</h3>
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t('settings.appearance')}</h3>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <button
@@ -102,7 +107,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                     }`}
                   >
                     <Sun className="h-6 w-6" />
-                    <span className="text-sm font-semibold">Light Mode</span>
+                    <span className="text-sm font-semibold">{t('settings.lightMode')}</span>
                   </button>
                   <button
                     onClick={() => setTheme('dark')}
@@ -111,7 +116,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                     }`}
                   >
                     <Moon className="h-6 w-6" />
-                    <span className="text-sm font-semibold">Dark Mode</span>
+                    <span className="text-sm font-semibold">{t('settings.darkMode')}</span>
                   </button>
                 </div>
               </section>
@@ -120,17 +125,17 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
               <section className="space-y-6">
                 <div className="flex items-center gap-2 mb-2">
                   <Globe className="h-4 w-4 text-sky-400" />
-                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Regional & Currency</h3>
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t('settings.regional')}</h3>
                 </div>
                 
                 {/* Currency */}
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-slate-300">Default Currency</label>
+                  <label className="text-sm font-medium text-slate-300">{t('settings.defaultCurrency')}</label>
                   <div className="grid grid-cols-4 gap-2">
                     {currencies.map(c => (
                       <button
                         key={c.code}
-                        onClick={() => setCurrency(c.code)}
+                        onClick={() => setCurrency(c.code as CurrencyCode)}
                         className={`py-2.5 rounded-xl text-xs font-bold border transition-all ${
                           currency === c.code ? 'bg-sky-500 text-white border-sky-500 shadow-lg shadow-sky-500/20' : 'bg-slate-800/40 border-slate-700 text-slate-400 hover:bg-slate-800'
                         }`}
@@ -143,13 +148,13 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
 
                 {/* Language */}
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-slate-300">Preferred Language</label>
+                  <label className="text-sm font-medium text-slate-300">{t('settings.preferredLanguage')}</label>
                   <select
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value)}
+                    value={i18n.language}
+                    onChange={(e) => i18n.changeLanguage(e.target.value)}
                     className="w-full bg-slate-800/60 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition-all"
                   >
-                    {languages.map(l => <option key={l} value={l} className="bg-slate-900">{l}</option>)}
+                    {languages.map(l => <option key={l.code} value={l.code} className="bg-slate-900">{l.name}</option>)}
                   </select>
                 </div>
               </section>
@@ -158,7 +163,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
               <section className="space-y-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Zap className="h-4 w-4 text-amber-400" />
-                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">System & Alerts</h3>
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t('settings.systemAlerts')}</h3>
                 </div>
                 
                 {/* Accessibility Toggle */}
@@ -168,8 +173,8 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                       <Star className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-slate-200">Accessibility Mode</p>
-                      <p className="text-[10px] text-slate-500 font-medium">Enhanced contrast & larger targets</p>
+                      <p className="text-sm font-semibold text-slate-200">{t('settings.accessibilityMode')}</p>
+                      <p className="text-[10px] text-slate-500 font-medium">{t('settings.accessibilityDesc')}</p>
                     </div>
                   </div>
                   <button
@@ -190,8 +195,8 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                       <Bell className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-slate-200">Smart Notifications</p>
-                      <p className="text-[10px] text-slate-500 font-medium">Price drops & booking updates</p>
+                      <p className="text-sm font-semibold text-slate-200">{t('settings.smartNotifications')}</p>
+                      <p className="text-[10px] text-slate-500 font-medium">{t('settings.notificationsDesc')}</p>
                     </div>
                   </div>
                   <button
@@ -213,13 +218,13 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                 onClick={onClose}
                 className="flex-1 px-4 py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-sm hover:bg-slate-700 transition-all border border-slate-700"
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 onClick={onClose}
                 className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-sky-600 text-white font-bold text-sm hover:shadow-lg hover:shadow-sky-500/20 transition-all"
               >
-                Apply Changes
+                {t('common.applyChanges')}
               </button>
             </div>
           </motion.div>

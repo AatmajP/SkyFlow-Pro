@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { ArrowLeft, User, CreditCard, Shield, Check, Plane, Clock, AlertCircle, ChevronRight, Lock, MapPin, Armchair } from 'lucide-react'
 import type { FlightOption } from '../types/flight'
@@ -25,6 +26,7 @@ interface PaymentInfo {
 import { useCurrency } from '../context/CurrencyContext'
 
 export function BookingPage() {
+    const { t } = useTranslation()
     const { formatPrice } = useCurrency()
     const navigate = useNavigate()
     const { flightId } = useParams()
@@ -121,10 +123,10 @@ export function BookingPage() {
             <div className="min-h-screen flex items-center justify-center">
                 <div className="glass rounded-2xl p-8 text-center max-w-md">
                     <AlertCircle className="h-12 w-12 text-amber-400 mx-auto mb-4" />
-                    <h2 className="text-xl font-semibold text-slate-50">No flight selected</h2>
-                    <p className="text-sm text-slate-400 mt-2">Please search for and select a flight first.</p>
+                    <h2 className="text-xl font-semibold text-slate-50">{t('booking.noFlight')}</h2>
+                    <p className="text-sm text-slate-400 mt-2">{t('booking.noFlightDesc')}</p>
                     <Link to="/" className="btn-primary inline-flex mt-6">
-                        Search Flights
+                        {t('search.searchButton')}
                     </Link>
                 </div>
             </div>
@@ -133,10 +135,10 @@ export function BookingPage() {
 
     // 4-step flow: Passenger → Seat Selection → Payment → Review
     const steps = [
-        { number: 1, title: 'Passenger Details', icon: User },
-        { number: 2, title: 'Seat Selection', icon: Armchair },
-        { number: 3, title: 'Payment', icon: CreditCard },
-        { number: 4, title: 'Review & Confirm', icon: Check },
+        { number: 1, title: t('booking.steps.passenger'), icon: User },
+        { number: 2, title: t('booking.steps.seats'), icon: Armchair },
+        { number: 3, title: t('booking.steps.payment'), icon: CreditCard },
+        { number: 4, title: t('booking.steps.review'), icon: Check },
     ]
 
     const isStep1Valid = passenger.firstName && passenger.lastName && passenger.email
@@ -156,13 +158,13 @@ export function BookingPage() {
                     className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-sky-400 transition-colors mb-6"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    Back to results
+                    {t('common.backToResults')}
                 </Link>
 
                 {/* Header */}
                 <div className="mb-8 animate-fade-in">
-                    <h1 className="text-3xl font-bold text-slate-50">Complete Your Booking</h1>
-                    <p className="text-slate-400 mt-1">Secure checkout · Your data is encrypted</p>
+                    <h1 className="text-3xl font-bold text-slate-50">{t('booking.title')}</h1>
+                    <p className="text-slate-400 mt-1">{t('booking.subtitle')}</p>
                     <div className="flex items-center gap-3 mt-3">
                         <button
                             type="button"
@@ -170,7 +172,7 @@ export function BookingPage() {
                             className="btn-secondary text-xs flex items-center gap-1.5"
                         >
                             <MapPin className="h-3.5 w-3.5" />
-                            Airport Map
+                            {t('booking.airportMap')}
                         </button>
                     </div>
                 </div>
@@ -207,7 +209,7 @@ export function BookingPage() {
                                     </div>
                                     <div className="hidden sm:block">
                                         <p className={`text-sm font-medium ${currentStep >= step.number ? 'text-slate-50' : 'text-slate-500'}`}>
-                                            Step {step.number}
+                                            {t('booking.steps.step', { number: step.number })}
                                         </p>
                                         <p className="text-xs text-slate-500">{step.title}</p>
                                     </div>
@@ -230,12 +232,12 @@ export function BookingPage() {
                             <div className="glass rounded-2xl p-6 animate-fade-in">
                                 <h2 className="text-lg font-semibold text-slate-50 flex items-center gap-2 mb-6">
                                     <User className="h-5 w-5 text-sky-400" />
-                                    Passenger Information
+                                    {t('booking.passenger.title')}
                                 </h2>
 
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">First Name *</label>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.passenger.firstName')} *</label>
                                         <input
                                             type="text"
                                             value={passenger.firstName}
@@ -246,7 +248,7 @@ export function BookingPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">Last Name *</label>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.passenger.lastName')} *</label>
                                         <input
                                             type="text"
                                             value={passenger.lastName}
@@ -257,7 +259,7 @@ export function BookingPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">Email Address *</label>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.passenger.email')} *</label>
                                         <input
                                             type="email"
                                             value={passenger.email}
@@ -268,7 +270,7 @@ export function BookingPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">Phone Number</label>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.passenger.phone')}</label>
                                         <input
                                             type="tel"
                                             value={passenger.phone}
@@ -278,7 +280,7 @@ export function BookingPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">Date of Birth</label>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.passenger.dob')}</label>
                                         <input
                                             type="date"
                                             value={passenger.dateOfBirth}
@@ -287,7 +289,7 @@ export function BookingPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">Passport Number</label>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.passenger.passport')}</label>
                                         <input
                                             type="text"
                                             value={passenger.passportNumber}
@@ -304,7 +306,7 @@ export function BookingPage() {
                                         disabled={!isStep1Valid}
                                         className={`btn-primary flex items-center gap-2 ${!isStep1Valid ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     >
-                                        Continue to Seat Selection
+                                        {t('booking.passenger.continueSeats')}
                                         <ChevronRight className="h-4 w-4" />
                                     </button>
                                 </div>
@@ -324,13 +326,13 @@ export function BookingPage() {
 
                                 <div className="flex justify-between pt-2">
                                     <button onClick={handlePrevStep} className="btn-secondary">
-                                        Back
+                                        {t('common.back')}
                                     </button>
                                     <button
                                         onClick={handleNextStep}
                                         className="btn-primary flex items-center gap-2"
                                     >
-                                        {selectedSeat ? 'Continue to Payment' : 'Skip & Auto-assign'}
+                                        {selectedSeat ? t('booking.seats.continuePayment') : t('booking.seats.skip')}
                                         <ChevronRight className="h-4 w-4" />
                                     </button>
                                 </div>
@@ -342,12 +344,12 @@ export function BookingPage() {
                             <div className="glass rounded-2xl p-6 animate-fade-in">
                                 <h2 className="text-lg font-semibold text-slate-50 flex items-center gap-2 mb-6">
                                     <CreditCard className="h-5 w-5 text-sky-400" />
-                                    Payment Details
+                                    {t('booking.payment.title')}
                                 </h2>
 
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">Cardholder Name *</label>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.payment.cardholder')} *</label>
                                         <input
                                             type="text"
                                             value={payment.cardholderName}
@@ -358,7 +360,7 @@ export function BookingPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">Card Number *</label>
+                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.payment.cardNumber')} *</label>
                                         <input
                                             type="text"
                                             value={payment.cardNumber}
@@ -371,7 +373,7 @@ export function BookingPage() {
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="text-xs font-medium text-slate-400 block mb-2">Expiry Date *</label>
+                                            <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.payment.expiry')} *</label>
                                             <input
                                                 type="text"
                                                 value={payment.expiryDate}
@@ -383,7 +385,7 @@ export function BookingPage() {
                                             />
                                         </div>
                                         <div>
-                                            <label className="text-xs font-medium text-slate-400 block mb-2">CVV *</label>
+                                            <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.payment.cvv')} *</label>
                                             <input
                                                 type="password"
                                                 value={payment.cvv}
@@ -399,19 +401,19 @@ export function BookingPage() {
 
                                 <div className="mt-4 p-3 rounded-lg bg-sky-950/30 border border-sky-500/20 flex items-center gap-2">
                                     <Lock className="h-4 w-4 text-sky-400" />
-                                    <p className="text-xs text-sky-300">Your payment is secured with 256-bit SSL encryption</p>
+                                    <p className="text-xs text-sky-300">{t('booking.payment.secureInfo')}</p>
                                 </div>
 
                                 <div className="mt-6 pt-6 border-t border-slate-800/50 flex justify-between">
                                     <button onClick={handlePrevStep} className="btn-secondary">
-                                        Back
+                                        {t('common.back')}
                                     </button>
                                     <button
                                         onClick={handleNextStep}
                                         disabled={!isStep3Valid}
                                         className={`btn-primary flex items-center gap-2 ${!isStep3Valid ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     >
-                                        Review Booking
+                                        {t('booking.payment.reviewBooking')}
                                         <ChevronRight className="h-4 w-4" />
                                     </button>
                                 </div>
@@ -423,12 +425,12 @@ export function BookingPage() {
                             <div className="glass rounded-2xl p-6 animate-fade-in">
                                 <h2 className="text-lg font-semibold text-slate-50 flex items-center gap-2 mb-6">
                                     <Check className="h-5 w-5 text-sky-400" />
-                                    Review Your Booking
+                                    {t('booking.review.title')}
                                 </h2>
 
                                 {/* Passenger summary */}
                                 <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
-                                    <h3 className="text-sm font-medium text-slate-300 mb-2">Passenger</h3>
+                                    <h3 className="text-sm font-medium text-slate-300 mb-2">{t('booking.review.passenger')}</h3>
                                     <p className="text-lg font-semibold text-slate-50">
                                         {passenger.firstName} {passenger.lastName}
                                     </p>
@@ -438,17 +440,17 @@ export function BookingPage() {
                                 {/* Seat summary */}
                                 {selectedSeat && (
                                     <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
-                                        <h3 className="text-sm font-medium text-slate-300 mb-2">Selected Seat</h3>
+                                        <h3 className="text-sm font-medium text-slate-300 mb-2">{t('booking.review.selectedSeat')}</h3>
                                         <div className="flex items-center gap-3">
                                             <div className="h-10 w-10 rounded-lg bg-sky-500 flex items-center justify-center text-white font-bold shadow-lg shadow-sky-500/20">
                                                 {selectedSeat.label}
                                             </div>
                                             <div>
                                                 <p className="text-sm font-semibold text-slate-50">
-                                                    Seat {selectedSeat.label} · {selectedSeat.position.charAt(0).toUpperCase() + selectedSeat.position.slice(1)}
+                                                    {t('booking.review.seatLabel', { label: selectedSeat.label, position: t(`common.positions.${selectedSeat.position}`, { defaultValue: selectedSeat.position }) })}
                                                 </p>
                                                 <p className="text-xs text-slate-400">
-                                                    {selectedSeat.price > 0 ? formatPrice(selectedSeat.price) : 'Free — no extra charge'}
+                                                    {selectedSeat.price > 0 ? formatPrice(selectedSeat.price) : t('booking.review.freeSeat')}
                                                 </p>
                                             </div>
                                         </div>
@@ -457,7 +459,7 @@ export function BookingPage() {
 
                                 {/* Payment summary */}
                                 <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
-                                    <h3 className="text-sm font-medium text-slate-300 mb-2">Payment Method</h3>
+                                    <h3 className="text-sm font-medium text-slate-300 mb-2">{t('booking.review.paymentMethod')}</h3>
                                     <p className="text-lg font-semibold text-slate-50 flex items-center gap-2">
                                         <CreditCard className="h-5 w-5 text-slate-400" />
                                         •••• •••• •••• {payment.cardNumber.slice(-4)}
@@ -475,16 +477,18 @@ export function BookingPage() {
                                             className="mt-1 h-4 w-4 rounded border-slate-600 bg-slate-800 text-sky-500 focus:ring-sky-500"
                                         />
                                         <span className="text-sm text-slate-400">
-                                            I agree to the <button className="text-sky-400 hover:underline">Terms of Service</button>,{' '}
-                                            <button className="text-sky-400 hover:underline">Privacy Policy</button>, and the airline's{' '}
-                                            <button className="text-sky-400 hover:underline">fare rules</button>.
+                                            <Trans i18nKey="booking.review.agreeTerms">
+                                                I agree to the <button className="text-sky-400 hover:underline">Terms of Service</button>,{' '}
+                                                <button className="text-sky-400 hover:underline">Privacy Policy</button>, and the airline's{' '}
+                                                <button className="text-sky-400 hover:underline">fare rules</button>.
+                                            </Trans>
                                         </span>
                                     </label>
                                 </div>
 
                                 <div className="mt-6 pt-6 border-t border-slate-800/50 flex justify-between">
                                     <button onClick={handlePrevStep} className="btn-secondary">
-                                        Back
+                                        {t('common.back')}
                                     </button>
                                     <button
                                         onClick={handleSubmit}
@@ -495,12 +499,12 @@ export function BookingPage() {
                                         {isProcessing ? (
                                             <>
                                                 <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                                Processing...
+                                                {t('booking.review.processing')}
                                             </>
                                         ) : (
                                             <>
                                                 <Lock className="h-4 w-4" />
-                                                Pay {formatPrice(totalPrice)}
+                                                {t('booking.review.pay', { price: formatPrice(totalPrice) })}
                                             </>
                                         )}
                                     </button>
@@ -512,11 +516,11 @@ export function BookingPage() {
                     {/* Sidebar - Flight Summary */}
                     <div className="lg:col-span-1">
                         <div className="glass rounded-2xl p-5 sticky top-24 animate-fade-in">
-                            <h3 className="text-sm font-semibold text-slate-300 mb-4">Flight Summary</h3>
+                            <h3 className="text-sm font-semibold text-slate-300 mb-4">{t('booking.summary.title')}</h3>
 
                             {/* Flight details */}
                             <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
-                                <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">Outbound</div>
+                                <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">{t('booking.summary.outbound')}</div>
                                 <div className="flex items-center gap-3">
                                     <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
                                         <Plane className="h-5 w-5 text-white" />
@@ -533,16 +537,16 @@ export function BookingPage() {
                                 <div className="mt-3 pt-3 border-t border-slate-700/50 flex items-center gap-2 text-xs text-slate-400">
                                     <Clock className="h-3.5 w-3.5" />
                                     <span>
-                                        {Math.floor(flight.totalDurationMinutes / 60)}h {flight.totalDurationMinutes % 60}m
+                                        {t('common.duration', { h: Math.floor(flight.totalDurationMinutes / 60), m: flight.totalDurationMinutes % 60 })}
                                     </span>
                                     <span className="text-slate-600">•</span>
-                                    <span>{flight.stops === 0 ? 'Non-stop' : `${flight.stops} stop`}</span>
+                                    <span>{flight.stops === 0 ? t('results.card.nonStop') : t('results.card.stops', { count: flight.stops })}</span>
                                 </div>
                             </div>
 
                             {returnFlight && (
                                 <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
-                                    <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">Return</div>
+                                    <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">{t('booking.summary.return')}</div>
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
                                             <Plane className="h-5 w-5 text-white rotate-[135deg]" />
@@ -559,10 +563,10 @@ export function BookingPage() {
                                     <div className="mt-3 pt-3 border-t border-slate-700/50 flex items-center gap-2 text-xs text-slate-400">
                                         <Clock className="h-3.5 w-3.5" />
                                         <span>
-                                            {Math.floor(returnFlight.totalDurationMinutes / 60)}h {returnFlight.totalDurationMinutes % 60}m
+                                            {t('common.duration', { h: Math.floor(returnFlight.totalDurationMinutes / 60), m: returnFlight.totalDurationMinutes % 60 })}
                                         </span>
                                         <span className="text-slate-600">•</span>
-                                        <span>{returnFlight.stops === 0 ? 'Non-stop' : `${returnFlight.stops} stop`}</span>
+                                        <span>{returnFlight.stops === 0 ? t('results.card.nonStop') : t('results.card.stops', { count: returnFlight.stops })}</span>
                                     </div>
                                 </div>
                             )}
@@ -570,31 +574,31 @@ export function BookingPage() {
                             {/* Price breakdown */}
                             <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
-                                    <span className="text-slate-400">Base fare</span>
+                                    <span className="text-slate-400">{t('results.card.baseFare')}</span>
                                     <span className="text-slate-200">{formatPrice(flight.price.baseFare + (returnFlight?.price.baseFare ?? 0))}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-slate-400">Taxes & fees</span>
+                                    <span className="text-slate-400">{t('results.card.taxesFees')}</span>
                                     <span className="text-slate-200">{formatPrice(flight.price.taxesAndFees + (returnFlight?.price.taxesAndFees ?? 0))}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-slate-400">Carrier charges</span>
+                                    <span className="text-slate-400">{t('results.card.carrierCharges')}</span>
                                     <span className="text-slate-200">{formatPrice(flight.price.carrierCharges + (returnFlight?.price.carrierCharges ?? 0))}</span>
                                 </div>
                                 {selectedSeat && selectedSeat.price > 0 && (
                                     <div className="flex justify-between">
-                                        <span className="text-amber-300">Seat {selectedSeat.label} surcharge</span>
+                                        <span className="text-amber-300">{t('booking.summary.seatSurcharge', { label: selectedSeat.label })}</span>
                                         <span className="text-amber-300">{formatPrice(selectedSeat.price)}</span>
                                     </div>
                                 )}
                                 {selectedSeat && selectedSeat.price === 0 && (
                                     <div className="flex justify-between">
-                                        <span className="text-emerald-300">Seat {selectedSeat.label}</span>
-                                        <span className="text-emerald-300">Free</span>
+                                        <span className="text-emerald-300">{t('booking.review.seatLabel', { label: selectedSeat.label, position: t(`common.positions.${selectedSeat.position}`, { defaultValue: selectedSeat.position }) })}</span>
+                                        <span className="text-emerald-300">{t('booking.review.freeSeat')}</span>
                                     </div>
                                 )}
                                 <div className="flex justify-between pt-3 border-t border-slate-800/50">
-                                    <span className="font-semibold text-slate-50">Total</span>
+                                    <span className="font-semibold text-slate-50">{t('booking.summary.total')}</span>
                                     <span className="text-xl font-bold text-sky-400">{formatPrice(totalPrice)}</span>
                                 </div>
                             </div>
@@ -603,15 +607,15 @@ export function BookingPage() {
                             <div className="mt-6 pt-4 border-t border-slate-800/50 space-y-2">
                                 <div className="flex items-center gap-2 text-xs text-slate-400">
                                     <Shield className="h-4 w-4 text-emerald-500" />
-                                    <span>100% Secure payment</span>
+                                    <span>{t('booking.trust.secure')}</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-xs text-slate-400">
                                     <Check className="h-4 w-4 text-emerald-500" />
-                                    <span>Instant confirmation</span>
+                                    <span>{t('booking.trust.instant')}</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-xs text-slate-400">
                                     <Check className="h-4 w-4 text-emerald-500" />
-                                    <span>24/7 customer support</span>
+                                    <span>{t('booking.trust.support')}</span>
                                 </div>
                             </div>
                         </div>

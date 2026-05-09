@@ -1,0 +1,367 @@
+{
+  "common": {
+    "searchFlights": "Buscar Vuelos",
+    "results": "Resultados",
+    "guest": "Invitado",
+    "notifications": "Notificaciones",
+    "settings": "Ajustes",
+    "cancel": "Cancelar",
+    "applyChanges": "Aplicar Cambios",
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "duration": "{{h}}h {{m}}m",
+    "days": {
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    },
+    "positions": {
+      "window": "Ventana",
+      "aisle": "Pasillo",
+      "middle": "Centro"
+    },
+    "back": "Volver",
+    "backToResults": "Volver a los resultados"
+  },
+  "nav": {
+    "toggleMenu": "Alternar menú"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "subtitle": "Panel de Configuración",
+    "appearance": "Apariencia",
+    "lightMode": "Modo Claro",
+    "darkMode": "Modo Oscuro",
+    "regional": "Regional y Moneda",
+    "defaultCurrency": "Moneda Predeterminada",
+    "preferredLanguage": "Idioma Preferido",
+    "systemAlerts": "Sistema y Alertas",
+    "accessibilityMode": "Modo de Accesibilidad",
+    "accessibilityDesc": "Contraste mejorado y objetivos más grandes",
+    "smartNotifications": "Notificaciones Inteligentes",
+    "notificationsDesc": "Bajas de precios y actualizaciones de reserva"
+  },
+  "search": {
+    "title": "Encuentra Tu Próxima Aventura",
+    "subtitle": "Busca entre más de 500 aerolíneas en todo el mundo",
+    "from": "Desde",
+    "to": "A",
+    "departure": "Salida",
+    "return": "Regreso",
+    "passengers": "Pasajeros",
+    "cabinClass": "Clase de Cabina",
+    "searchButton": "Buscar Vuelos",
+    "oneWay": "Solo ida",
+    "roundTrip": "Ida y vuelta",
+    "multiCity": "Multiciudad",
+    "economy": "Económica",
+    "premiumEconomy": "Económica Premium",
+    "business": "Ejecutiva",
+    "first": "Primera Clase",
+    "placeholderCity": "Ciudad o código de aeropuerto",
+    "timelineHint": "Selecciona una fecha de salida para ver los días más baratos",
+    "timelineDesc": "Mostraremos precios ±3 días alrededor de la fecha elegida",
+    "flexible": "Fechas flexibles"
+  },
+  "chat": {
+    "placeholder": "Pregunta sobre vuelos, clima o consejos...",
+    "greeting": "✨ ¡Bienvenido a SkyFlow Intelligence! Soy tu curador de viajes personal.\n\nCuéntame sobre tu plan: ¿buscas una escapada romántica, una ciudad vibrante o tal vez un refugio de montaña nevado?",
+    "title": "Asistente SkyFlow",
+    "activeIntelligence": "Inteligencia Activa",
+    "viewFlights": "Ver Vuelos",
+    "version": "SkyFlow Pro Intelligence · v2.5.0",
+    "suggestions": {
+      "cheapest": "Encuentra vuelos baratos a Londres",
+      "status": "Consultar estado del vuelo",
+      "weather": "¿Cómo está el clima en París?",
+      "relaxing": "🏖 Playa Relajante",
+      "adventure": "🧗 Aventura",
+      "luxury": "💎 Estancia de Lujo",
+      "nightlife": "🌃 Vida Nocturna",
+      "cold": "❄️ Invierno Nevado"
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAllRead": "Marcar todo como leído",
+    "noNotifications": "No hay notificaciones nuevas"
+  },
+  "hero": {
+    "badge": "Tarifas honestas. Sin cargos ocultos.",
+    "titlePrefix": "Encuentra Tu",
+    "titleSuffix": "Experiencia de Vuelo",
+    "subtitle": "Busca en más de 50 destinos en India y el mundo. Cada cargo detallado, cada asiento garantizado."
+  },
+  "features": {
+    "title": "Por qué elegir SkyFlow Pro",
+    "subtitle": "Vive el futuro de la reserva de vuelos",
+    "noHiddenFees": {
+      "title": "Sin Cargos Ocultos",
+      "desc": "Cada cargo detallado por adelantado. Lo que ves es lo que pagas."
+    },
+    "priceGuarantee": {
+      "title": "Garantía de Mejor Precio",
+      "desc": "Te mostramos las tarifas más bajas de todas las aerolíneas."
+    },
+    "realTime": {
+      "title": "Precios en Tiempo Real",
+      "desc": "Actualizaciones en vivo para que nunca pierdas una oferta."
+    },
+    "instantBooking": {
+      "title": "Reserva Instantánea",
+      "desc": "Asegura tus asientos en segundos con nuestro pago rápido."
+    }
+  },
+  "stats": {
+    "destinations": "Destinos",
+    "airlines": "Aerolíneas",
+    "dailyFlights": "Vuelos Diarios",
+    "userRating": "Calificación"
+  },
+  "trusted": {
+    "text": "Con la confianza de viajeros de todo el mundo · Vuela con las mejores aerolíneas"
+  },
+  "discovery": {
+    "liveDeals": "Ofertas en Vivo",
+    "fromPrefix": "desde"
+  },
+  "results": {
+    "newSearch": "Nueva búsqueda",
+    "liveResults": "Resultados en Vivo",
+    "roundTrip": "Ida y Vuelta",
+    "refresh": "Actualizar",
+    "smartInsights": "Perspectivas Inteligentes",
+    "outbound": "Salida",
+    "return": "Regreso",
+    "total": "Total Ida y Vuelta",
+    "proceed": "Continuar con la Reserva",
+    "filters": "Filtros",
+    "sortBy": "Ordenar por",
+    "nonStopOnly": "Solo directos",
+    "morningFlights": "Vuelos de mañana",
+    "stops": "Escalas",
+    "any": "Cualquiera",
+    "nonstop": "Sin escalas",
+    "oneStop": "1 escala",
+    "airlines": "Aerolíneas",
+    "allAirlines": "Todas",
+    "departureTime": "Hora de salida",
+    "anyTime": "Cualquier hora",
+    "priceRange": "Rango de precio",
+    "anyPrice": "Cualquier precio",
+    "clearAll": "Limpiar filtros",
+    "findingFlights": "Buscando los mejores vuelos...",
+    "errorTitle": "No pudimos obtener datos actualizados ahora",
+    "errorDesc": "Inténtalo de nuevo en un momento. Si persiste, usaremos resultados en caché.",
+    "tryAgain": "Reintentar",
+    "noMatch": "No hay vuelos que coincidan con tus filtros",
+    "availableCount": "{{count}} vuelos disponibles. Ajusta tus filtros.",
+    "selectOutbound": "Selecciona un vuelo para continuar con el regreso",
+    "selectReturn": "Selecciona un vuelo para ver el precio total",
+    "noFlightsTitle": "No se encontraron vuelos",
+    "noFlightsDesc": "Prueba ajustando tus criterios o con fechas flexibles.",
+    "bestOptions": "Mejores opciones para tu ruta",
+    "viewingCount": "Viendo {{count}} opciones seleccionadas",
+    "legPrices": "Precios mostrados solo para este trayecto",
+    "allInclusive": "Todos los precios incluyen impuestos y cargos",
+    "lowestFrom": "Mínimo desde",
+    "fastest": "Más rápido",
+    "trend": {
+      "rising": "Precios al alza",
+      "stable": "Buenos precios hoy",
+      "average": "Precio promedio"
+    },
+    "smartPicks": "Selecciones inteligentes",
+    "badges": {
+      "cheapest": "Más barato",
+      "fastest": "Más rápido",
+      "bestValue": "Mejor valor",
+      "recommended": "Recomendado"
+    },
+    "showingAllCount": "Mostrando {{count}} resultados",
+    "priceAvailability": "Precios y disponibilidad sujetos a cambios",
+    "priceSummary": "Rango: {{min}} – {{max}} · Promedio: {{avg}}",
+    "card": {
+      "patroSpecial": "Especial Patro",
+      "nonStop": "Sin escalas",
+      "stops": "{{count}} escala",
+      "stops_plural": "{{count}} escalas",
+      "checkedBag": "Maleta incluida",
+      "onlyLeft": "¡Solo quedan {{count}}!",
+      "perTraveler": "{{price}} por viajero",
+      "discountApplied": "10% de descuento Patro aplicado",
+      "surgePricing": "Precios dinámicos activos",
+      "details": "Detalles",
+      "select": "Seleccionar",
+      "selected": "Seleccionado",
+      "flexible": "Flexible",
+      "restricted": "Restringido",
+      "mixed": "Mixto",
+      "carbon": "{{count}} kg CO₂",
+      "fareBreakdown": "Desglose de Tarifa",
+      "baseFare": "Tarifa base",
+      "taxesFees": "Impuestos y cargos",
+      "carrierCharges": "Cargos de aerolínea",
+      "total": "Total",
+      "compareClasses": "Comparar Clases",
+      "fareRules": "Reglas de Tarifa",
+      "refund": "Reembolso",
+      "baggage": "Equipaje",
+      "aircraft": "Aeronave",
+      "refundability": "Reembolsabilidad",
+      "lastChecked": "Última comprobación: {{time}}",
+      "ago": "(hace {{count}}m)",
+      "classShort": {
+        "economy": "Eco",
+        "premium_economy": "Prem",
+        "business": "Neg",
+        "first": "1ra"
+      }
+    },
+    "booking": {
+      "title": "Completa tu Reserva",
+      "subtitle": "Pago seguro · Tus datos están encriptados",
+      "airportMap": "Mapa del Aeropuerto",
+      "noFlight": "No se seleccionó vuelo",
+      "noFlightDesc": "Por favor, busca y selecciona un vuelo primero.",
+      "steps": {
+        "passenger": "Datos del Pasajero",
+        "seats": "Selección de Asiento",
+        "payment": "Pago",
+        "review": "Revisar y Confirmar",
+        "step": "Paso {{number}}"
+      },
+      "passenger": {
+        "title": "Información del Pasajero",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "email": "Correo Electrónico",
+        "phone": "Teléfono",
+        "dob": "Fecha de Nacimiento",
+        "passport": "Número de Pasaporte",
+        "continueSeats": "Continuar a Selección de Asiento"
+      },
+      "seats": {
+        "skip": "Omitir y asignar auto",
+        "continuePayment": "Continuar al Pago"
+      },
+      "payment": {
+        "title": "Detalles de Pago",
+        "cardholder": "Nombre en la Tarjeta",
+        "cardNumber": "Número de Tarjeta",
+        "expiry": "Vencimiento",
+        "cvv": "CVV",
+        "secureInfo": "Tu pago está protegido con encriptación SSL de 256 bits",
+        "reviewBooking": "Revisar Reserva"
+      },
+      "review": {
+        "title": "Revisa tu Reserva",
+        "passenger": "Pasajero",
+        "selectedSeat": "Asiento Seleccionado",
+        "seatLabel": "Asiento {{label}} · {{position}}",
+        "freeSeat": "Gratis — sin cargo extra",
+        "paymentMethod": "Método de Pago",
+        "agreeTerms": "Acepto los <0>Términos de Servicio</0>, <1>Política de Privacidad</1> y <2>reglas de tarifa</2>.",
+        "pay": "Pagar {{price}}",
+        "processing": "Procesando..."
+      },
+      "summary": {
+        "title": "Resumen del Vuelo",
+        "outbound": "Salida",
+        "return": "Regreso",
+        "total": "Total",
+        "seatSurcharge": "Recargo asiento {{label}}"
+      },
+      "trust": {
+        "secure": "Pago 100% seguro",
+        "instant": "Confirmación instantánea",
+        "support": "Soporte 24/7"
+      }
+    },
+    "confirmation": {
+      "notFound": "Reserva no encontrada",
+      "notFoundDesc": "No se pudo encontrar la confirmación de la reserva.",
+      "goHome": "Ir al Inicio",
+      "successTitle": "¡Reserva Confirmada!",
+      "successSubtitle": "Tu vuelo ha sido reservado con éxito",
+      "confNumber": "Número de Confirmación:",
+      "totalPaid": "Total pagado",
+      "departureDate": "Fecha de Salida",
+      "flightDuration": "Duración del Vuelo",
+      "passenger": "Pasajero",
+      "boardingPass": "Tarjeta de Embarque",
+      "checkInNote": "El check-in abre 24 horas antes de la salida",
+      "baggageAllowance": "Equipaje Permitido",
+      "emailSent": "Correo de confirmación enviado",
+      "emailSentDesc": "Hemos enviado tu confirmación y e-ticket a <0>{{email}}</0>",
+      "downloadTicket": "Descargar E-Ticket",
+      "printItinerary": "Imprimir Itinerario",
+      "shareDetails": "Compartir Detalles",
+      "bookAnother": "¿Necesitas reservar otro vuelo?",
+      "searchNew": "Buscar Nuevos Vuelos",
+      "supportNote": "¿Necesitas ayuda? Contacta a soporte 24/7 en <0>support@skyflowpro.com</0>",
+      "bookedOn": "Reservado el {{date}}"
+    },
+    "demand": {
+      "veryHigh": "Muy Alta",
+      "peak": "Pico",
+      "high": "Alta"
+    },
+    "perks": {
+      "priority": "Embarque Prioritario",
+      "baggage": "Equipaje Extra",
+      "sleepKit": "Kit de Sueño",
+      "recline": "Mejor Reclinación",
+      "legroom": "Espacio Extra",
+      "meals": "Comidas Premium"
+    },
+    "sort": {
+      "price": "Precio",
+      "duration": "Duración",
+      "departure": "Salida"
+    },
+    "underPrice": "Menos de {{price}}",
+    "abovePrice": "Más de {{price}}",
+    "searchingFromTo": "Buscando de {{from}} a {{to}}",
+    "insights": {
+      "fareTitle": "Inteligencia de Tarifas",
+      "demandTitle": "Analítica de Demanda",
+      "cabinTitle": "Inteligencia de Cabina",
+      "optimizationTitle": "Optimización",
+      "upgradeTitle": "Aviso de Mejora",
+      "priceAlert": "Alerta de precio para {{from}} → {{to}}",
+      "fareRise": "Las tarifas podrían <span class=\"text-amber-400 font-bold\">subir un {{percentage}}%</span> en las próximas {{timeframe}}.",
+      "bestWindow": "Mejor Ventana de Reserva",
+      "savingDay": "Volar un <span class=\"text-emerald-400 font-bold\">{{day}}</span> podría ahorrarte <span class=\"text-emerald-400 font-bold\">{{amount}}</span>.",
+      "occupancy": "Ocupación del Vuelo",
+      "popularity": "Popularidad de la Ruta",
+      "trend": "Tendencia",
+      "intensity": "Alta intensidad de reservas detectada en las últimas 12 horas.",
+      "value": "Valor {{score}}%",
+      "upgradeOffer": "<span class=\"text-purple-400 font-bold\">{{type}}</span> ofrece <span class=\"font-bold text-slate-100\">{{legroom}} más de espacio</span> por solo <span class=\"text-emerald-400 font-bold\">{{fareDiff}} más</span>.",
+      "viewMatrix": "Ver Matriz de Comparación",
+      "onTime": "El vuelo seleccionado tiene un 94% de puntualidad.",
+      "worthUpgrade": "¿Vale la pena la mejora?",
+      "upgradeReason": "{{reason}} Mejoras desde <span class=\"text-emerald-400 font-bold\">{{price}}</span>.",
+      "match": "{{score}}% Coincidencia",
+      "showOptions": "Ver Opciones de Mejora",
+      "routeInsight": "Perspectiva de Ruta",
+      "upgradeCorridor": "El inventario de Business es favorable actualmente para el corredor {{from}}→{{to}}.",
+      "upgradeLongHaul": "Vuelo de larga distancia. Los asientos cama en Business ofrecen 4 veces más descanso.",
+      "upgradeBusiness": "Alta demanda corporativa. Asegura tu mejora ahora para acceder a salas VIP en {{to}}.",
+      "upgradeFirst": "Suites de Primera disponibles. Privacidad total y cena 5 estrellas.",
+      "12h": "12 horas",
+      "48h": "48 horas",
+      "bookWithin6h": "Reserva en 6 horas",
+      "timingBusiness": "Vuelos temprano (6-8 AM) tienen la mejor puntualidad para negocios.",
+      "timingLeisure": "Las salidas por la tarde suelen estar menos concurridas.",
+      "routeLongHaul": "Vuelos directos ahorran aprox. 4.5 horas vs opciones con escala.",
+      "routeNearby": "Vuelos directos se agotan rápido. Aeropuertos cercanos podrían ahorrar un 10%.",
+      "upgradeTitleValue": "Mejora {{type}}"
+    }
+  }
+}

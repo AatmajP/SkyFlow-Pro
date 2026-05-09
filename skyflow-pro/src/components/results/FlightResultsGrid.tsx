@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plane, Clock, DollarSign, Award, TrendingDown, TrendingUp, Zap, BarChart3 } from 'lucide-react'
 import type { FlightOption } from '../../types/flight'
 import { FlightCard } from './FlightCard'
@@ -14,6 +15,7 @@ interface FlightResultsGridProps {
 import { useCurrency } from '../../context/CurrencyContext'
 
 export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, isRoundTrip }: FlightResultsGridProps) {
+  const { t } = useTranslation()
   const { formatPrice } = useCurrency()
   // Compute badges dynamically from the data
   const badgeMap = useMemo(() => computeFlightBadges(results), [results])
@@ -24,9 +26,9 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
         <div className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-slate-800/50 mb-4">
           <Plane className="h-10 w-10 text-slate-600" />
         </div>
-        <h3 className="text-xl font-semibold text-slate-200">No flights found</h3>
+        <h3 className="text-xl font-semibold text-slate-200">{t('results.noFlightsTitle')}</h3>
         <p className="text-sm text-slate-400 mt-2 max-w-md mx-auto">
-          Try adjusting your search criteria or flexible dates to find available flights.
+          {t('results.noFlightsDesc')}
         </p>
       </div>
     )
@@ -58,10 +60,10 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-sky-400">
-              Best options for your route
+              {t('results.bestOptions')}
             </p>
             <p className="mt-1 text-sm text-slate-400">
-              Viewing {results.length} curated options · {isRoundTrip ? 'Prices shown are for this leg only' : 'All prices include taxes & fees'}
+              {t('results.viewingCount', { count: results.length })} · {isRoundTrip ? t('results.legPrices') : t('results.allInclusive')}
             </p>
           </div>
 
@@ -70,13 +72,13 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-950/30 border border-emerald-500/20">
               <DollarSign className="h-4 w-4 text-emerald-400" />
               <span className="text-xs text-emerald-300">
-                Lowest from <span className="font-bold">{formatPrice(minPrice)}</span>
+                {t('results.lowestFrom')} <span className="font-bold">{formatPrice(minPrice)}</span>
               </span>
             </div>
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-sky-950/30 border border-sky-500/20">
               <Clock className="h-4 w-4 text-sky-400" />
               <span className="text-xs text-sky-300">
-                Fastest {Math.floor(fastestFlight.totalDurationMinutes / 60)}h {fastestFlight.totalDurationMinutes % 60}m
+                {t('results.fastest')} {t('common.duration', { h: Math.floor(fastestFlight.totalDurationMinutes / 60), m: fastestFlight.totalDurationMinutes % 60 })}
               </span>
             </div>
             {/* Price Trend Indicator */}
@@ -93,7 +95,7 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
                 <TrendingDown className="h-4 w-4 text-emerald-400" />
               )}
               <span className={`text-xs ${trendLabel === 'rising' ? 'text-amber-300' : 'text-emerald-300'}`}>
-                {trendLabel === 'rising' ? 'Prices trending up' : trendLabel === 'stable' ? 'Great prices today' : 'Average pricing'}
+                {trendLabel === 'rising' ? t('results.trend.rising') : trendLabel === 'stable' ? t('results.trend.stable') : t('results.trend.average')}
               </span>
             </div>
           </div>
@@ -101,7 +103,7 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
 
         {/* Intelligent recommendation badges */}
         <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-slate-800/50">
-          <span className="text-xs text-slate-500 mr-1">Smart picks:</span>
+          <span className="text-xs text-slate-500 mr-1">{t('results.smartPicks')}:</span>
 
           {/* Cheapest pill */}
           {results.filter((f) => badgeMap[f.id]?.includes('cheapest')).map((flight) => (
@@ -111,7 +113,7 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
             >
               <TrendingDown className="h-3 w-3" />
               {flight.segments[0]?.marketingCarrier} · {formatPrice(flight.price.total)}
-              <span className="text-emerald-400/70 ml-0.5">Cheapest</span>
+              <span className="text-emerald-400/70 ml-0.5">{t('results.badges.cheapest')}</span>
             </div>
           ))}
 
@@ -122,8 +124,8 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-sky-950/40 text-sky-300 hover:bg-sky-950/60 transition-colors cursor-default"
             >
               <Zap className="h-3 w-3" />
-              {flight.segments[0]?.marketingCarrier} · {Math.floor(flight.totalDurationMinutes / 60)}h {flight.totalDurationMinutes % 60}m
-              <span className="text-sky-400/70 ml-0.5">Fastest</span>
+              {flight.segments[0]?.marketingCarrier} · {t('common.duration', { h: Math.floor(flight.totalDurationMinutes / 60), m: flight.totalDurationMinutes % 60 })}
+              <span className="text-sky-400/70 ml-0.5">{t('results.badges.fastest')}</span>
             </div>
           ))}
 
@@ -132,7 +134,7 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-violet-950/40 text-violet-300 hover:bg-violet-950/60 transition-colors cursor-default">
               <Award className="h-3 w-3" />
               {bestValueFlight.segments[0]?.marketingCarrier} · {formatPrice(bestValueFlight.price.total)}
-              <span className="text-violet-400/70 ml-0.5">Best Value</span>
+              <span className="text-violet-400/70 ml-0.5">{t('results.badges.bestValue')}</span>
             </div>
           )}
 
@@ -141,7 +143,7 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-gradient-to-r from-sky-950/40 to-emerald-950/40 text-sky-300 hover:from-sky-950/60 hover:to-emerald-950/60 transition-colors cursor-default ring-1 ring-sky-500/20">
               <BarChart3 className="h-3 w-3" />
               Patro Airlines · {formatPrice(patroFlight.price.total)}
-              <span className="text-emerald-400/70 ml-0.5">Recommended</span>
+              <span className="text-emerald-400/70 ml-0.5">{t('results.badges.recommended')}</span>
             </div>
           )}
         </div>
@@ -168,10 +170,10 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
       {/* Results footer */}
       <div className="glass rounded-2xl p-4 mt-4 text-center">
         <p className="text-sm text-slate-400">
-          Showing all {results.length} results · Prices and availability may change
+          {t('results.showingAllCount', { count: results.length })} · {t('results.priceAvailability')}
         </p>
         <p className="text-xs text-slate-500 mt-1">
-          Price range: {formatPrice(minPrice)} – {formatPrice(maxPrice)} · Average: {formatPrice(avgPrice)}
+          {t('results.priceSummary', { min: formatPrice(minPrice), max: formatPrice(maxPrice), avg: formatPrice(avgPrice) })}
         </p>
       </div>
     </section>

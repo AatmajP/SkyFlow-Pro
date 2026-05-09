@@ -2,47 +2,50 @@ import { GlobalSearchHeader } from '../components/global-search/GlobalSearchHead
 import { SmartDiscovery } from '../components/search/SmartDiscovery'
 import { MainFooter } from '../components/ui/MainFooter'
 import { Plane, Shield, Tag, Clock, Star, Users, Zap, Globe } from 'lucide-react'
-
-const features = [
-  {
-    icon: Shield,
-    title: 'No Hidden Fees',
-    description: 'Every charge itemized upfront. What you see is what you pay.',
-    color: 'from-emerald-500 to-teal-500',
-  },
-  {
-    icon: Tag,
-    title: 'Best Price Guarantee',
-    description: 'We show you the lowest fares across all carriers.',
-    color: 'from-sky-500 to-blue-500',
-  },
-  {
-    icon: Clock,
-    title: 'Real-time Pricing',
-    description: 'Live fare updates ensure you never miss a deal.',
-    color: 'from-purple-500 to-violet-500',
-  },
-  {
-    icon: Zap,
-    title: 'Instant Booking',
-    description: 'Secure your seats in seconds with our fast checkout.',
-    color: 'from-amber-500 to-orange-500',
-  },
-]
-
-const stats = [
-  { value: '50+', label: 'Destinations', icon: Plane },
-  { value: '6', label: 'Airlines', icon: Users },
-  { value: '20+', label: 'Daily Flights', icon: Globe },
-  { value: '4.9', label: 'User Rating', icon: Star },
-]
-
-const airlines = [
-  'IndiGo', 'Air India', 'Vistara', 'SpiceJet', 'Akasa Air', 'Patro Airlines',
-  'Emirates', 'British Airways', 'Lufthansa', 'Singapore Airlines',
-]
+import { useTranslation } from 'react-i18next'
 
 export function SearchPage() {
+  const { t } = useTranslation()
+
+  const features = [
+    {
+      icon: Shield,
+      title: t('features.noHiddenFees.title'),
+      description: t('features.noHiddenFees.desc'),
+      color: 'from-emerald-500 to-teal-500',
+    },
+    {
+      icon: Tag,
+      title: t('features.priceGuarantee.title'),
+      description: t('features.priceGuarantee.desc'),
+      color: 'from-sky-500 to-blue-500',
+    },
+    {
+      icon: Clock,
+      title: t('features.realTime.title'),
+      description: t('features.realTime.desc'),
+      color: 'from-purple-500 to-violet-500',
+    },
+    {
+      icon: Zap,
+      title: t('features.instantBooking.title'),
+      description: t('features.instantBooking.desc'),
+      color: 'from-amber-500 to-orange-500',
+    },
+  ]
+
+  const stats = [
+    { value: '50+', label: t('stats.destinations'), icon: Plane },
+    { value: '6', label: t('stats.airlines'), icon: Users },
+    { value: '20+', label: t('stats.dailyFlights'), icon: Globe },
+    { value: '4.9', label: t('stats.userRating'), icon: Star },
+  ]
+
+  const airlines = [
+    'IndiGo', 'Air India', 'Vistara', 'SpiceJet', 'Akasa Air', 'Patro Airlines',
+    'Emirates', 'British Airways', 'Lufthansa', 'Singapore Airlines',
+  ]
+
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       {/* Decorative background elements */}
@@ -66,18 +69,17 @@ export function SearchPage() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-500" />
             </span>
-            Truth-first fares. No hidden fees.
+            {t('hero.badge')}
           </div>
 
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            <span className="gradient-text">Find Your Perfect</span>
+            <span className="gradient-text">{t('hero.titlePrefix')}</span>
             <br />
-            <span className="text-slate-100">Flight Experience</span>
+            <span className="text-slate-100">{t('hero.titleSuffix')}</span>
           </h1>
 
           <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400 sm:text-lg">
-            Search 50+ destinations across India and beyond.
-            Every fee itemized, every seat guaranteed.
+            {t('hero.subtitle')}
           </p>
         </header>
 
@@ -111,9 +113,9 @@ export function SearchPage() {
         <section className="mb-16" id="main">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-slate-50 sm:text-3xl">
-              Why Choose <span className="gradient-text">SkyFlow Pro</span>
+              {t('features.title').split('SkyFlow Pro')[0]} <span className="gradient-text">SkyFlow Pro</span>
             </h2>
-            <p className="mt-2 text-slate-400">Experience the future of flight booking</p>
+            <p className="mt-2 text-slate-400">{t('features.subtitle')}</p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -136,7 +138,7 @@ export function SearchPage() {
         {/* Trusted Airlines */}
         <section className="mb-16 glass rounded-2xl p-8 animate-fade-in">
           <p className="text-center text-sm font-medium text-slate-400 mb-6">
-            Trusted by travelers worldwide · Fly with India's best airlines
+            {t('trusted.text')}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6">
             {airlines.map((airline, idx) => (

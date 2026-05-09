@@ -1,0 +1,367 @@
+{
+  "common": {
+    "searchFlights": "उड़ानें खोजें",
+    "results": "परिणाम",
+    "guest": "अतिथि",
+    "notifications": "सूचनाएं",
+    "settings": "सेटिंग्स",
+    "cancel": "रद्द करें",
+    "applyChanges": "परिवर्तन लागू करें",
+    "loading": "लोड हो रहा है...",
+    "error": "कुछ गलत हो गया",
+    "duration": "{{h}}घं {{m}}मि",
+    "days": {
+      "monday": "सोमवार",
+      "tuesday": "मंगलवार",
+      "wednesday": "बुधवार",
+      "thursday": "गुरुवार",
+      "friday": "शुक्रवार",
+      "saturday": "शनिवार",
+      "sunday": "रविवार"
+    },
+    "positions": {
+      "window": "खिड़की",
+      "aisle": "रास्ता",
+      "middle": "बीच"
+    },
+    "back": "पीछे",
+    "backToResults": "परिणामों पर वापस जाएं"
+  },
+  "nav": {
+    "toggleMenu": "मेनू टॉगल करें"
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "subtitle": "कॉन्फ़िगरेशन पैनल",
+    "appearance": "दिखावट",
+    "lightMode": "लाइट मोड",
+    "darkMode": "डार्क मोड",
+    "regional": "क्षेत्रीय और मुद्रा",
+    "defaultCurrency": "डिफ़ॉल्ट मुद्रा",
+    "preferredLanguage": "पसंदीदा भाषा",
+    "systemAlerts": "सिस्टम और अलर्ट",
+    "accessibilityMode": "एक्सेसिबिलिटी मोड",
+    "accessibilityDesc": "बेहतर कंट्रास्ट और बड़े लक्ष्य",
+    "smartNotifications": "स्मार्ट सूचनाएं",
+    "notificationsDesc": "कीमत में गिरावट और बुकिंग अपडेट"
+  },
+  "search": {
+    "title": "अपना अगला साहसिक कार्य खोजें",
+    "subtitle": "दुनिया भर की 500+ एयरलाइनों में खोजें",
+    "from": "कहाँ से",
+    "to": "कहाँ तक",
+    "departure": "प्रस्थान",
+    "return": "वापसी",
+    "passengers": "यात्री",
+    "cabinClass": "केबिन क्लास",
+    "searchButton": "उड़ानें खोजें",
+    "oneWay": "एक तरफ",
+    "roundTrip": "आने-जाने का",
+    "multiCity": "बहु-शहर",
+    "economy": "इकोनॉमी",
+    "premiumEconomy": "प्रीमियम इकोनॉमी",
+    "business": "बिजनेस",
+    "first": "फर्स्ट क्लास",
+    "placeholderCity": "शहर या एयरपोर्ट कोड",
+    "timelineHint": "आस-पास के सबसे सस्ते दिन देखने के लिए प्रस्थान तिथि चुनें",
+    "timelineDesc": "हम आपको आपकी चुनी हुई तारीख के ±3 दिनों के आसपास की कीमतें दिखाएंगे",
+    "flexible": "लचीली तारीखें"
+  },
+  "chat": {
+    "placeholder": "उड़ानों, मौसम या यात्रा युक्तियों के बारे में पूछें...",
+    "greeting": "✨ स्काईफ़्लो इंटेलिजेंस में आपका स्वागत है! मैं आपका व्यक्तिगत यात्रा क्यूरेटर हूँ।\n\nमुझे अपने मूड के बारे में बताएं—क्या आप एक रोमांटिक पलायन, एक उच्च-ऊर्जा शहर, या शायद एक बर्फीले पहाड़ की तलाश में हैं?",
+    "title": "स्काईफ़्लो सहायक",
+    "activeIntelligence": "सक्रिय इंटेलिजेंस",
+    "viewFlights": "उड़ानें देखें",
+    "version": "स्काईफ़्लो प्रो इंटेलिजेंस · v2.5.0",
+    "suggestions": {
+      "cheapest": "लंदन के लिए सबसे सस्ती उड़ानें खोजें",
+      "status": "फ्लाइट स्टेटस चेक करें",
+      "weather": "पेरिस में मौसम कैसा है?",
+      "relaxing": "🏖 आरामदायक बीच",
+      "adventure": "🧗 साहसिक कार्य",
+      "luxury": "💎 लग्जरी स्टे",
+      "nightlife": "🌃 नाइटलाइफ़",
+      "cold": "❄️ बर्फीली सर्दी"
+    }
+  },
+  "notifications": {
+    "title": "सूचनाएं",
+    "markAllRead": "सभी को पढ़ा हुआ मार्क करें",
+    "noNotifications": "कोई नई सूचना नहीं"
+  },
+  "hero": {
+    "badge": "सत्य-प्रथम किराए। कोई छिपा हुआ शुल्क नहीं।",
+    "titlePrefix": "अपना सही खोजें",
+    "titleSuffix": "फ्लाइट अनुभव",
+    "subtitle": "भारत और उसके बाहर 50+ गंतव्यों में खोजें। हर शुल्क मदवार, हर सीट की गारंटी।"
+  },
+  "features": {
+    "title": "स्काईफ़्लो प्रो क्यों चुनें",
+    "subtitle": "फ्लाइट बुकिंग के भविष्य का अनुभव करें",
+    "noHiddenFees": {
+      "title": "कोई छिपा हुआ शुल्क नहीं",
+      "desc": "हर शुल्क पहले ही मदवार दिया गया है। जो आप देखते हैं वही आप भुगतान करते हैं।"
+    },
+    "priceGuarantee": {
+      "title": "सर्वोत्तम मूल्य की गारंटी",
+      "desc": "हम आपको सभी वाहकों में सबसे कम किराया दिखाते हैं।"
+    },
+    "realTime": {
+      "title": "रीयल-टाइम मूल्य निर्धारण",
+      "desc": "लाइव किराया अपडेट सुनिश्चित करते हैं कि आप कभी कोई डील न चूकें।"
+    },
+    "instantBooking": {
+      "title": "त्वरित बुकिंग",
+      "desc": "हमारे तेज़ चेकआउट के साथ सेकंडों में अपनी सीटें सुरक्षित करें।"
+    }
+  },
+  "stats": {
+    "destinations": "गंतव्य",
+    "airlines": "एयरलाइंस",
+    "dailyFlights": "दैनिक उड़ानें",
+    "userRating": "यूजर रेटिंग"
+  },
+  "trusted": {
+    "text": "दुनिया भर के यात्रियों द्वारा विश्वसनीय · भारत की सर्वश्रेष्ठ एयरलाइनों के साथ उड़ें"
+  },
+  "discovery": {
+    "liveDeals": "लाइव डील्स",
+    "fromPrefix": "से"
+  },
+  "results": {
+    "newSearch": "नई खोज",
+    "liveResults": "लाइव परिणाम",
+    "roundTrip": "आने-जाने का",
+    "refresh": "रिफ्रेश",
+    "smartInsights": "स्मार्ट यात्रा अंतर्दृष्टि",
+    "outbound": "प्रस्थान",
+    "return": "वापसी",
+    "total": "कुल आने-जाने का",
+    "proceed": "बुकिंग के लिए आगे बढ़ें",
+    "filters": "फ़िल्टर",
+    "sortBy": "इसके अनुसार क्रमबद्ध करें",
+    "nonStopOnly": "केवल नॉन-स्टॉप",
+    "morningFlights": "सुबह की उड़ानें",
+    "stops": "स्टॉप",
+    "any": "कोई भी",
+    "nonstop": "नॉन-स्टॉप",
+    "oneStop": "1 स्टॉप",
+    "airlines": "एयरलाइंस",
+    "allAirlines": "सभी एयरलाइंस",
+    "departureTime": "प्रस्थान का समय",
+    "anyTime": "किसी भी समय",
+    "priceRange": "मूल्य सीमा",
+    "anyPrice": "कोई भी कीमत",
+    "clearAll": "सभी फ़िल्टर हटाएँ",
+    "findingFlights": "सर्वोत्तम उड़ानें खोज रहे हैं...",
+    "errorTitle": "हम अभी ताज़ा जानकारी प्राप्त नहीं कर सके",
+    "errorDesc": "थोड़ी देर में पुनः प्रयास करें। यदि ऐसा होता रहता है, तो हम पुराने परिणामों पर वापस चले जाएंगे।",
+    "tryAgain": "पुनः प्रयास करें",
+    "noMatch": "आपके फ़िल्टर से कोई उड़ान मेल नहीं खाती",
+    "availableCount": "{{count}} उड़ानें उपलब्ध हैं। अपने फ़िल्टर समायोजित करने का प्रयास करें।",
+    "selectOutbound": "वापसी यात्रा जारी रखने के लिए एक उड़ान चुनें",
+    "selectReturn": "कुल मूल्य देखने के लिए एक उड़ान चुनें",
+    "noFlightsTitle": "कोई उड़ान नहीं मिली",
+    "noFlightsDesc": "उपलब्ध उड़ानें खोजने के लिए अपने खोज मानदंड या लचीली तारीखों को समायोजित करने का प्रयास करें।",
+    "bestOptions": "आपके रूट के लिए सर्वोत्तम विकल्प",
+    "viewingCount": "{{count}} क्यूरेटेड विकल्प देख रहे हैं",
+    "legPrices": "दिखाई गई कीमतें केवल इस यात्रा के लिए हैं",
+    "allInclusive": "सभी कीमतों में टैक्स और शुल्क शामिल हैं",
+    "lowestFrom": "न्यूनतम से",
+    "fastest": "सबसे तेज़",
+    "trend": {
+      "rising": "कीमतें बढ़ रही हैं",
+      "stable": "आज अच्छी कीमतें हैं",
+      "average": "औसत मूल्य निर्धारण"
+    },
+    "smartPicks": "स्मार्ट पिक्स",
+    "badges": {
+      "cheapest": "सबसे सस्ता",
+      "fastest": "सबसे तेज़",
+      "bestValue": "सर्वोत्तम मूल्य",
+      "recommended": "अनुशंसित"
+    },
+    "showingAllCount": "सभी {{count}} परिणाम दिखाए जा रहे हैं",
+    "priceAvailability": "कीमतें और उपलब्धता बदल सकती हैं",
+    "priceSummary": "मूल्य सीमा: {{min}} – {{max}} · औसत: {{avg}}",
+    "card": {
+      "patroSpecial": "पात्रो विशेष",
+      "nonStop": "नॉन-स्टॉप",
+      "stops": "{{count}} स्टॉप",
+      "stops_plural": "{{count}} स्टॉप",
+      "checkedBag": "चेक किया गया बैग शामिल",
+      "onlyLeft": "केवल {{count}} बचे हैं!",
+      "perTraveler": "{{price}} प्रति यात्री",
+      "discountApplied": "10% पात्रो छूट लागू",
+      "surgePricing": "सर्ज प्राइसिंग सक्रिय",
+      "details": "विवरण",
+      "select": "चुनें",
+      "selected": "चुना गया",
+      "flexible": "लचीला",
+      "restricted": "प्रतिबंधित",
+      "mixed": "मिश्रित",
+      "carbon": "{{count}} किग्रा CO₂",
+      "fareBreakdown": "किराया विवरण",
+      "baseFare": "मूल किराया",
+      "taxesFees": "टैक्स और शुल्क",
+      "carrierCharges": "वाहक शुल्क",
+      "total": "कुल",
+      "compareClasses": "क्लास की तुलना करें",
+      "fareRules": "किराया नियम",
+      "refund": "रिफंड",
+      "baggage": "सामान",
+      "aircraft": "विमान",
+      "refundability": "रिफंडेबिलिटी",
+      "lastChecked": "अंतिम बार जांचा गया: {{time}}",
+      "ago": "({{count}}मि पहले)",
+      "classShort": {
+        "economy": "इको",
+        "premium_economy": "प्रेम",
+        "business": "बिज़",
+        "first": "1st"
+      }
+    },
+    "booking": {
+      "title": "अपनी बुकिंग पूरी करें",
+      "subtitle": "सुरक्षित चेकआउट · आपका डेटा एन्क्रिप्टेड है",
+      "airportMap": "एयरपोर्ट मैप",
+      "noFlight": "कोई उड़ान नहीं चुनी गई",
+      "noFlightDesc": "कृपया पहले एक उड़ान खोजें और चुनें।",
+      "steps": {
+        "passenger": "यात्री विवरण",
+        "seats": "सीट चयन",
+        "payment": "भुगतान",
+        "review": "समीक्षा और पुष्टि करें",
+        "step": "चरण {{number}}"
+      },
+      "passenger": {
+        "title": "यात्री जानकारी",
+        "firstName": "प्रथम नाम",
+        "lastName": "अंतिम नाम",
+        "email": "ईमेल पता",
+        "phone": "फ़ोन नंबर",
+        "dob": "जन्म तिथि",
+        "passport": "पासपोर्ट नंबर",
+        "continueSeats": "सीट चयन पर जारी रखें"
+      },
+      "seats": {
+        "skip": "छोड़ें और ऑटो-असाइन करें",
+        "continuePayment": "भुगतान पर जारी रखें"
+      },
+      "payment": {
+        "title": "भुगतान विवरण",
+        "cardholder": "कार्डधारक का नाम",
+        "cardNumber": "कार्ड नंबर",
+        "expiry": "समाप्ति तिथि",
+        "cvv": "CVV",
+        "secureInfo": "आपका भुगतान 256-बिट SSL एन्क्रिप्शन के साथ सुरक्षित है",
+        "reviewBooking": "बुकिंग की समीक्षा करें"
+      },
+      "review": {
+        "title": "अपनी बुकिंग की समीक्षा करें",
+        "passenger": "यात्री",
+        "selectedSeat": "चुनी गई सीट",
+        "seatLabel": "सीट {{label}} · {{position}}",
+        "freeSeat": "मुफ़्त — कोई अतिरिक्त शुल्क नहीं",
+        "paymentMethod": "भुगतान विधि",
+        "agreeTerms": "मैं <0>सेवा की शर्तों</0>, <1>गोपनीयता नीति</1>, और एयरलाइन के <2>किराया नियमों</2> से सहमत हूँ।",
+        "pay": "{{price}} भुगतान करें",
+        "processing": "प्रक्रिया चल रही है..."
+      },
+      "summary": {
+        "title": "उड़ान सारांश",
+        "outbound": "प्रस्थान",
+        "return": "वापसी",
+        "total": "कुल",
+        "seatSurcharge": "सीट {{label}} अधिभार"
+      },
+      "trust": {
+        "secure": "100% सुरक्षित भुगतान",
+        "instant": "त्वरित पुष्टि",
+        "support": "24/7 ग्राहक सहायता"
+      }
+    },
+    "confirmation": {
+      "notFound": "बुकिंग नहीं मिली",
+      "notFoundDesc": "बुकिंग पुष्टिकरण नहीं मिल सका।",
+      "goHome": "होम पर जाएं",
+      "successTitle": "बुकिंग की पुष्टि हो गई!",
+      "successSubtitle": "आपकी उड़ान सफलतापूर्वक बुक हो गई है",
+      "confNumber": "पुष्टिकरण संख्या:",
+      "totalPaid": "कुल भुगतान किया गया",
+      "departureDate": "प्रस्थान तिथि",
+      "flightDuration": "उड़ान की अवधि",
+      "passenger": "यात्री",
+      "boardingPass": "बोर्डिंग पास",
+      "checkInNote": "चेक-इन प्रस्थान से 24 घंटे पहले खुलता है",
+      "baggageAllowance": "सामान की अनुमति",
+      "emailSent": "पुष्टिकरण ईमेल भेज दिया गया",
+      "emailSentDesc": "हमने आपका बुकिंग पुष्टिकरण और ई-टिकट <0>{{email}}</0> पर भेज दिया है",
+      "downloadTicket": "ई-टिकट डाउनलोड करें",
+      "printItinerary": "यात्रा कार्यक्रम प्रिंट करें",
+      "shareDetails": "विवरण साझा करें",
+      "bookAnother": "एक और उड़ान बुक करने की आवश्यकता है?",
+      "searchNew": "नई उड़ानें खोजें",
+      "supportNote": "मदद की ज़रूरत है? हमारे 24/7 ग्राहक सहायता से <0>support@skyflowpro.com</0> पर संपर्क करें",
+      "bookedOn": "{{date}} को बुक किया गया"
+    },
+    "demand": {
+      "veryHigh": "बहुत अधिक",
+      "peak": "पीक",
+      "high": "अधिक"
+    },
+    "perks": {
+      "priority": "प्राथमिकता बोर्डिंग",
+      "baggage": "अतिरिक्त सामान",
+      "sleepKit": "स्लीप किट",
+      "recline": "बेहतर रिक्लाइन",
+      "legroom": "अतिरिक्त लेगरूम",
+      "meals": "प्रीमियम भोजन"
+    },
+    "sort": {
+      "price": "कीमत",
+      "duration": "अवधि",
+      "departure": "प्रस्थान"
+    },
+    "underPrice": "{{price}} से कम",
+    "abovePrice": "{{price}} से ऊपर",
+    "searchingFromTo": "{{from}} से {{to}} खोज रहे हैं",
+    "insights": {
+      "fareTitle": "किराया इंटेलिजेंस",
+      "demandTitle": "डिमांड एनालिटिक्स",
+      "cabinTitle": "केबिन इंटेलिजेंस",
+      "optimizationTitle": "अनुकूलन",
+      "upgradeTitle": "अपग्रेड एडवाइजरी",
+      "priceAlert": "{{from}} → {{to}} के लिए मूल्य अलर्ट",
+      "fareRise": "किराया अगले {{timeframe}} के भीतर <span class=\"text-amber-400 font-bold\">{{percentage}}% बढ़</span> सकता है।",
+      "bestWindow": "सर्वोत्तम बुकिंग विंडो",
+      "savingDay": "<span class=\"text-emerald-400 font-bold\">{{day}}</span> को उड़ान भरने से आप <span class=\"text-emerald-400 font-bold\">{{amount}}</span> बचा सकते हैं।",
+      "occupancy": "फ्लाइट ऑक्यूपेंसी",
+      "popularity": "रूट लोकप्रियता",
+      "trend": "ट्रेंड",
+      "intensity": "पिछले 12 घंटों में उच्च तीव्रता वाली बुकिंग का पता चला है।",
+      "value": "मूल्य {{score}}%",
+      "upgradeOffer": "<span class=\"text-purple-400 font-bold\">{{type}}</span> केवल <span class=\"text-emerald-400 font-bold\">{{fareDiff}} अधिक किराए</span> में <span class=\"font-bold text-slate-100\">{{legroom}} अधिक लेगरूम</span> प्रदान करता है।",
+      "viewMatrix": "तुलना मैट्रिक्स देखें",
+      "onTime": "चुनी गई उड़ान का समय पर प्रदर्शन 94% है।",
+      "worthUpgrade": "क्या अपग्रेड करना सार्थक है?",
+      "upgradeReason": "{{reason}} अपग्रेड <span class=\"text-emerald-400 font-bold\">{{price}}</span> से शुरू हो रहे हैं।",
+      "match": "{{score}}% मैच",
+      "showOptions": "अपग्रेड विकल्प दिखाएं",
+      "routeInsight": "रूट अंतर्दृष्टि",
+      "upgradeCorridor": "बिजनेस क्लास इन्वेंट्री वर्तमान में {{from}}→{{to}} कॉरिडोर के लिए अनुकूल है।",
+      "upgradeLongHaul": "लंबी दूरी की उड़ान का पता चला। बिजनेस क्लास में फ्लैट-बेड सीटें आपके आगमन के लिए 4 गुना अधिक आराम प्रदान करती हैं।",
+      "upgradeBusiness": "उच्च व्यावसायिक मांग। {{to}} में प्रीमियम लाउंज का उपयोग करने के लिए अभी अपना अपग्रेड सुरक्षित करें।",
+      "upgradeFirst": "फर्स्ट क्लास सूट उपलब्ध हैं। बादलों के ऊपर परम गोपनीयता और 5-सितारा भोजन का अनुभव करें।",
+      "12h": "12 घंटे",
+      "48h": "48 घंटे",
+      "bookWithin6h": "6 घंटे के भीतर बुक करें",
+      "timingBusiness": "व्यावसायिक यात्रियों के लिए सुबह की उड़ानों (6-8 AM) का समय पर प्रदर्शन उच्चतम होता है।",
+      "timingLeisure": "इस मार्ग पर दोपहर के समय प्रस्थान आमतौर पर कम भीड़भाड़ वाले होते हैं।",
+      "routeLongHaul": "सीधी उड़ानें आपको लेओवर विकल्पों की तुलना में लगभग 4.5 घंटे की यात्रा के समय की बचत कराती।",
+      "routeNearby": "नॉन-स्टॉप इन्वेंट्री तेजी से बिक रही है। वैकल्पिक नजदीकी एयरपोर्ट 10% बचा सकते हैं।",
+      "upgradeTitleValue": "{{type}} अपग्रेड"
+    }
+  }
+}
