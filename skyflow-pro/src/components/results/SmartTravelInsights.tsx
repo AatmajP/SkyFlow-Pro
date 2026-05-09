@@ -1,5 +1,6 @@
-import { TrendingUp, Users, Award, Zap, Info, Clock, CheckCircle2, ChevronRight, Star } from 'lucide-react'
+import { TrendingUp, Users, Award, Zap, Info, Clock, CheckCircle2, ChevronRight, Star, MapPin } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useCurrency } from '../../context/CurrencyContext'
 
 interface SmartTravelInsightsProps {
   from: string
@@ -10,50 +11,88 @@ interface SmartTravelInsightsProps {
 }
 
 export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTravelInsightsProps) {
-  // In a real app, these would come from an API based on the search params
-  const insights = {
-    fare: {
-      prediction: 'rise',
-      percentage: 18,
-      timeframe: '48 hours',
-      bestWindow: 'Next 24 hours',
-      savingDay: 'Tuesday',
-      savingAmount: 3200
-    },
-    demand: {
-      level: 'High',
-      percentage: 84,
-      trend: 'increasing',
-      popularity: 9.2
-    },
-    cabinComparison: [
-      {
-        type: 'Premium Economy',
-        valueScore: 88,
-        comfortScore: 92,
-        extraLegroom: '38%',
-        fareDiff: '12%',
-        perks: ['Extra Legroom', 'Priority Boarding', 'Premium Meals']
-      }
-    ],
-    optimization: [
-      {
-        title: 'Timing Strategy',
-        suggestion: 'Morning departures reduce delays by 22%.',
-        impact: 'Positive'
+  const { formatPrice } = useCurrency()
+
+  // Dynamic Intelligence Engine
+  const generateInsights = () => {
+    // Determine route characteristics
+    const isDomestic = from.length === 3 && to.length === 3 // Simplified for mock
+    const isLongHaul = !isDomestic || ['LHR', 'JFK', 'LAX', 'SFO', 'NRT', 'SYD'].includes(to)
+    const isBusinessRoute = ['BOM', 'BLR', 'DXB', 'SIN', 'LHR', 'JFK'].includes(to)
+    const isLeisureRoute = ['GOA', 'MLE', 'BKK', 'DPS', 'FCO', 'CDG'].includes(to)
+    
+    const dayOfWeek = new Date(date).getDay()
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6 || dayOfWeek === 5
+
+    // Seeded random for deterministic but route-specific values
+    const seed = (from + to + cabin).split('').reduce((a, b) => a + b.charCodeAt(0), 0)
+    const rnd = (max: number) => Math.floor(((seed * 16807) % 2147483647) % max)
+
+    const fareRise = 10 + rnd(15)
+    const demandLevel = isBusinessRoute ? 'Very High' : isLeisureRoute && isWeekend ? 'Peak' : 'High'
+    const occupancy = 75 + rnd(20)
+    
+    // Custom upgrade logic
+    let upgradeReason = `Business class inventory is currently favorable for the ${from}→${to} corridor.`
+    if (isLongHaul) upgradeReason = `Long-haul flight detected. Flat-bed seats in Business class offer 4x more rest for your arrival.`
+    if (isBusinessRoute) upgradeReason = `High business demand. Secure your upgrade now to access premium lounges in ${to}.`
+    if (cabin === 'business') upgradeReason = `First Class suites available. Experience ultimate privacy and 5-star dining over the clouds.`
+
+    const upgradePrice = isLongHaul ? 15000 + rnd(10000) : 4500 + rnd(3000)
+
+    return {
+      fare: {
+        prediction: 'rise',
+        percentage: fareRise,
+        timeframe: isWeekend ? '12 hours' : '48 hours',
+        bestWindow: 'Book within 6 hours',
+        savingDay: dayOfWeek === 2 ? 'Wednesday' : 'Tuesday',
+        savingAmount: 2500 + rnd(2000)
       },
-      {
-        title: 'Price Strategy',
-        suggestion: 'Late-night flights are currently 15% cheaper.',
-        impact: 'High'
+      demand: {
+        level: demandLevel,
+        percentage: occupancy,
+        trend: 'increasing',
+        popularity: (8.5 + (seed % 15) / 10).toFixed(1)
+      },
+      cabinComparison: [
+        {
+          type: cabin === 'economy' ? 'Premium Economy' : cabin === 'premium_economy' ? 'Business' : 'First Class',
+          valueScore: 85 + rnd(10),
+          comfortScore: 90 + rnd(8),
+          extraLegroom: isLongHaul ? '42%' : '35%',
+          fareDiff: isLongHaul ? '25%' : '15%',
+          perks: isLongHaul 
+            ? ['Priority Boarding', 'Extra Baggage', 'Sleep Kit', 'Better Recline']
+            : ['Extra Legroom', 'Priority Boarding', 'Premium Meals']
+        }
+      ],
+      optimization: [
+        {
+          title: 'Timing Strategy',
+          suggestion: isBusinessRoute 
+            ? 'Early morning flights (6-8 AM) have the highest on-time performance for business travelers.'
+            : 'Afternoon departures on this route are typically less crowded.',
+          impact: 'Positive'
+        },
+        {
+          title: 'Route Insight',
+          suggestion: isLongHaul 
+            ? 'Direct flights save you approx. 4.5 hours of travel time compared to layover options.'
+            : 'Non-stop inventory is selling fast. Alternative nearby airports could save 10%.',
+          impact: 'High'
+        }
+      ],
+      upgrade: {
+        worth: true,
+        reason: upgradeReason,
+        valueScore: 88 + rnd(10),
+        price: upgradePrice
       }
-    ],
-    upgrade: {
-      worth: true,
-      reason: 'Business class inventory is high for this route, upgrades starting at ₹5,500.',
-      valueScore: 95
     }
   }
+
+  const insights = generateInsights()
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
@@ -87,7 +126,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
           
           <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
             <p className="text-xs text-slate-300">
-              Flying on <span className="text-emerald-400 font-bold">{insights.fare.savingDay}</span> could save you <span className="text-emerald-400 font-bold">₹{insights.fare.savingAmount.toLocaleString()}</span>.
+              Flying on <span className="text-emerald-400 font-bold">{insights.fare.savingDay}</span> could save you <span className="text-emerald-400 font-bold">{formatPrice(insights.fare.savingAmount)}</span>.
             </p>
           </div>
         </div>
@@ -217,7 +256,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
           <div className="space-y-3">
             <p className="text-sm font-semibold text-slate-200">Is it worth upgrading?</p>
             <p className="text-xs text-slate-400 leading-relaxed">
-              {insights.upgrade.reason}
+              {insights.upgrade.reason} Upgrades starting at <span className="text-emerald-400 font-bold">{formatPrice(insights.upgrade.price)}</span>.
             </p>
             
             <div className="flex items-center gap-2 mt-4">

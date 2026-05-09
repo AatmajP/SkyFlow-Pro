@@ -22,13 +22,10 @@ interface PaymentInfo {
     cardholderName: string
 }
 
-const formatter = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-})
+import { useCurrency } from '../context/CurrencyContext'
 
 export function BookingPage() {
+    const { formatPrice } = useCurrency()
     const navigate = useNavigate()
     const { flightId } = useParams()
     const [flight, setFlight] = useState<FlightOption | null>(null)
@@ -451,7 +448,7 @@ export function BookingPage() {
                                                     Seat {selectedSeat.label} · {selectedSeat.position.charAt(0).toUpperCase() + selectedSeat.position.slice(1)}
                                                 </p>
                                                 <p className="text-xs text-slate-400">
-                                                    {selectedSeat.price > 0 ? formatter.format(selectedSeat.price) : 'Free — no extra charge'}
+                                                    {selectedSeat.price > 0 ? formatPrice(selectedSeat.price) : 'Free — no extra charge'}
                                                 </p>
                                             </div>
                                         </div>
@@ -503,7 +500,7 @@ export function BookingPage() {
                                         ) : (
                                             <>
                                                 <Lock className="h-4 w-4" />
-                                                Pay {formatter.format(totalPrice)}
+                                                Pay {formatPrice(totalPrice)}
                                             </>
                                         )}
                                     </button>
@@ -574,20 +571,20 @@ export function BookingPage() {
                             <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
                                     <span className="text-slate-400">Base fare</span>
-                                    <span className="text-slate-200">{formatter.format(flight.price.baseFare + (returnFlight?.price.baseFare ?? 0))}</span>
+                                    <span className="text-slate-200">{formatPrice(flight.price.baseFare + (returnFlight?.price.baseFare ?? 0))}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-slate-400">Taxes & fees</span>
-                                    <span className="text-slate-200">{formatter.format(flight.price.taxesAndFees + (returnFlight?.price.taxesAndFees ?? 0))}</span>
+                                    <span className="text-slate-200">{formatPrice(flight.price.taxesAndFees + (returnFlight?.price.taxesAndFees ?? 0))}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-slate-400">Carrier charges</span>
-                                    <span className="text-slate-200">{formatter.format(flight.price.carrierCharges + (returnFlight?.price.carrierCharges ?? 0))}</span>
+                                    <span className="text-slate-200">{formatPrice(flight.price.carrierCharges + (returnFlight?.price.carrierCharges ?? 0))}</span>
                                 </div>
                                 {selectedSeat && selectedSeat.price > 0 && (
                                     <div className="flex justify-between">
                                         <span className="text-amber-300">Seat {selectedSeat.label} surcharge</span>
-                                        <span className="text-amber-300">{formatter.format(selectedSeat.price)}</span>
+                                        <span className="text-amber-300">{formatPrice(selectedSeat.price)}</span>
                                     </div>
                                 )}
                                 {selectedSeat && selectedSeat.price === 0 && (
@@ -598,7 +595,7 @@ export function BookingPage() {
                                 )}
                                 <div className="flex justify-between pt-3 border-t border-slate-800/50">
                                     <span className="font-semibold text-slate-50">Total</span>
-                                    <span className="text-xl font-bold text-sky-400">{formatter.format(totalPrice)}</span>
+                                    <span className="text-xl font-bold text-sky-400">{formatPrice(totalPrice)}</span>
                                 </div>
                             </div>
 

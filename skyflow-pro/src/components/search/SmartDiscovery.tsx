@@ -2,13 +2,10 @@ import { useNavigate } from 'react-router-dom'
 import { Zap, Bell } from 'lucide-react'
 import { useDiscoveryDeals } from '../../hooks/useDiscovery'
 
-const formatter = new Intl.NumberFormat('en-IN', {
-  style: 'currency',
-  currency: 'INR',
-  maximumFractionDigits: 0,
-})
+import { useCurrency } from '../../context/CurrencyContext'
 
 export function SmartDiscovery() {
+  const { formatPrice } = useCurrency()
   const navigate = useNavigate()
   const defaultFrom = 'DEL'
 
@@ -62,7 +59,7 @@ export function SmartDiscovery() {
               </div>
               <div className="text-right pl-4 border-l border-slate-700/50">
                 <p className="text-xs text-slate-500">from</p>
-                <p className="text-sm font-bold text-emerald-400">{formatter.format(deal.price)}</p>
+                <p className="text-sm font-bold text-emerald-400">{formatPrice(deal.price)}</p>
               </div>
             </button>
           ))}

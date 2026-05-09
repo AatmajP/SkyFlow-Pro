@@ -61,7 +61,7 @@ const RESPONSE_TEMPLATES: Record<string, string[]> = {
   budget_understood: [
     "Perfect, keeping it under {budget}. Here are some incredible {mood} destinations that fit your criteria perfectly:",
     "Got it, {budget} max. I've found some amazing {mood} spots that won't break the bank:",
-    "₹{budget} is a great budget for {mood} travel. Check out these top recommendations for you:"
+    "{budget} is a great budget for {mood} travel. Check out these top recommendations for you:"
   ],
   recommending: [
     "Based on what you told me, I think you'll absolutely love these places:",

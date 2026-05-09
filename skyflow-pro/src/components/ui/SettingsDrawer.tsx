@@ -7,9 +7,11 @@ interface SettingsDrawerProps {
   onClose: () => void
 }
 
+import { useCurrency, type CurrencyCode } from '../../context/CurrencyContext'
+
 export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
+  const { currency, setCurrency } = useCurrency()
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark')
-  const [currency, setCurrency] = useState(localStorage.getItem('currency') || 'INR')
   const [language, setLanguage] = useState(localStorage.getItem('language') || 'English')
   const [animations, setAnimations] = useState(localStorage.getItem('animations') !== 'false')
   const [notifications, setNotifications] = useState(localStorage.getItem('notification_pref') !== 'false')
@@ -21,7 +23,6 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
     else document.documentElement.classList.remove('dark')
   }, [theme])
 
-  useEffect(() => localStorage.setItem('currency', currency), [currency])
   useEffect(() => localStorage.setItem('language', language), [language])
   useEffect(() => localStorage.setItem('animations', String(animations)), [animations])
   useEffect(() => localStorage.setItem('notification_pref', String(notifications)), [notifications])
@@ -37,10 +38,11 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
   }, [onClose])
 
   const currencies = [
-    { code: 'INR', symbol: '₹', label: 'Indian Rupee' },
-    { code: 'USD', symbol: '$', label: 'US Dollar' },
-    { code: 'EUR', symbol: '€', label: 'Euro' },
-    { code: 'GBP', symbol: '£', label: 'British Pound' },
+    { code: 'INR', label: 'Indian Rupee (₹)' },
+    { code: 'USD', label: 'US Dollar ($)' },
+    { code: 'EUR', label: 'Euro (€)' },
+    { code: 'GBP', label: 'British Pound (£)' },
+    { code: 'AED', label: 'UAE Dirham (د.إ)' },
   ]
 
   const languages = ['English', 'Hindi', 'Spanish', 'French', 'German']

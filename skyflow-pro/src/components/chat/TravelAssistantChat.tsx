@@ -9,6 +9,7 @@ import {
   type Suggestion,
   type ChatState
 } from '../../services/travelAssistant'
+import { useCurrency } from '../../context/CurrencyContext'
 
 interface ChatMessage {
   id: string
@@ -19,6 +20,7 @@ interface ChatMessage {
 
 export function TravelAssistantChat() {
   const navigate = useNavigate()
+  const { formatPrice } = useCurrency()
   const [searchParams] = useSearchParams()
   const [isOpen, setIsOpen] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
@@ -70,10 +72,16 @@ export function TravelAssistantChat() {
       setChatState(newState)
       setIsTyping(false)
 
+      // Format budget in the message if it exists
+      let formattedText = response.message
+      if (newState.budget) {
+        formattedText = formattedText.replace(String(newState.budget), formatPrice(newState.budget))
+      }
+
       const assistantMsg: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        text: response.message,
+        text: formattedText,
         suggestions: response.suggestions,
       }
       setMessages(prev => [...prev, assistantMsg])
@@ -231,7 +239,7 @@ export function TravelAssistantChat() {
                               <p className="text-xs text-slate-400 leading-relaxed pr-8">{s.reason}</p>
                               <div className="mt-3 flex items-center justify-between">
                                 <p className="text-sm font-bold text-emerald-400">
-                                  Est. ₹{s.price?.toLocaleString('en-IN')}
+                                  Est. {formatPrice(s.price)}
                                 </p>
                                 <div className="flex items-center gap-1 text-[10px] font-bold text-sky-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
                                   View Flights <ArrowRight className="h-3 w-3" />

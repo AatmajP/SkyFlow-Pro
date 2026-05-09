@@ -11,13 +11,10 @@ interface FlightResultsGridProps {
   isRoundTrip?: boolean
 }
 
-const formatter = new Intl.NumberFormat('en-IN', {
-  style: 'currency',
-  currency: 'INR',
-  maximumFractionDigits: 0,
-})
+import { useCurrency } from '../../context/CurrencyContext'
 
 export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, isRoundTrip }: FlightResultsGridProps) {
+  const { formatPrice } = useCurrency()
   // Compute badges dynamically from the data
   const badgeMap = useMemo(() => computeFlightBadges(results), [results])
 
@@ -73,7 +70,7 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-950/30 border border-emerald-500/20">
               <DollarSign className="h-4 w-4 text-emerald-400" />
               <span className="text-xs text-emerald-300">
-                Lowest from <span className="font-bold">{formatter.format(minPrice)}</span>
+                Lowest from <span className="font-bold">{formatPrice(minPrice)}</span>
               </span>
             </div>
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-sky-950/30 border border-sky-500/20">
@@ -113,7 +110,7 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-emerald-950/40 text-emerald-300 hover:bg-emerald-950/60 transition-colors cursor-default"
             >
               <TrendingDown className="h-3 w-3" />
-              {flight.segments[0]?.marketingCarrier} · {formatter.format(flight.price.total)}
+              {flight.segments[0]?.marketingCarrier} · {formatPrice(flight.price.total)}
               <span className="text-emerald-400/70 ml-0.5">Cheapest</span>
             </div>
           ))}
@@ -134,7 +131,7 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
           {bestValueFlight && (
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-violet-950/40 text-violet-300 hover:bg-violet-950/60 transition-colors cursor-default">
               <Award className="h-3 w-3" />
-              {bestValueFlight.segments[0]?.marketingCarrier} · {formatter.format(bestValueFlight.price.total)}
+              {bestValueFlight.segments[0]?.marketingCarrier} · {formatPrice(bestValueFlight.price.total)}
               <span className="text-violet-400/70 ml-0.5">Best Value</span>
             </div>
           )}
@@ -143,7 +140,7 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
           {patroFlight && (
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-gradient-to-r from-sky-950/40 to-emerald-950/40 text-sky-300 hover:from-sky-950/60 hover:to-emerald-950/60 transition-colors cursor-default ring-1 ring-sky-500/20">
               <BarChart3 className="h-3 w-3" />
-              Patro Airlines · {formatter.format(patroFlight.price.total)}
+              Patro Airlines · {formatPrice(patroFlight.price.total)}
               <span className="text-emerald-400/70 ml-0.5">Recommended</span>
             </div>
           )}
@@ -174,7 +171,7 @@ export function FlightResultsGrid({ results, onSelectFlight, selectedFlightId, i
           Showing all {results.length} results · Prices and availability may change
         </p>
         <p className="text-xs text-slate-500 mt-1">
-          Price range: {formatter.format(minPrice)} – {formatter.format(maxPrice)} · Average: {formatter.format(avgPrice)}
+          Price range: {formatPrice(minPrice)} – {formatPrice(maxPrice)} · Average: {formatPrice(avgPrice)}
         </p>
       </div>
     </section>

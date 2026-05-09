@@ -15,11 +15,7 @@ interface FlightCardProps {
   isSelected?: boolean
 }
 
-const formatter = new Intl.NumberFormat('en-IN', {
-  style: 'currency',
-  currency: 'INR',
-  maximumFractionDigits: 0,
-})
+import { useCurrency } from '../../context/CurrencyContext'
 
 function formatDuration(minutes: number) {
   const h = Math.floor(minutes / 60)
@@ -89,6 +85,7 @@ function getTagStyle(tag: string) {
 
 export function FlightCard({ flight, badges = [], onSelect, isSelected }: FlightCardProps) {
   const navigate = useNavigate()
+  const { formatPrice } = useCurrency()
   const [isExpanded, setIsExpanded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const [isSelectPressed, setIsSelectPressed] = useState(false)
@@ -281,10 +278,10 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                     ? 'text-transparent bg-clip-text bg-gradient-to-r from-slate-50 to-slate-200'
                     : 'text-slate-50'
               }`}>
-                {formatter.format(activeClassPrice.total)}
+                {formatPrice(activeClassPrice.total)}
               </p>
               <p className="text-xs text-slate-400">
-                {formatter.format(activeClassPrice.total)} per traveler · {activeClassPrice.label ?? 'Economy'}
+                {formatPrice(activeClassPrice.total)} per traveler · {activeClassPrice.label ?? 'Economy'}
               </p>
               {isPatro && (
                 <p className="text-[0.65rem] text-emerald-400 font-medium mt-0.5">
@@ -318,7 +315,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                      cp.cabin === 'business' ? 'Biz' : '1st'}
                   </p>
                   <p className={`text-[0.6rem] font-bold mt-0.5 ${selectedCabin === cp.cabin ? 'text-white' : 'text-slate-300'}`}>
-                    {formatter.format(cp.total)}
+                    {formatPrice(cp.total)}
                   </p>
                 </button>
               ))}
@@ -393,19 +390,19 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between group/row">
                   <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Base fare</span>
-                  <span className="font-medium text-slate-200">{formatter.format(activeClassPrice.baseFare)}</span>
+                  <span className="font-medium text-slate-200">{formatPrice(activeClassPrice.baseFare)}</span>
                 </div>
                 <div className="flex justify-between group/row">
                   <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Taxes & fees</span>
-                  <span className="font-medium text-slate-200">{formatter.format(activeClassPrice.taxesAndFees)}</span>
+                  <span className="font-medium text-slate-200">{formatPrice(activeClassPrice.taxesAndFees)}</span>
                 </div>
                 <div className="flex justify-between group/row">
                   <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">Carrier charges</span>
-                  <span className="font-medium text-slate-200">{formatter.format(activeClassPrice.carrierCharges)}</span>
+                  <span className="font-medium text-slate-200">{formatPrice(activeClassPrice.carrierCharges)}</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-slate-800">
                   <span className="font-semibold text-slate-200">Total</span>
-                  <span className="font-bold text-sky-400">{formatter.format(activeClassPrice.total)}</span>
+                  <span className="font-bold text-sky-400">{formatPrice(activeClassPrice.total)}</span>
                 </div>
               </div>
             </div>
@@ -430,7 +427,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                   >
                     <span className="font-medium">{cp.label}</span>
                     <span className={`font-bold ${selectedCabin === cp.cabin ? 'text-sky-300' : 'text-slate-300'}`}>
-                      {formatter.format(cp.total)}
+                      {formatPrice(cp.total)}
                     </span>
                   </button>
                 ))}

@@ -28,13 +28,10 @@ interface BookingConfirmation {
     bookedAt: string
 }
 
-const formatter = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-})
+import { useCurrency } from '../context/CurrencyContext'
 
 export function ConfirmationPage() {
+    const { formatPrice } = useCurrency()
     const { bookingId } = useParams()
     const [booking, setBooking] = useState<BookingConfirmation | null>(null)
     const [showConfetti, setShowConfetti] = useState(true)
@@ -137,7 +134,7 @@ export function ConfirmationPage() {
                         </div>
 
                         <div className="text-right">
-                            <p className="text-2xl font-bold text-emerald-400">{formatter.format(flight.price.total)}</p>
+                            <p className="text-2xl font-bold text-emerald-400">{formatPrice(flight.price.total)}</p>
                             <p className="text-sm text-slate-400">Total paid</p>
                         </div>
                     </div>

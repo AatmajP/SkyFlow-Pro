@@ -11,13 +11,10 @@ interface PriceTimelineProps {
   onSelectDate: (date: string) => void
 }
 
-const formatter = new Intl.NumberFormat('en-IN', {
-  style: 'currency',
-  currency: 'INR',
-  maximumFractionDigits: 0,
-})
+import { useCurrency } from '../../context/CurrencyContext'
 
 export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }: PriceTimelineProps) {
+  const { formatPrice } = useCurrency()
   const { data: timelineData, isLoading, refetch } = useDiscoveryTimeline(from, to, date, cabin, tripType)
 
   const getDayOfWeek = (dateStr: string) => {
@@ -92,7 +89,7 @@ export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }:
               {/* Tooltip */}
               <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-slate-800 border border-slate-700 text-white text-xs py-1.5 px-3 rounded-lg pointer-events-none z-10 whitespace-nowrap shadow-2xl translate-y-2 group-hover:translate-y-0">
                 <p className="font-bold">{getMonthDay(day.date)}</p>
-                <p className="text-emerald-400">{formatter.format(day.price)}</p>
+                <p className="text-emerald-400">{formatPrice(day.price)}</p>
               </div>
               
               {/* Bar Container */}
@@ -137,7 +134,7 @@ export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }:
                   {getDayOfWeek(day.date)}
                 </p>
                 <p className={`text-xs font-bold mt-1 ${isSelected ? 'text-slate-50' : 'text-slate-300'}`}>
-                  {formatter.format(day.price).replace('.00', '').replace('₹', '₹ ')}
+                  {formatPrice(day.price)}
                 </p>
               </div>
             </motion.div>

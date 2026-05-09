@@ -7,10 +7,12 @@ import { BookingPage } from './pages/BookingPage'
 import { ConfirmationPage } from './pages/ConfirmationPage'
 import { Toaster } from './components/ui/Toaster'
 import { TravelAssistantChat } from './components/chat/TravelAssistantChat'
+import { CurrencyProvider } from './context/CurrencyContext'
 
 function App() {
   return (
-    <div className="min-h-screen text-slate-50">
+    <CurrencyProvider>
+      <div className="min-h-screen text-slate-50">
       <SkipLink />
       <Navbar />
       <Routes>
@@ -23,6 +25,7 @@ function App() {
       <TravelAssistantChat />
       <Toaster />
     </div>
+    </CurrencyProvider>
   )
 }
 
