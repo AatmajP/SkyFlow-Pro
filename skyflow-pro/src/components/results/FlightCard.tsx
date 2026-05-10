@@ -78,11 +78,11 @@ function getTagIcon(tag: string) {
 
 function getTagStyle(tag: string) {
   switch (tag) {
-    case 'meal': return 'bg-emerald-950/50 text-emerald-300 ring-emerald-500/30'
-    case 'baggage': return 'bg-sky-950/50 text-sky-300 ring-sky-500/30'
-    case 'refundable': return 'bg-violet-950/50 text-violet-300 ring-violet-500/30'
-    case 'surge': return 'bg-amber-950/50 text-amber-300 ring-amber-500/30'
-    default: return 'bg-slate-800 text-slate-300 ring-slate-700'
+    case 'meal': return 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-300 ring-emerald-200 dark:ring-emerald-500/30'
+    case 'baggage': return 'bg-sky-50 dark:bg-sky-950/50 text-sky-600 dark:text-sky-300 ring-sky-200 dark:ring-sky-500/30'
+    case 'refundable': return 'bg-violet-50 dark:bg-violet-950/50 text-violet-600 dark:text-violet-300 ring-violet-200 dark:ring-violet-500/30'
+    case 'surge': return 'bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-300 ring-amber-200 dark:ring-amber-500/30'
+    default: return 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 ring-slate-200 dark:ring-slate-700'
   }
 }
 
@@ -144,10 +144,12 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
 
   return (
     <article
-      className={`relative rounded-2xl border bg-gradient-to-br from-slate-900/90 to-slate-950/90 shadow-lg flight-card-hover ${
+      className={`relative rounded-2xl border transition-all duration-300 flight-card-hover ${
         isSelected
-          ? 'border-emerald-500/60 ring-1 ring-emerald-500/40 bg-emerald-950/20'
-          : isHovered ? 'border-sky-500/50 ring-1 ring-sky-500/20' : 'border-slate-800/80'
+          ? 'border-emerald-500/60 ring-1 ring-emerald-500/40 bg-emerald-50 dark:bg-emerald-950/20'
+          : isHovered
+            ? 'border-sky-500/50 ring-1 ring-sky-500/20 bg-white dark:bg-slate-900'
+            : 'border-slate-200 dark:border-slate-800/80 bg-white dark:bg-gradient-to-br dark:from-slate-900/90 dark:to-slate-950/90'
       } ${hasBestValue ? 'best-value-glow' : ''} ${isPatro ? 'patro-glow' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -196,7 +198,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                 <div className={`sm:hidden h-8 w-8 rounded-lg bg-gradient-to-br flex items-center justify-center text-white font-bold text-xs ${airlineVisuals.gradient}`}>
                   {airlineVisuals.initial}
                 </div>
-                <p className="text-base font-semibold text-slate-50">
+                <p className="text-base font-bold text-slate-900 dark:text-slate-50">
                   {flight.segments[0]?.marketingCarrier}
                 </p>
                 <span className="text-xs text-slate-500">
@@ -206,7 +208,7 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                 {flight.alliance && (
                   <span className="badge-info text-[0.65rem]">{flight.alliance}</span>
                 )}
-                <span className="px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-slate-800 text-slate-300 ring-1 ring-slate-700">
+                <span className="px-2 py-0.5 rounded-full text-[0.65rem] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 ring-1 ring-slate-200 dark:ring-slate-700">
                   {flight.fareBrand}
                 </span>
               </div>
@@ -215,8 +217,8 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
               <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center gap-3">
                   <div className="text-center">
-                    <p className="text-xl font-bold text-slate-50">{flight.from}</p>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xl font-bold text-slate-900 dark:text-slate-50">{flight.from}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       {flight.segments[0]?.departureTime && formatTime(flight.segments[0].departureTime, i18n.language)}
                     </p>
                   </div>
@@ -235,8 +237,8 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                   </div>
 
                   <div className="text-center">
-                    <p className="text-xl font-bold text-slate-50">{flight.to}</p>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xl font-bold text-slate-900 dark:text-slate-50">{flight.to}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       {flight.segments[flight.segments.length - 1]?.arrivalTime &&
                         formatTime(flight.segments[flight.segments.length - 1].arrivalTime, i18n.language)}
                     </p>
@@ -273,14 +275,14 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
           </div>
 
           {/* Right side - Price and CTA */}
-          <div className="flex flex-col items-end gap-3 border-t border-slate-800/50 pt-4 lg:border-0 lg:pt-0 lg:pl-6 lg:border-l lg:min-w-[220px]">
+          <div className="flex flex-col items-end gap-3 border-t border-slate-200 dark:border-slate-800/50 pt-4 lg:border-0 lg:pt-0 lg:pl-6 lg:border-l lg:border-slate-200 dark:lg:border-slate-800/50 lg:min-w-[220px]">
             <div className="text-right">
               <p className={`text-2xl font-bold transition-all duration-300 ${
                 isPatro
-                  ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400'
+                  ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-emerald-500 dark:from-sky-400 dark:to-emerald-400'
                   : hasBadges
-                    ? 'text-transparent bg-clip-text bg-gradient-to-r from-slate-50 to-slate-200'
-                    : 'text-slate-50'
+                    ? 'text-slate-900 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-slate-50 dark:to-slate-200'
+                    : 'text-slate-900 dark:text-slate-50'
               }`}>
                 {formatPrice(activeClassPrice.total)}
               </p>
@@ -300,8 +302,8 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
               )}
             </div>
 
-            {/* Class selector — FIXES Economy = Premium pricing bug */}
-            <div className="w-full grid grid-cols-4 gap-1 rounded-xl bg-slate-900/80 p-1 ring-1 ring-slate-800">
+            {/* Class selector */}
+            <div className="w-full grid grid-cols-4 gap-1 rounded-xl bg-slate-100 dark:bg-slate-900/80 p-1 ring-1 ring-slate-200 dark:ring-slate-800">
               {(flight.classPrices ?? []).map((cp) => (
                 <button
                   key={cp.cabin}
@@ -309,14 +311,14 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                   onClick={() => setSelectedCabin(cp.cabin)}
                   className={`px-1 py-1.5 rounded-lg text-center transition-all duration-200 ${
                     selectedCabin === cp.cabin
-                      ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                      ? 'bg-white dark:bg-sky-500 text-sky-600 dark:text-white shadow-md dark:shadow-lg dark:shadow-sky-500/30'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-800/50'
                   }`}
                 >
-                  <p className="text-[0.55rem] font-medium leading-tight truncate">
+                  <p className="text-[0.55rem] font-bold leading-tight truncate uppercase">
                     {t(`results.card.classShort.${cp.cabin}`)}
                   </p>
-                  <p className={`text-[0.6rem] font-bold mt-0.5 ${selectedCabin === cp.cabin ? 'text-white' : 'text-slate-300'}`}>
+                  <p className={`text-[0.6rem] font-bold mt-0.5 ${selectedCabin === cp.cabin ? 'text-sky-600 dark:text-white' : 'text-slate-600 dark:text-slate-300'}`}>
                     {formatPrice(cp.total)}
                   </p>
                 </button>
@@ -327,10 +329,10 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
               <button
                 type="button"
                 onClick={() => setIsExpanded(!isExpanded)}
-                className={`flex-1 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-300 flex items-center justify-center gap-1 btn-details ${
+                className={`flex-1 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1 btn-details ${
                   isExpanded
-                    ? 'text-sky-300 bg-sky-500/10 ring-1 ring-sky-500/20'
-                    : 'text-slate-400 bg-slate-800/50 hover:bg-slate-800 hover:text-slate-200'
+                    ? 'text-sky-600 dark:text-sky-300 bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/20'
+                    : 'text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
                 {t('results.card.details')}
@@ -352,12 +354,12 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
 
             {/* Quick badges */}
             <div className="flex items-center gap-2">
-              <span className={`text-[0.65rem] font-medium px-2 py-0.5 rounded-full ${
+              <span className={`text-[0.65rem] font-bold px-2 py-0.5 rounded-full ring-1 ${
                 isHighRefund
-                  ? 'bg-emerald-950/50 text-emerald-300 ring-1 ring-emerald-500/30'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-300 ring-emerald-200 dark:ring-emerald-500/30'
                   : isLowRefund
-                    ? 'bg-amber-950/50 text-amber-300 ring-1 ring-amber-500/30'
-                    : 'bg-slate-800/50 text-slate-300 ring-1 ring-slate-700'
+                    ? 'bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-300 ring-amber-200 dark:ring-amber-500/30'
+                    : 'bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 ring-slate-200 dark:ring-slate-700'
               }`}>
                 {isHighRefund ? t('results.card.flexible') : isLowRefund ? t('results.card.restricted') : t('results.card.mixed')}
               </span>
@@ -381,38 +383,38 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
           opacity: isExpanded ? 1 : 0,
         }}
       >
-        <div className="border-t border-slate-800/50 p-4 sm:p-5 bg-slate-900/50">
+        <div className="border-t border-slate-200 dark:border-slate-800/50 p-4 sm:p-5 bg-slate-50 dark:bg-slate-900/50">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* Dynamic fare breakdown for selected class */}
             <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-                <Shield className="h-4 w-4 text-sky-400" />
+              <h4 className="text-sm font-bold text-slate-900 dark:text-slate-200 flex items-center gap-2">
+                <Shield className="h-4 w-4 text-sky-500 dark:text-sky-400" />
                 {t('results.card.fareBreakdown')} — {t(`search.${activeClassPrice.cabin}`, { defaultValue: activeClassPrice.label })}
               </h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between group/row">
-                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">{t('results.card.baseFare')}</span>
-                  <span className="font-medium text-slate-200">{formatPrice(activeClassPrice.baseFare)}</span>
+                  <span className="text-slate-500 dark:text-slate-400 group-hover/row:text-slate-900 dark:group-hover/row:text-slate-300 transition-colors">{t('results.card.baseFare')}</span>
+                  <span className="font-bold text-slate-900 dark:text-slate-200">{formatPrice(activeClassPrice.baseFare)}</span>
                 </div>
                 <div className="flex justify-between group/row">
-                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">{t('results.card.taxesFees')}</span>
-                  <span className="font-medium text-slate-200">{formatPrice(activeClassPrice.taxesAndFees)}</span>
+                  <span className="text-slate-500 dark:text-slate-400 group-hover/row:text-slate-900 dark:group-hover/row:text-slate-300 transition-colors">{t('results.card.taxesFees')}</span>
+                  <span className="font-bold text-slate-900 dark:text-slate-200">{formatPrice(activeClassPrice.taxesAndFees)}</span>
                 </div>
                 <div className="flex justify-between group/row">
-                  <span className="text-slate-400 group-hover/row:text-slate-300 transition-colors">{t('results.card.carrierCharges')}</span>
-                  <span className="font-medium text-slate-200">{formatPrice(activeClassPrice.carrierCharges)}</span>
+                  <span className="text-slate-500 dark:text-slate-400 group-hover/row:text-slate-900 dark:group-hover/row:text-slate-300 transition-colors">{t('results.card.carrierCharges')}</span>
+                  <span className="font-bold text-slate-900 dark:text-slate-200">{formatPrice(activeClassPrice.carrierCharges)}</span>
                 </div>
-                <div className="flex justify-between pt-2 border-t border-slate-800">
-                  <span className="font-semibold text-slate-200">{t('results.card.total')}</span>
-                  <span className="font-bold text-sky-400">{formatPrice(activeClassPrice.total)}</span>
+                <div className="flex justify-between pt-2 border-t border-slate-200 dark:border-slate-800">
+                  <span className="font-bold text-slate-900 dark:text-slate-200">{t('results.card.total')}</span>
+                  <span className="font-black text-sky-600 dark:text-sky-400">{formatPrice(activeClassPrice.total)}</span>
                 </div>
               </div>
             </div>
 
             {/* All class comparison */}
             <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-                <Info className="h-4 w-4 text-sky-400" />
+              <h4 className="text-sm font-bold text-slate-900 dark:text-slate-200 flex items-center gap-2">
+                <Info className="h-4 w-4 text-sky-500 dark:text-sky-400" />
                 {t('results.card.compareClasses')}
               </h4>
               <div className="space-y-1.5">
@@ -423,12 +425,12 @@ export function FlightCard({ flight, badges = [], onSelect, isSelected }: Flight
                     onClick={() => setSelectedCabin(cp.cabin)}
                     className={`w-full flex justify-between items-center text-xs px-3 py-2 rounded-lg transition-all ${
                       selectedCabin === cp.cabin
-                        ? 'bg-sky-500/15 text-sky-300 ring-1 ring-sky-500/30'
-                        : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+                        ? 'bg-sky-100 dark:bg-sky-500/15 text-sky-700 dark:text-sky-300 ring-1 ring-sky-200 dark:ring-sky-500/30 font-bold'
+                        : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
                     }`}
                   >
                     <span className="font-medium">{t(`search.${cp.cabin}`, { defaultValue: cp.label })}</span>
-                    <span className={`font-bold ${selectedCabin === cp.cabin ? 'text-sky-300' : 'text-slate-300'}`}>
+                    <span className={`font-bold ${selectedCabin === cp.cabin ? 'text-sky-700 dark:text-sky-300' : 'text-slate-700 dark:text-slate-300'}`}>
                       {formatPrice(cp.total)}
                     </span>
                   </button>

@@ -64,7 +64,7 @@ export function SearchPage() {
       <div className="relative mx-auto flex max-w-6xl flex-col px-4 py-8 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <header className="mb-10 text-center animate-fade-in">
-          <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500/10 to-purple-500/10 px-4 py-1.5 text-xs font-medium text-sky-300 ring-1 ring-sky-500/30 mb-6">
+          <div className="inline-flex items-center gap-2 rounded-full bg-sky-50 dark:bg-sky-500/10 px-4 py-1.5 text-xs font-bold text-sky-600 dark:text-sky-300 ring-1 ring-sky-200 dark:ring-sky-500/30 mb-6">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-500" />
@@ -72,13 +72,13 @@ export function SearchPage() {
             {t('hero.badge')}
           </div>
 
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+          <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
             <span className="gradient-text">{t('hero.titlePrefix')}</span>
             <br />
-            <span className="text-slate-100">{t('hero.titleSuffix')}</span>
+            <span className="text-slate-900 dark:text-slate-100">{t('hero.titleSuffix')}</span>
           </h1>
 
-          <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400 sm:text-lg">
+          <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600 dark:text-slate-400 sm:text-lg font-medium">
             {t('hero.subtitle')}
           </p>
         </header>
@@ -94,11 +94,11 @@ export function SearchPage() {
             {stats.map((stat, idx) => (
               <div
                 key={idx}
-                className="glass rounded-2xl p-5 text-center card-hover"
+                className="glass rounded-2xl p-5 text-center card-hover border border-slate-200 dark:border-slate-800/50"
               >
-                <stat.icon className="mx-auto mb-3 h-6 w-6 text-sky-400" />
-                <p className="text-2xl font-bold text-slate-50">{stat.value}</p>
-                <p className="text-sm text-slate-400">{stat.label}</p>
+                <stat.icon className="mx-auto mb-3 h-6 w-6 text-sky-600 dark:text-sky-400" />
+                <p className="text-2xl font-black text-slate-900 dark:text-slate-50">{stat.value}</p>
+                <p className="text-sm font-bold text-slate-500 dark:text-slate-400">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -112,32 +112,32 @@ export function SearchPage() {
         {/* Features Grid */}
         <section className="mb-16" id="main">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-slate-50 sm:text-3xl">
+            <h2 className="text-2xl font-black text-slate-900 dark:text-slate-50 sm:text-3xl">
               {t('features.title').split('SkyFlow Pro')[0]} <span className="gradient-text">SkyFlow Pro</span>
             </h2>
-            <p className="mt-2 text-slate-400">{t('features.subtitle')}</p>
+            <p className="mt-2 text-slate-600 dark:text-slate-400 font-medium">{t('features.subtitle')}</p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((feature, idx) => (
               <div
                 key={idx}
-                className="glass rounded-2xl p-6 card-hover animate-fade-in"
+                className="glass rounded-2xl p-6 card-hover animate-fade-in border border-slate-200 dark:border-slate-800/50"
                 style={{ animationDelay: `${0.1 * idx}s` }}
               >
-                <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${feature.color} mb-4`}>
+                <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${feature.color} mb-4 shadow-lg`}>
                   <feature.icon className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-50 mb-2">{feature.title}</h3>
-                <p className="text-sm text-slate-400">{feature.description}</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 mb-2">{feature.title}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* Trusted Airlines */}
-        <section className="mb-16 glass rounded-2xl p-8 animate-fade-in">
-          <p className="text-center text-sm font-medium text-slate-400 mb-6">
+        <section className="mb-16 glass rounded-2xl p-8 animate-fade-in border border-slate-200 dark:border-slate-800/50">
+          <p className="text-center text-sm font-bold text-slate-500 dark:text-slate-400 mb-6">
             {t('trusted.text')}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6">

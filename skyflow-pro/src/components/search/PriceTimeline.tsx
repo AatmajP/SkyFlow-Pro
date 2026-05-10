@@ -39,17 +39,17 @@ export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }:
             <BarChart3 className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-50 flex items-center gap-2">
-              {from} <span className="text-slate-500">→</span> {to} · 7 Day Forecast
+            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">
+              {from} <span className="text-slate-400 dark:text-slate-500">→</span> {to} · 7 Day Forecast
             </h2>
-            <p className="text-xs text-slate-400">Prices are based on {cabin.charAt(0).toUpperCase() + cabin.slice(1).replace('_', ' ')} class · Updated live</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Prices are based on {cabin.charAt(0).toUpperCase() + cabin.slice(1).replace('_', ' ')} class · Updated live</p>
           </div>
         </div>
         
         <button 
           onClick={() => refetch()}
           disabled={isLoading}
-          className="p-2 rounded-lg bg-slate-800/50 hover:bg-slate-800 text-slate-400 hover:text-sky-400 transition-all border border-slate-700/50"
+          className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-all border border-slate-200 dark:border-slate-700/50"
         >
           <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
         </button>
@@ -63,9 +63,9 @@ export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }:
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 z-20 flex items-center justify-center bg-slate-900/40 backdrop-blur-[2px] rounded-xl"
+              className="absolute inset-0 z-20 flex items-center justify-center bg-white/40 dark:bg-slate-900/40 backdrop-blur-[2px] rounded-xl"
             >
-              <RefreshCw className="h-8 w-8 text-sky-400 animate-spin" />
+              <RefreshCw className="h-8 w-8 text-sky-600 dark:text-sky-400 animate-spin" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -87,13 +87,13 @@ export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }:
               transition={{ delay: idx * 0.05 }}
             >
               {/* Tooltip */}
-              <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-slate-800 border border-slate-700 text-white text-xs py-1.5 px-3 rounded-lg pointer-events-none z-10 whitespace-nowrap shadow-2xl translate-y-2 group-hover:translate-y-0">
+              <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs py-1.5 px-3 rounded-lg pointer-events-none z-10 whitespace-nowrap shadow-2xl translate-y-2 group-hover:translate-y-0">
                 <p className="font-bold">{getMonthDay(day.date)}</p>
-                <p className="text-emerald-400">{formatPrice(day.price)}</p>
+                <p className="text-emerald-600 dark:text-emerald-400 font-black">{formatPrice(day.price)}</p>
               </div>
               
               {/* Bar Container */}
-              <div className="w-full relative flex flex-col justify-end h-32 sm:h-40 bg-slate-800/20 rounded-t-xl overflow-hidden group-hover:bg-slate-800/40 transition-colors">
+              <div className="w-full relative flex flex-col justify-end h-32 sm:h-40 bg-slate-100 dark:bg-slate-800/20 rounded-t-xl overflow-hidden group-hover:bg-slate-200 dark:group-hover:bg-slate-800/40 transition-colors">
                 {/* Active Highlight */}
                 {isSelected && (
                   <motion.div 
@@ -106,9 +106,9 @@ export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }:
                 <motion.div 
                   className={`w-full rounded-t-lg relative transition-colors duration-300 ${
                     day.isCheapest ? 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)]' : 
-                    isExpensive ? 'bg-slate-700 group-hover:bg-amber-500/60' : 
+                    isExpensive ? 'bg-slate-300 dark:bg-slate-700 group-hover:bg-amber-500/60' : 
                     isSelected ? 'bg-sky-500 shadow-[0_0_20px_rgba(14,165,233,0.3)]' :
-                    'bg-slate-700 group-hover:bg-sky-500/60'
+                    'bg-slate-300 dark:bg-slate-700 group-hover:bg-sky-500/60'
                   }`}
                   style={{ height: `${heightPct}%` }}
                   whileHover={{ scaleY: 1.05 }}
@@ -116,8 +116,8 @@ export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }:
                 >
                   {day.isCheapest && (
                     <div className="absolute -top-7 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                      <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-tighter mb-1">Best</span>
-                      <TrendingDown className="h-4 w-4 text-emerald-400 animate-bounce" />
+                      <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-tighter mb-1">Best</span>
+                      <TrendingDown className="h-4 w-4 text-emerald-600 dark:text-emerald-400 animate-bounce" />
                     </div>
                   )}
                   {isExpensive && !isSelected && (
@@ -129,11 +129,11 @@ export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }:
               </div>
               
               {/* Labels */}
-              <div className={`mt-4 text-center w-full pt-2 transition-colors duration-300 ${isSelected ? 'border-t-2 border-sky-400' : 'border-t border-slate-800'}`}>
-                <p className={`text-[0.65rem] uppercase tracking-widest font-bold ${day.isCheapest ? 'text-emerald-400' : isSelected ? 'text-sky-400' : 'text-slate-500'}`}>
+              <div className={`mt-4 text-center w-full pt-2 transition-colors duration-300 ${isSelected ? 'border-t-2 border-sky-500 dark:border-sky-400' : 'border-t border-slate-200 dark:border-slate-800'}`}>
+                <p className={`text-[0.65rem] uppercase tracking-widest font-black ${day.isCheapest ? 'text-emerald-600 dark:text-emerald-400' : isSelected ? 'text-sky-600 dark:text-sky-400' : 'text-slate-500'}`}>
                   {getDayOfWeek(day.date)}
                 </p>
-                <p className={`text-xs font-bold mt-1 ${isSelected ? 'text-slate-50' : 'text-slate-300'}`}>
+                <p className={`text-xs font-bold mt-1 ${isSelected ? 'text-slate-900 dark:text-slate-50' : 'text-slate-600 dark:text-slate-300'}`}>
                   {formatPrice(day.price)}
                 </p>
               </div>
@@ -142,26 +142,26 @@ export function PriceTimeline({ from, to, date, cabin, tripType, onSelectDate }:
         }) : (
           <div className="w-full flex gap-4 h-40 items-end">
             {[1, 2, 3, 4, 5, 6, 7].map(i => (
-              <div key={i} className="flex-1 bg-slate-800/30 rounded-t-lg animate-pulse" style={{ height: `${20 + Math.random() * 80}%` }} />
+              <div key={i} className="flex-1 bg-slate-100 dark:bg-slate-800/30 rounded-t-lg animate-pulse" style={{ height: `${20 + Math.random() * 80}%` }} />
             ))}
           </div>
         )}
       </div>
 
       {/* Legend / Stats */}
-      <div className="mt-8 pt-4 border-t border-slate-800/50 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-6 text-[10px] uppercase tracking-widest font-bold">
+      <div className="mt-8 pt-4 border-t border-slate-200 dark:border-slate-800/50 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-6 text-[10px] uppercase tracking-widest font-black">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            <span className="text-slate-400">Best Price</span>
+            <span className="text-slate-500 dark:text-slate-400">Best Price</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-sky-500" />
-            <span className="text-slate-400">Selected</span>
+            <span className="text-slate-500 dark:text-slate-400">Selected</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-slate-700" />
-            <span className="text-slate-400">Average</span>
+            <span className="h-2 w-2 rounded-full bg-slate-400 dark:bg-slate-700" />
+            <span className="text-slate-500 dark:text-slate-400">Average</span>
           </div>
         </div>
         

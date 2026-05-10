@@ -90,34 +90,34 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-lg max-h-[90vh] bg-slate-900 border border-slate-800 shadow-2xl rounded-3xl flex flex-col overflow-hidden"
+            className="relative w-full max-w-lg max-h-[90vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-3xl flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/50 backdrop-blur-sm z-10">
+            <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm z-10">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/10 text-sky-400 relative">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 relative">
                   <Bell className="h-5 w-5" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 border-2 border-slate-900 rounded-full" />
+                    <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 border-2 border-white dark:border-slate-900 rounded-full" />
                   )}
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-50 leading-none">Notifications</h2>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 leading-none">Notifications</h2>
                   <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mt-1.5">
-                    {unreadCount} UNREAD UPDATES
+                    {unreadCount} {unreadCount === 1 ? 'UNREAD UPDATE' : 'UNREAD UPDATES'}
                   </p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-all"
+                className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-all"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Tabs */}
-            <div className="px-6 py-3 border-b border-slate-800 flex items-center gap-1 bg-slate-900/30">
+            <div className="px-6 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center gap-1 bg-slate-50/50 dark:bg-slate-900/30">
               {tabs.map(tab => (
                 <button
                   key={tab.id}
@@ -125,7 +125,7 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                     activeTab === tab.id 
                       ? 'bg-sky-500 text-white' 
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
                 >
                   {tab.label}
@@ -134,12 +134,11 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
               
               <div className="ml-auto flex items-center gap-3">
                 <button
-                  onClick={markAllAsRead}
-                  className="text-[10px] font-bold text-sky-400 hover:text-sky-300 uppercase tracking-tight"
+                  className="text-[10px] font-bold text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 uppercase tracking-tight"
                 >
                   Mark All
                 </button>
-                <div className="h-3 w-[1px] bg-slate-700" />
+                <div className="h-3 w-[1px] bg-slate-200 dark:bg-slate-700" />
                 <button
                   onClick={clearAll}
                   className="text-[10px] font-bold text-slate-500 hover:text-red-400 uppercase tracking-tight"
@@ -150,7 +149,7 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
             </div>
 
             {/* List */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar bg-slate-950/20 min-h-0">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar bg-slate-50/30 dark:bg-slate-950/20 min-h-0">
               {filteredNotifications.length > 0 ? (
                 filteredNotifications.map((n) => (
                   <motion.div
@@ -160,19 +159,19 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
                     animate={{ opacity: 1, y: 0 }}
                     className={`p-4 rounded-2xl border transition-all duration-300 relative group ${
                       n.read
-                        ? 'bg-slate-900/30 border-slate-800/50 opacity-60'
-                        : 'bg-slate-800/40 border-slate-700 shadow-lg shadow-sky-500/5'
+                        ? 'bg-white/40 dark:bg-slate-900/30 border-slate-200/50 dark:border-slate-800/50 opacity-60'
+                        : 'bg-white dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 shadow-md dark:shadow-lg shadow-sky-500/5'
                     }`}
                   >
                     <div className="flex gap-4">
                       <div className={`flex-shrink-0 h-11 w-11 rounded-xl flex items-center justify-center ${
-                        n.read ? 'bg-slate-800 text-slate-500' : 'bg-slate-800/80 text-white'
+                        n.read ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' : 'bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white shadow-sm'
                       }`}>
                         {getIcon(n.type, n.category)}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2 mb-1">
-                          <h3 className={`text-sm font-bold truncate ${n.read ? 'text-slate-400' : 'text-slate-100'}`}>
+                          <h3 className={`text-sm font-bold truncate ${n.read ? 'text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>
                             {n.title}
                           </h3>
                           <div className="flex items-center gap-1 text-[10px] text-slate-500 whitespace-nowrap font-medium">
@@ -180,7 +179,7 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
                             {formatTime(n.timestamp)}
                           </div>
                         </div>
-                        <p className={`text-xs leading-relaxed ${n.read ? 'text-slate-500' : 'text-slate-300'}`}>
+                        <p className={`text-xs leading-relaxed font-medium ${n.read ? 'text-slate-400' : 'text-slate-600 dark:text-slate-300'}`}>
                           {n.message}
                         </p>
                       </div>
@@ -199,11 +198,11 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
                 ))
               ) : (
                 <div className="h-full flex flex-col items-center justify-center text-center p-8">
-                  <div className="h-16 w-16 rounded-full bg-slate-800 flex items-center justify-center mb-4 opacity-40">
-                    <Bell className="h-8 w-8 text-slate-600" />
+                  <div className="h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 opacity-40">
+                    <Bell className="h-8 w-8 text-slate-400 dark:text-slate-600" />
                   </div>
-                  <h3 className="text-slate-300 font-semibold">Quiet in here...</h3>
-                  <p className="text-xs text-slate-500 mt-2 max-w-[200px] mx-auto leading-relaxed">
+                  <h3 className="text-slate-900 dark:text-slate-300 font-bold">Quiet in here...</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-500 mt-2 max-w-[200px] mx-auto leading-relaxed font-medium">
                     We'll notify you here for gate updates, check-ins, and price drops.
                   </p>
                 </div>
@@ -211,10 +210,10 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
             </div>
 
             {/* Sticky Footer */}
-            <div className="px-6 py-5 border-t border-slate-800 bg-slate-900/50 backdrop-blur-sm">
+            <div className="px-6 py-5 border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
               <button
                 onClick={onClose}
-                className="w-full px-4 py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-sm hover:bg-slate-700 transition-all border border-slate-700"
+                className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700"
               >
                 Close Panel
               </button>

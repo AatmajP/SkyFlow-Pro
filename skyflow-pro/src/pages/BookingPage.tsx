@@ -123,7 +123,7 @@ export function BookingPage() {
             <div className="min-h-screen flex items-center justify-center">
                 <div className="glass rounded-2xl p-8 text-center max-w-md">
                     <AlertCircle className="h-12 w-12 text-amber-400 mx-auto mb-4" />
-                    <h2 className="text-xl font-semibold text-slate-50">{t('booking.noFlight')}</h2>
+                    <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-50">{t('booking.noFlight')}</h2>
                     <p className="text-sm text-slate-400 mt-2">{t('booking.noFlightDesc')}</p>
                     <Link to="/" className="btn-primary inline-flex mt-6">
                         {t('search.searchButton')}
@@ -163,7 +163,7 @@ export function BookingPage() {
 
                 {/* Header */}
                 <div className="mb-8 animate-fade-in">
-                    <h1 className="text-3xl font-bold text-slate-50">{t('booking.title')}</h1>
+                    <h1 className="text-3xl font-black text-slate-900 dark:text-slate-50">{t('booking.title')}</h1>
                     <p className="text-slate-400 mt-1">{t('booking.subtitle')}</p>
                     <div className="flex items-center gap-3 mt-3">
                         <button
@@ -198,7 +198,7 @@ export function BookingPage() {
                                                 ? 'bg-emerald-500 text-white'
                                                 : currentStep === step.number
                                                     ? 'bg-sky-500 text-white'
-                                                    : 'bg-slate-800 text-slate-500'
+                                                    : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
                                             }`}
                                     >
                                         {currentStep > step.number ? (
@@ -208,15 +208,15 @@ export function BookingPage() {
                                         )}
                                     </div>
                                     <div className="hidden sm:block">
-                                        <p className={`text-sm font-medium ${currentStep >= step.number ? 'text-slate-50' : 'text-slate-500'}`}>
+                                        <p className={`text-sm font-bold ${currentStep >= step.number ? 'text-slate-900 dark:text-slate-50' : 'text-slate-500'}`}>
                                             {t('booking.steps.step', { number: step.number })}
                                         </p>
-                                        <p className="text-xs text-slate-500">{step.title}</p>
+                                        <p className="text-xs font-bold text-slate-500">{step.title}</p>
                                     </div>
                                 </div>
                                 {idx < steps.length - 1 && (
                                     <div className="flex-1 mx-4">
-                                        <div className={`h-1 rounded-full ${currentStep > step.number ? 'bg-emerald-500' : 'bg-slate-800'}`} />
+                                        <div className={`h-1 rounded-full ${currentStep > step.number ? 'bg-emerald-500' : 'bg-slate-200 dark:bg-slate-800'}`} />
                                     </div>
                                 )}
                             </div>
@@ -230,14 +230,14 @@ export function BookingPage() {
                         {/* Step 1: Passenger Details */}
                         {currentStep === 1 && (
                             <div className="glass rounded-2xl p-6 animate-fade-in">
-                                <h2 className="text-lg font-semibold text-slate-50 flex items-center gap-2 mb-6">
+                                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2 mb-6">
                                     <User className="h-5 w-5 text-sky-400" />
                                     {t('booking.passenger.title')}
                                 </h2>
 
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.passenger.firstName')} *</label>
+                                        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('booking.passenger.firstName')} *</label>
                                         <input
                                             type="text"
                                             value={passenger.firstName}
@@ -248,7 +248,7 @@ export function BookingPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.passenger.lastName')} *</label>
+                                        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('booking.passenger.lastName')} *</label>
                                         <input
                                             type="text"
                                             value={passenger.lastName}
@@ -259,7 +259,7 @@ export function BookingPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.passenger.email')} *</label>
+                                        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('booking.passenger.email')} *</label>
                                         <input
                                             type="email"
                                             value={passenger.email}
@@ -300,7 +300,7 @@ export function BookingPage() {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 pt-6 border-t border-slate-800/50 flex justify-end">
+                                <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800/50 flex justify-end">
                                     <button
                                         onClick={handleNextStep}
                                         disabled={!isStep1Valid}
@@ -342,14 +342,14 @@ export function BookingPage() {
                         {/* Step 3: Payment */}
                         {currentStep === 3 && (
                             <div className="glass rounded-2xl p-6 animate-fade-in">
-                                <h2 className="text-lg font-semibold text-slate-50 flex items-center gap-2 mb-6">
+                                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2 mb-6">
                                     <CreditCard className="h-5 w-5 text-sky-400" />
                                     {t('booking.payment.title')}
                                 </h2>
 
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="text-xs font-medium text-slate-400 block mb-2">{t('booking.payment.cardholder')} *</label>
+                                        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('booking.payment.cardholder')} *</label>
                                         <input
                                             type="text"
                                             value={payment.cardholderName}
@@ -399,9 +399,9 @@ export function BookingPage() {
                                     </div>
                                 </div>
 
-                                <div className="mt-4 p-3 rounded-lg bg-sky-950/30 border border-sky-500/20 flex items-center gap-2">
-                                    <Lock className="h-4 w-4 text-sky-400" />
-                                    <p className="text-xs text-sky-300">{t('booking.payment.secureInfo')}</p>
+                                <div className="mt-4 p-3 rounded-lg bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-500/20 flex items-center gap-2">
+                                    <Lock className="h-4 w-4 text-sky-600 dark:text-sky-400" />
+                                    <p className="text-xs font-bold text-sky-700 dark:text-sky-300">{t('booking.payment.secureInfo')}</p>
                                 </div>
 
                                 <div className="mt-6 pt-6 border-t border-slate-800/50 flex justify-between">
@@ -423,15 +423,15 @@ export function BookingPage() {
                         {/* Step 4: Review & Confirm */}
                         {currentStep === 4 && (
                             <div className="glass rounded-2xl p-6 animate-fade-in">
-                                <h2 className="text-lg font-semibold text-slate-50 flex items-center gap-2 mb-6">
+                                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2 mb-6">
                                     <Check className="h-5 w-5 text-sky-400" />
                                     {t('booking.review.title')}
                                 </h2>
 
                                 {/* Passenger summary */}
-                                <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
-                                    <h3 className="text-sm font-medium text-slate-300 mb-2">{t('booking.review.passenger')}</h3>
-                                    <p className="text-lg font-semibold text-slate-50">
+                                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-transparent mb-4">
+                                    <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-2">{t('booking.review.passenger')}</h3>
+                                    <p className="text-lg font-bold text-slate-900 dark:text-slate-50">
                                         {passenger.firstName} {passenger.lastName}
                                     </p>
                                     <p className="text-sm text-slate-400">{passenger.email}</p>
@@ -439,14 +439,14 @@ export function BookingPage() {
 
                                 {/* Seat summary */}
                                 {selectedSeat && (
-                                    <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
-                                        <h3 className="text-sm font-medium text-slate-300 mb-2">{t('booking.review.selectedSeat')}</h3>
+                                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-transparent mb-4">
+                                        <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-2">{t('booking.review.selectedSeat')}</h3>
                                         <div className="flex items-center gap-3">
                                             <div className="h-10 w-10 rounded-lg bg-sky-500 flex items-center justify-center text-white font-bold shadow-lg shadow-sky-500/20">
                                                 {selectedSeat.label}
                                             </div>
                                             <div>
-                                                <p className="text-sm font-semibold text-slate-50">
+                                                <p className="text-sm font-bold text-slate-900 dark:text-slate-50">
                                                     {t('booking.review.seatLabel', { label: selectedSeat.label, position: t(`common.positions.${selectedSeat.position}`, { defaultValue: selectedSeat.position }) })}
                                                 </p>
                                                 <p className="text-xs text-slate-400">
@@ -458,9 +458,9 @@ export function BookingPage() {
                                 )}
 
                                 {/* Payment summary */}
-                                <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
-                                    <h3 className="text-sm font-medium text-slate-300 mb-2">{t('booking.review.paymentMethod')}</h3>
-                                    <p className="text-lg font-semibold text-slate-50 flex items-center gap-2">
+                                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-transparent mb-4">
+                                    <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-2">{t('booking.review.paymentMethod')}</h3>
+                                    <p className="text-lg font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">
                                         <CreditCard className="h-5 w-5 text-slate-400" />
                                         •••• •••• •••• {payment.cardNumber.slice(-4)}
                                     </p>
@@ -468,7 +468,7 @@ export function BookingPage() {
                                 </div>
 
                                 {/* Terms */}
-                                <div className="p-4 rounded-xl bg-slate-800/30 mb-6">
+                                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-transparent mb-6">
                                     <label className="flex items-start gap-3 cursor-pointer">
                                         <input
                                             type="checkbox"
@@ -519,14 +519,14 @@ export function BookingPage() {
                             <h3 className="text-sm font-semibold text-slate-300 mb-4">{t('booking.summary.title')}</h3>
 
                             {/* Flight details */}
-                            <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
-                                <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">{t('booking.summary.outbound')}</div>
+                            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-transparent mb-4">
+                                <div className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">{t('booking.summary.outbound')}</div>
                                 <div className="flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
+                                    <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
                                         <Plane className="h-5 w-5 text-white" />
                                     </div>
                                     <div>
-                                        <p className="font-semibold text-slate-50">
+                                        <p className="font-bold text-slate-900 dark:text-slate-50">
                                             {flight.from} → {flight.to}
                                         </p>
                                         <p className="text-xs text-slate-400">
@@ -545,14 +545,14 @@ export function BookingPage() {
                             </div>
 
                             {returnFlight && (
-                                <div className="p-4 rounded-xl bg-slate-800/30 mb-4">
-                                    <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">{t('booking.summary.return')}</div>
+                                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-transparent mb-4">
+                                    <div className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">{t('booking.summary.return')}</div>
                                     <div className="flex items-center gap-3">
-                                        <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                                        <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
                                             <Plane className="h-5 w-5 text-white rotate-[135deg]" />
                                         </div>
                                         <div>
-                                            <p className="font-semibold text-slate-50">
+                                            <p className="font-bold text-slate-900 dark:text-slate-50">
                                                 {returnFlight.from} → {returnFlight.to}
                                             </p>
                                             <p className="text-xs text-slate-400">
@@ -597,9 +597,9 @@ export function BookingPage() {
                                         <span className="text-emerald-300">{t('booking.review.freeSeat')}</span>
                                     </div>
                                 )}
-                                <div className="flex justify-between pt-3 border-t border-slate-800/50">
-                                    <span className="font-semibold text-slate-50">{t('booking.summary.total')}</span>
-                                    <span className="text-xl font-bold text-sky-400">{formatPrice(totalPrice)}</span>
+                                <div className="flex justify-between pt-3 border-t border-slate-200 dark:border-slate-800/50">
+                                    <span className="font-bold text-slate-900 dark:text-slate-50">{t('booking.summary.total')}</span>
+                                    <span className="text-xl font-black text-sky-600 dark:text-sky-400">{formatPrice(totalPrice)}</span>
                                 </div>
                             </div>
 

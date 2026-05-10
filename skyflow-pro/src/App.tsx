@@ -12,7 +12,7 @@ import { CurrencyProvider } from './context/CurrencyContext'
 function App() {
   return (
     <CurrencyProvider>
-      <div className="min-h-screen text-slate-50">
+      <div className="min-h-screen text-slate-900 dark:text-slate-50">
       <SkipLink />
       <Navbar />
       <Routes>

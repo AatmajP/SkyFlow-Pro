@@ -53,7 +53,7 @@ export function ConfirmationPage() {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="glass rounded-2xl p-8 text-center max-w-md">
-                    <h2 className="text-xl font-semibold text-slate-50">{t('confirmation.notFound')}</h2>
+                    <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-50">{t('confirmation.notFound')}</h2>
                     <p className="text-sm text-slate-400 mt-2">{t('confirmation.notFoundDesc')}</p>
                     <Link to="/" className="btn-primary inline-flex mt-6">
                         <Home className="h-4 w-4 mr-2" />
@@ -104,14 +104,14 @@ export function ConfirmationPage() {
                         <CheckCircle2 className="h-12 w-12 text-emerald-400" />
                     </div>
 
-                    <h1 className="text-3xl font-bold text-slate-50 sm:text-4xl">
+                    <h1 className="text-3xl font-black text-slate-900 dark:text-slate-100 sm:text-4xl">
                         {t('confirmation.successTitle')}
                     </h1>
-                    <p className="text-lg text-slate-400 mt-2">
+                    <p className="text-lg text-slate-600 dark:text-slate-400 mt-2 font-medium">
                         {t('confirmation.successSubtitle')}
                     </p>
 
-                    <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700">
+                    <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
                         <span className="text-sm text-slate-400">{t('confirmation.confNumber')}</span>
                         <span className="text-lg font-bold text-sky-400 font-mono">{booking.bookingId}</span>
                     </div>
@@ -126,27 +126,27 @@ export function ConfirmationPage() {
                                 <Plane className="h-7 w-7 text-white" />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-slate-50">
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
                                     {flight.from} <ArrowRight className="inline h-5 w-5 text-sky-400 mx-1" /> {flight.to}
                                 </h2>
-                                <p className="text-sm text-slate-400">
+                                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
                                     {flight.segments[0]?.marketingCarrier} · {flight.fareBrand}
                                 </p>
                             </div>
                         </div>
 
                         <div className="text-right">
-                            <p className="text-2xl font-bold text-emerald-400">{formatPrice(flight.price.total)}</p>
-                            <p className="text-sm text-slate-400">{t('confirmation.totalPaid')}</p>
+                            <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400">{formatPrice(flight.price.total)}</p>
+                            <p className="text-sm font-bold text-slate-500 dark:text-slate-400">{t('confirmation.totalPaid')}</p>
                         </div>
                     </div>
 
                     {/* Flight Details Grid */}
                     <div className="grid gap-6 sm:grid-cols-3 py-6">
-                        <div className="text-center p-4 rounded-xl bg-slate-800/30">
-                            <Calendar className="h-6 w-6 text-sky-400 mx-auto mb-2" />
-                            <p className="text-sm text-slate-400">{t('confirmation.departureDate')}</p>
-                            <p className="text-lg font-semibold text-slate-50 mt-1">
+                        <div className="text-center p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-transparent">
+                            <Calendar className="h-6 w-6 text-sky-600 dark:text-sky-400 mx-auto mb-2" />
+                            <p className="text-sm font-bold text-slate-500 dark:text-slate-400">{t('confirmation.departureDate')}</p>
+                            <p className="text-lg font-bold text-slate-900 dark:text-slate-50 mt-1">
                                 {flight.segments[0]?.departureTime
                                     ? new Date(flight.segments[0].departureTime).toLocaleDateString(i18n.language, {
                                         weekday: 'short',
@@ -158,31 +158,31 @@ export function ConfirmationPage() {
                             </p>
                         </div>
 
-                        <div className="text-center p-4 rounded-xl bg-slate-800/30">
-                            <Clock className="h-6 w-6 text-sky-400 mx-auto mb-2" />
-                            <p className="text-sm text-slate-400">{t('confirmation.flightDuration')}</p>
-                            <p className="text-lg font-semibold text-slate-50 mt-1">
+                        <div className="text-center p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-transparent">
+                            <Clock className="h-6 w-6 text-sky-600 dark:text-sky-400 mx-auto mb-2" />
+                            <p className="text-sm font-bold text-slate-500 dark:text-slate-400">{t('confirmation.flightDuration')}</p>
+                            <p className="text-lg font-bold text-slate-900 dark:text-slate-50 mt-1">
                                 {t('common.duration', { h: Math.floor(flight.totalDurationMinutes / 60), m: flight.totalDurationMinutes % 60 })}
                             </p>
-                            <p className="text-xs text-slate-500">{flight.stops === 0 ? t('results.card.nonStop') : t('results.card.stops', { count: flight.stops })}</p>
+                            <p className="text-xs font-medium text-slate-500">{flight.stops === 0 ? t('results.card.nonStop') : t('results.card.stops', { count: flight.stops })}</p>
                         </div>
 
-                        <div className="text-center p-4 rounded-xl bg-slate-800/30">
-                            <User className="h-6 w-6 text-sky-400 mx-auto mb-2" />
-                            <p className="text-sm text-slate-400">{t('confirmation.passenger')}</p>
-                            <p className="text-lg font-semibold text-slate-50 mt-1">
+                        <div className="text-center p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-transparent">
+                            <User className="h-6 w-6 text-sky-600 dark:text-sky-400 mx-auto mb-2" />
+                            <p className="text-sm font-bold text-slate-500 dark:text-slate-400">{t('confirmation.passenger')}</p>
+                            <p className="text-lg font-bold text-slate-900 dark:text-slate-50 mt-1">
                                 {passenger.firstName} {passenger.lastName}
                             </p>
-                            <p className="text-xs text-slate-500">{passenger.email}</p>
+                            <p className="text-xs font-medium text-slate-500">{passenger.email}</p>
                         </div>
                     </div>
 
                     {/* Boarding Pass Style Section */}
-                    <div className="mt-4 p-5 rounded-2xl bg-gradient-to-r from-slate-800/50 to-slate-900/50 border border-dashed border-slate-700">
+                    <div className="mt-4 p-5 rounded-2xl bg-slate-50 dark:bg-gradient-to-r dark:from-slate-800/50 dark:to-slate-900/50 border border-dashed border-slate-300 dark:border-slate-700">
                         <div className="flex flex-wrap items-center justify-between gap-4">
                             <div>
-                                <p className="text-xs text-slate-500 uppercase tracking-wider">{t('confirmation.boardingPass')}</p>
-                                <p className="text-sm text-slate-300 mt-1">
+                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('confirmation.boardingPass')}</p>
+                                <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium">
                                     {t('confirmation.checkInNote')}
                                 </p>
                             </div>
@@ -195,9 +195,9 @@ export function ConfirmationPage() {
                     </div>
 
                     {/* Baggage Info */}
-                    <div className="mt-6 p-4 rounded-xl bg-sky-950/30 border border-sky-500/20">
-                        <p className="text-sm font-medium text-sky-300">{t('confirmation.baggageAllowance')}</p>
-                        <p className="text-sm text-slate-400 mt-1">{flight.baggagePolicy}</p>
+                    <div className="mt-6 p-4 rounded-xl bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-500/20">
+                        <p className="text-sm font-bold text-sky-700 dark:text-sky-300">{t('confirmation.baggageAllowance')}</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 font-medium">{flight.baggagePolicy}</p>
                     </div>
                 </div>
 
@@ -208,10 +208,10 @@ export function ConfirmationPage() {
                             <Mail className="h-6 w-6 text-emerald-400" />
                         </div>
                         <div>
-                            <p className="font-medium text-slate-200">{t('confirmation.emailSent')}</p>
-                            <p className="text-sm text-slate-400">
+                            <p className="font-bold text-slate-900 dark:text-slate-200">{t('confirmation.emailSent')}</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
                                 <Trans i18nKey="confirmation.emailSentDesc" values={{ email: passenger.email }}>
-                                    We've sent your booking confirmation and e-ticket to <span className="text-sky-400">{{ email: passenger.email }}</span>
+                                    We've sent your booking confirmation and e-ticket to <span className="text-sky-600 dark:text-sky-400 font-bold">{{ email: passenger.email }}</span>
                                 </Trans>
                             </p>
                         </div>

@@ -188,9 +188,9 @@ export function ResultsPage() {
                 </span>
                 {t('results.liveResults')} {isRoundTrip && `· ${t('results.roundTrip')}`}
               </p>
-              <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl flex items-center gap-3">
+              <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900 dark:text-slate-50 sm:text-4xl flex items-center gap-3">
                 {from}
-                <span className="inline-flex items-center gap-1 text-sky-400">
+                <span className="inline-flex items-center gap-1 text-sky-600 dark:text-sky-400">
                   {isRoundTrip ? (
                     <ArrowRight className="h-6 w-6" />
                   ) : (
@@ -199,10 +199,10 @@ export function ResultsPage() {
                 </span>
                 {to}
               </h1>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 font-medium">
                 {fromAirport ? `${fromAirport.city}` : from} → {toAirport ? `${toAirport.city}` : to}
               </p>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 {formatDate(date)}
                 {isRoundTrip && returnDate && ` — ${formatDate(returnDate)}`}
                 {' '}• {adults} traveler{adults > 1 ? 's' : ''} • {cabin.charAt(0).toUpperCase() + cabin.slice(1)}
@@ -241,8 +241,8 @@ export function ResultsPage() {
         {/* Smart Travel Insights Section */}
         <div className="mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="h-5 w-5 text-sky-400" />
-            <h2 className="text-xl font-bold text-slate-100">{t('results.smartInsights')}</h2>
+            <Sparkles className="h-5 w-5 text-sky-600 dark:text-sky-400" />
+            <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">{t('results.smartInsights')}</h2>
           </div>
           <SmartTravelInsights 
             from={from} 
@@ -277,8 +277,8 @@ export function ResultsPage() {
                     )}
                   </div>
                   <div className="text-left">
-                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">{t('results.outbound')}</p>
-                    <p className="text-sm font-semibold text-slate-200">
+                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('results.outbound')}</p>
+                    <p className="text-sm font-bold text-slate-900 dark:text-slate-200">
                       {from} → {to} · {formatDate(date)}
                     </p>
                     {selectedOutbound && (
@@ -308,8 +308,8 @@ export function ResultsPage() {
                     )}
                   </div>
                   <div className="text-left">
-                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">{t('results.return')}</p>
-                    <p className="text-sm font-semibold text-slate-200">
+                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('results.return')}</p>
+                    <p className="text-sm font-bold text-slate-900 dark:text-slate-200">
                       {to} → {from} · {formatDate(returnDate)}
                     </p>
                     {selectedReturn && (
@@ -325,8 +325,8 @@ export function ResultsPage() {
               {selectedOutbound && selectedReturn && (
                 <div className="mt-4 pt-4 border-t border-slate-800/50 flex items-center justify-between animate-fade-in">
                   <div>
-                    <p className="text-xs text-slate-400 uppercase tracking-wider font-medium">{t('results.total')}</p>
-                    <p className="text-2xl font-bold text-emerald-400">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">{t('results.total')}</p>
+                    <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
                       {formatPrice(roundTripTotal)}
                     </p>
                     <p className="text-xs text-slate-500 mt-0.5">
@@ -365,39 +365,39 @@ export function ResultsPage() {
 
               {/* Quick filters */}
               <div className="hidden sm:flex items-center gap-2">
-                <button
-                  onClick={() => setStopsFilter(stopsFilter === 'nonstop' ? 'any' : 'nonstop')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                    stopsFilter === 'nonstop'
-                      ? 'bg-sky-500/20 text-sky-300 ring-1 ring-sky-500/30'
-                      : 'bg-slate-800/50 text-slate-300 hover:bg-slate-800'
-                  }`}
-                >
-                  {t('results.nonStopOnly')}
-                </button>
-                <button
-                  onClick={() => setTimeFilter(timeFilter === 'morning' ? 'any' : 'morning')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                    timeFilter === 'morning'
-                      ? 'bg-sky-500/20 text-sky-300 ring-1 ring-sky-500/30'
-                      : 'bg-slate-800/50 text-slate-300 hover:bg-slate-800'
-                  }`}
-                >
-                  {t('results.morningFlights')}
-                </button>
+                  <button
+                    onClick={() => setStopsFilter(stopsFilter === 'nonstop' ? 'any' : 'nonstop')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                      stopsFilter === 'nonstop'
+                        ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 ring-1 ring-sky-500/30'
+                        : 'bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    {t('results.nonStopOnly')}
+                  </button>
+                  <button
+                    onClick={() => setTimeFilter(timeFilter === 'morning' ? 'any' : 'morning')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                      timeFilter === 'morning'
+                        ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 ring-1 ring-sky-500/30'
+                        : 'bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    {t('results.morningFlights')}
+                  </button>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500">{t('results.sortBy')}:</span>
-              <div className="flex items-center gap-1 rounded-xl bg-slate-900/80 p-1">
+              <div className="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-slate-900/80 p-1 ring-1 ring-slate-200 dark:ring-slate-800">
                 {(['price', 'duration', 'departure'] as SortOption[]).map((option) => (
                   <button
                     key={option}
                     onClick={() => setSortBy(option)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 ${sortBy === option
-                        ? 'bg-sky-500 text-white'
-                        : 'text-slate-400 hover:text-slate-200'
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${sortBy === option
+                        ? 'bg-white dark:bg-sky-500 text-sky-600 dark:text-white shadow-sm'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                       }`}
                   >
                     {t(`results.sort.${option}`)}
@@ -411,7 +411,7 @@ export function ResultsPage() {
           {showFilters && (
             <div className="mt-4 pt-4 border-t border-slate-800/50 grid grid-cols-2 sm:grid-cols-4 gap-4 animate-fade-in">
               <div>
-                <label className="text-xs font-medium text-slate-400 block mb-2">{t('results.stops')}</label>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.stops')}</label>
                 <select
                   value={stopsFilter}
                   onChange={(e) => setStopsFilter(e.target.value)}
@@ -423,7 +423,7 @@ export function ResultsPage() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-medium text-slate-400 block mb-2">{t('results.airlines')}</label>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.airlines')}</label>
                 <select
                   value={airlineFilter}
                   onChange={(e) => setAirlineFilter(e.target.value)}
@@ -436,7 +436,7 @@ export function ResultsPage() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-medium text-slate-400 block mb-2">{t('results.departureTime')}</label>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.departureTime')}</label>
                 <select
                   value={timeFilter}
                   onChange={(e) => setTimeFilter(e.target.value)}
@@ -449,7 +449,7 @@ export function ResultsPage() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-medium text-slate-400 block mb-2">{t('results.priceRange')}</label>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.priceRange')}</label>
                 <select
                   value={priceFilter}
                   onChange={(e) => setPriceFilter(e.target.value)}
@@ -485,12 +485,12 @@ export function ResultsPage() {
         {/* Results */}
         <main className="flex flex-1 flex-col gap-6" id="main">
           {query.isLoading ? (
-            <div className="glass rounded-2xl p-8 text-center animate-fade-in">
-              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-sky-500/10 mb-4">
-                <Plane className="h-8 w-8 text-sky-400 animate-pulse" />
+            <div className="glass rounded-2xl p-8 text-center animate-fade-in border border-slate-200 dark:border-slate-800/50">
+              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-sky-50 dark:bg-sky-500/10 mb-4">
+                <Plane className="h-8 w-8 text-sky-600 dark:text-sky-400 animate-pulse" />
               </div>
-              <p className="text-lg font-semibold text-slate-50">{t('results.findingFlights')}</p>
-              <p className="text-sm text-slate-400 mt-1">
+              <p className="text-lg font-black text-slate-900 dark:text-slate-50">{t('results.findingFlights')}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
                 {t('results.searchingFromTo', { from: fromAirport?.city ?? from, to: toAirport?.city ?? to })}
               </p>
               <div className="mt-6 max-w-xs mx-auto">
@@ -522,17 +522,17 @@ export function ResultsPage() {
               {/* Leg label for round trip */}
               {isRoundTrip && (
                 <div className="mb-4 flex items-center gap-2 text-sm">
-                  <Plane className={`h-4 w-4 ${activeLeg === 'outbound' ? 'text-sky-400 -rotate-45' : 'text-purple-400 rotate-[135deg]'}`} />
-                  <span className="font-semibold text-slate-200">
+                  <Plane className={`h-4 w-4 ${activeLeg === 'outbound' ? 'text-sky-600 dark:text-sky-400 -rotate-45' : 'text-purple-600 dark:text-purple-400 rotate-[135deg]'}`} />
+                  <span className="font-bold text-slate-900 dark:text-slate-200">
                     {activeLeg === 'outbound'
                       ? `Outbound: ${fromAirport?.city ?? from} → ${toAirport?.city ?? to}`
                       : `Return: ${toAirport?.city ?? to} → ${fromAirport?.city ?? from}`
                     }
                   </span>
-                  <span className="text-slate-500">·</span>
-                  <span className="text-slate-400">{formatDate(activeLeg === 'outbound' ? date : returnDate)}</span>
+                  <span className="text-slate-400 dark:text-slate-500">·</span>
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">{formatDate(activeLeg === 'outbound' ? date : returnDate)}</span>
                   {isRoundTrip && (
-                    <span className="ml-auto text-xs text-slate-500">
+                    <span className="ml-auto text-xs font-bold text-slate-500 uppercase tracking-tighter">
                       {activeLeg === 'outbound' ? t('results.selectOutbound') : t('results.selectReturn')}
                     </span>
                   )}

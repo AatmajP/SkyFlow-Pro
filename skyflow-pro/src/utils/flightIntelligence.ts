@@ -85,23 +85,23 @@ export function getBadgeConfig(badge: FlightBadge) {
     case 'cheapest':
       return {
         label: 'Cheapest',
-        bgClass: 'bg-emerald-500/15 ring-emerald-500/30',
-        textClass: 'text-emerald-400',
-        dotClass: 'bg-emerald-400',
+        bgClass: 'bg-emerald-50 dark:bg-emerald-500/15 ring-emerald-200 dark:ring-emerald-500/30',
+        textClass: 'text-emerald-600 dark:text-emerald-400',
+        dotClass: 'bg-emerald-500',
       }
     case 'fastest':
       return {
         label: 'Fastest',
-        bgClass: 'bg-sky-500/15 ring-sky-500/30',
-        textClass: 'text-sky-400',
-        dotClass: 'bg-sky-400',
+        bgClass: 'bg-sky-50 dark:bg-sky-500/15 ring-sky-200 dark:ring-sky-500/30',
+        textClass: 'text-sky-600 dark:text-sky-400',
+        dotClass: 'bg-sky-500',
       }
     case 'best-value':
       return {
         label: 'Best Value',
-        bgClass: 'bg-violet-500/15 ring-violet-500/30',
-        textClass: 'text-violet-400',
-        dotClass: 'bg-violet-400',
+        bgClass: 'bg-purple-50 dark:bg-purple-500/15 ring-purple-200 dark:ring-purple-500/30',
+        textClass: 'text-purple-600 dark:text-purple-400',
+        dotClass: 'bg-purple-500',
       }
   }
 }

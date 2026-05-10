@@ -96,7 +96,7 @@ export function GlobalSearchHeader() {
   return (
     <section
       aria-label="Flight search"
-      className="glass rounded-3xl p-6 shadow-xl sm:p-8"
+      className="glass rounded-3xl p-6 shadow-xl sm:p-8 border border-slate-200 dark:border-slate-800/50"
     >
       <form
         onSubmit={handleSubmit}
@@ -105,15 +105,15 @@ export function GlobalSearchHeader() {
       >
         {/* Trip Type Selector */}
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="inline-flex rounded-2xl bg-slate-900/80 p-1 ring-1 ring-slate-800">
+          <div className="inline-flex rounded-2xl bg-slate-100 dark:bg-slate-900/80 p-1 ring-1 ring-slate-200 dark:ring-slate-800">
             {(['oneway', 'roundtrip'] as TripType[]).map((type) => (
               <button
                 key={type}
                 type="button"
                 onClick={() => handleChange('tripType', type)}
                 className={`rounded-xl px-4 py-2 text-sm font-medium capitalize transition-all duration-300 ${form.tripType === type
-                    ? 'bg-gradient-to-r from-sky-500 to-sky-600 text-white shadow-lg shadow-sky-500/30'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ? 'bg-white dark:bg-gradient-to-r dark:from-sky-500 dark:to-sky-600 text-sky-600 dark:text-white shadow-md dark:shadow-lg dark:shadow-sky-500/30'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-800/50'
                   }`}
                 aria-pressed={form.tripType === type}
               >
@@ -124,7 +124,7 @@ export function GlobalSearchHeader() {
 
           <div
             id="price-transparency-helper"
-            className="flex items-center gap-2 rounded-xl bg-sky-500/10 px-3 py-2 text-xs text-sky-300 ring-1 ring-sky-500/20"
+            className="flex items-center gap-2 rounded-xl bg-sky-50 dark:bg-sky-500/10 px-3 py-2 text-xs text-sky-600 dark:text-sky-300 ring-1 ring-sky-200 dark:ring-sky-500/20"
           >
             <Info className="h-4 w-4" />
             <span>{t('hero.badge')}</span>
@@ -134,7 +134,7 @@ export function GlobalSearchHeader() {
         {/* Main Search Fields */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr,auto,1fr]">
           <div ref={fromInputRef} className="relative">
-            <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
               {t('search.from')}
             </label>
             <input
@@ -153,7 +153,7 @@ export function GlobalSearchHeader() {
               <Briefcase className="h-5 w-5" />
             </div>
             {form.from && (
-              <p className="text-xs text-slate-500 mt-1">{getAirportLabel(form.from)}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{getAirportLabel(form.from)}</p>
             )}
             {/* Portal-based dropdown — no overlap issues */}
             <AirportDropdownPortal
@@ -170,15 +170,15 @@ export function GlobalSearchHeader() {
             <button
               type="button"
               onClick={swapLocations}
-              className="group p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-sky-500/50 hover:bg-slate-800 transition-all duration-300"
+              className="group p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 hover:border-sky-500/50 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-300"
               aria-label="Swap departure and destination"
             >
-              <ArrowRightLeft className="h-5 w-5 text-slate-400 group-hover:text-sky-400 transition-colors" />
+              <ArrowRightLeft className="h-5 w-5 text-slate-500 dark:text-slate-400 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors" />
             </button>
           </div>
 
           <div ref={toInputRef} className="relative">
-            <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
               {t('search.to')}
             </label>
             <input
@@ -197,7 +197,7 @@ export function GlobalSearchHeader() {
               <Briefcase className="h-5 w-5" />
             </div>
             {form.to && (
-              <p className="text-xs text-slate-500 mt-1">{getAirportLabel(form.to)}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{getAirportLabel(form.to)}</p>
             )}
             <AirportDropdownPortal
               query={form.to}
@@ -212,7 +212,7 @@ export function GlobalSearchHeader() {
         {/* Date and Passenger Fields */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="relative">
-            <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
               <Calendar className="inline h-3 w-3 mr-1" />
               {t('search.departure')}
             </label>
@@ -228,7 +228,7 @@ export function GlobalSearchHeader() {
 
           {form.tripType === 'roundtrip' && (
             <div className="relative">
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
                 <Calendar className="inline h-3 w-3 mr-1" />
                 {t('search.return')}
               </label>
@@ -243,7 +243,7 @@ export function GlobalSearchHeader() {
           )}
 
           <div className="relative">
-            <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
               <Users className="inline h-3 w-3 mr-1" />
               {t('search.passengers')}
             </label>
@@ -259,7 +259,7 @@ export function GlobalSearchHeader() {
           </div>
 
           <div className="relative">
-            <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
               {t('search.cabinClass')}
             </label>
             <select
@@ -273,7 +273,7 @@ export function GlobalSearchHeader() {
                 { value: 'business', label: t('search.business') },
                 { value: 'first', label: t('search.first') },
               ].map(({ value, label }) => (
-                <option key={value} value={value} className="bg-slate-900">
+                <option key={value} value={value} className="bg-white dark:bg-slate-900">
                   {label}
                 </option>
               ))}
@@ -291,12 +291,12 @@ export function GlobalSearchHeader() {
             onSelectDate={(nextDate) => handleChange('departureDate', nextDate)}
           />
         ) : (
-          <div className="glass rounded-2xl border border-dashed border-slate-700 bg-slate-900/30 p-6 text-center">
-            <Calendar className="mx-auto h-10 w-10 text-slate-600 mb-3" />
-            <p className="text-sm text-slate-400">
+          <div className="glass rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 bg-white/30 dark:bg-slate-900/30 p-6 text-center">
+            <Calendar className="mx-auto h-10 w-10 text-slate-300 dark:text-slate-600 mb-3" />
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               {t('search.timelineHint')}
             </p>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
               {t('search.timelineDesc')}
             </p>
           </div>
@@ -304,8 +304,8 @@ export function GlobalSearchHeader() {
 
         {/* Search Button */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-          <p className="text-xs text-slate-500">
-            <span className="text-sky-400 font-medium">Flexible dates:</span> ±{form.flexDays} days around your chosen date.
+          <p className="text-xs text-slate-400 dark:text-slate-500">
+            <span className="text-sky-600 dark:text-sky-400 font-bold">Flexible dates:</span> ±{form.flexDays} days around your chosen date.
             We highlight the cheapest options automatically.
           </p>
 

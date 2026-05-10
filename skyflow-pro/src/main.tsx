@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter } from 'react-router-dom'
 import { ToasterProvider } from './components/ui/Toaster'
+import { ThemeProvider } from './context/ThemeContext'
 import './index.css'
 import './i18n'
 import App from './App.tsx'
@@ -21,9 +22,11 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <ToasterProvider>
-          <App />
-        </ToasterProvider>
+        <ThemeProvider>
+          <ToasterProvider>
+            <App />
+          </ToasterProvider>
+        </ThemeProvider>
       </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>,
