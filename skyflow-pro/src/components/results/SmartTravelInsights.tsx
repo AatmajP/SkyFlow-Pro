@@ -8,6 +8,7 @@ interface SmartTravelInsightsProps {
   to: string
   date: string
   cabin: string
+
   tripType: string
 }
 
@@ -22,7 +23,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
     const isLongHaul = !isDomestic || ['LHR', 'JFK', 'LAX', 'SFO', 'NRT', 'SYD'].includes(to)
     const isBusinessRoute = ['BOM', 'BLR', 'DXB', 'SIN', 'LHR', 'JFK'].includes(to)
     const isLeisureRoute = ['GOA', 'MLE', 'BKK', 'DPS', 'FCO', 'CDG'].includes(to)
-    
+
     const dayOfWeek = new Date(date).getDay()
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6 || dayOfWeek === 5
 
@@ -33,7 +34,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
     const fareRise = 10 + rnd(15)
     const demandLevel = isBusinessRoute ? t('results.demand.veryHigh') : isLeisureRoute && isWeekend ? t('results.demand.peak') : t('results.demand.high')
     const occupancy = 75 + rnd(20)
-    
+
     // Custom upgrade logic
     let upgradeReason = t('results.insights.upgradeCorridor', { from, to })
     if (isLongHaul) upgradeReason = t('results.insights.upgradeLongHaul')
@@ -64,7 +65,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
           comfortScore: 90 + rnd(8),
           extraLegroom: isLongHaul ? '42%' : '35%',
           fareDiff: isLongHaul ? '25%' : '15%',
-          perks: isLongHaul 
+          perks: isLongHaul
             ? [t('results.perks.priority'), t('results.perks.baggage'), t('results.perks.sleepKit'), t('results.perks.recline')]
             : [t('results.perks.legroom'), t('results.perks.priority'), t('results.perks.meals')]
         }
@@ -72,14 +73,14 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
       optimization: [
         {
           title: t('results.insights.timingStrategy'),
-          suggestion: isBusinessRoute 
+          suggestion: isBusinessRoute
             ? t('results.insights.timingBusiness')
             : t('results.insights.timingLeisure'),
           impact: 'Positive'
         },
         {
           title: t('results.insights.routeInsight'),
-          suggestion: isLongHaul 
+          suggestion: isLongHaul
             ? t('results.insights.routeLongHaul')
             : t('results.insights.routeNearby'),
           impact: 'High'
@@ -109,7 +110,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
           </div>
           <h3 className="font-bold text-slate-100">{t('results.insights.fareTitle')}</h3>
         </div>
-        
+
         <div className="space-y-4 relative z-10">
           <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
             <p className="text-xs text-amber-200 font-medium flex items-center gap-2">
@@ -117,19 +118,19 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
               {t('results.insights.priceAlert', { from, to })}
             </p>
             <p className="text-sm text-slate-200 mt-1">
-              <Trans 
-                i18nKey="results.insights.fareRise" 
+              <Trans
+                i18nKey="results.insights.fareRise"
                 values={{ percentage: insights.fare.percentage, timeframe: insights.fare.timeframe }}
                 components={{ span: <span className="text-amber-400 font-bold" /> }}
               />
             </p>
           </div>
-          
+
           <div className="flex items-center justify-between text-xs">
             <span className="text-slate-400">{t('results.insights.bestWindow')}</span>
             <span className="text-emerald-400 font-bold">{insights.fare.bestWindow}</span>
           </div>
-          
+
           <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
             <p className="text-xs text-slate-300">
               <Trans
@@ -158,7 +159,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
               <span className="text-sm font-bold text-slate-200">{insights.demand.percentage}%</span>
             </div>
             <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
-              <motion.div 
+              <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${insights.demand.percentage}%` }}
                 transition={{ duration: 1, ease: "easeOut" }}
@@ -180,7 +181,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
               <p className="text-sm font-bold text-emerald-400 mt-1 capitalize">{insights.demand.trend}</p>
             </div>
           </div>
-          
+
           <p className="text-xs text-slate-500 italic">
             {t('results.insights.intensity')}
           </p>
@@ -212,7 +213,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
                   components={{ span: <span className="font-bold text-slate-100" />, pspan: <span className="text-purple-400 font-bold" />, espan: <span className="text-emerald-400 font-bold" /> }}
                 />
               </p>
-              
+
               <div className="mt-4 flex flex-wrap gap-2">
                 {comp.perks.map(perk => (
                   <span key={perk} className="text-[10px] px-2 py-1 rounded-md bg-slate-900/60 text-slate-400 border border-slate-800">
@@ -221,7 +222,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
                 ))}
               </div>
             </div>
-            
+
             <button className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-700/50 transition-all group">
               <span className="text-xs font-semibold text-slate-300">{t('results.insights.viewMatrix')}</span>
               <ChevronRight className="h-4 w-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
@@ -249,7 +250,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
               </div>
             </div>
           ))}
-          
+
           <div className="mt-2 flex items-center gap-2 p-3 rounded-xl bg-sky-500/5 border border-sky-500/10">
             <CheckCircle2 className="h-4 w-4 text-sky-400" />
             <p className="text-[11px] text-sky-300 font-medium">{t('results.insights.onTime')}</p>
@@ -276,7 +277,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
                 components={{ span: <span className="text-emerald-400 font-bold" /> }}
               />
             </p>
-            
+
             <div className="flex items-center gap-2 mt-4">
               <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
                 <div className="h-full bg-amber-500" style={{ width: `${insights.upgrade.valueScore}%` }} />
@@ -284,7 +285,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
               <span className="text-[10px] font-bold text-amber-400">{t('results.insights.match', { score: insights.upgrade.valueScore })}</span>
             </div>
           </div>
-          
+
           <button className="btn-primary w-full py-2.5 text-xs">
             {t('results.insights.showOptions')}
           </button>
