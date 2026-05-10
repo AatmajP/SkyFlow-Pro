@@ -105,10 +105,10 @@ export function ConfirmationPage() {
                     </div>
 
                     <h1 className="text-3xl font-black text-slate-900 dark:text-slate-100 sm:text-4xl">
-                        {t('confirmation.successTitle')}
+                        {t('confirmation.successTitle', 'Booking Confirmed!')}
                     </h1>
                     <p className="text-lg text-slate-600 dark:text-slate-400 mt-2 font-medium">
-                        {t('confirmation.successSubtitle')}
+                        {t('confirmation.successSubtitle', 'Your flight has been successfully booked')}
                     </p>
 
                     <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">

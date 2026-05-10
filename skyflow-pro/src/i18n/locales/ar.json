@@ -221,147 +221,147 @@
         "business": "أعمال",
         "first": "أولى"
       }
-    },
-    "booking": {
-      "title": "أكمل حجزك",
-      "subtitle": "دفع آمن · بياناتك مشفرة",
-      "airportMap": "خريطة المطار",
-      "noFlight": "لم يتم اختيار رحلة",
-      "noFlightDesc": "يرجى البحث عن رحلة واختيارها أولاً.",
-      "steps": {
-        "passenger": "تفاصيل المسافر",
-        "seats": "اختيار المقعد",
-        "payment": "الدفع",
-        "review": "المراجعة والتأكيد",
-        "step": "الخطوة {{number}}"
-      },
-      "passenger": {
-        "title": "معلومات المسافر",
-        "firstName": "الاسم الأول",
-        "lastName": "اسم العائلة",
-        "email": "البريد الإلكتروني",
-        "phone": "رقم الهاتف",
-        "dob": "تاريخ الميلاد",
-        "passport": "رقم جواز السفر",
-        "continueSeats": "المتابعة لاختيار المقاعد"
-      },
-      "seats": {
-        "skip": "تخطي وتعيين تلقائي",
-        "continuePayment": "المتابعة للدفع"
-      },
-      "payment": {
-        "title": "تفاصيل الدفع",
-        "cardholder": "اسم صاحب البطاقة",
-        "cardNumber": "رقم البطاقة",
-        "expiry": "تاريخ الانتهاء",
-        "cvv": "رمز الأمان",
-        "secureInfo": "مدفوعاتك مؤمنة بتشفير SSL 256-بت",
-        "reviewBooking": "مراجعة الحجز"
-      },
-      "review": {
-        "title": "راجع حجزك",
-        "passenger": "المسافر",
-        "selectedSeat": "المقعد المختار",
-        "seatLabel": "المقعد {{label}} · {{position}}",
-        "freeSeat": "مجاني — لا توجد رسوم إضافية",
-        "paymentMethod": "طريقة الدفع",
-        "agreeTerms": "أوافق على <0>شروط الخدمة</0>، <1>سياسة الخصوصية</1>، و<2>قواعد السعر</2> الخاصة بشركة الطيران.",
-        "pay": "دفع {{price}}",
-        "processing": "جاري المعالجة..."
-      },
-      "summary": {
-        "title": "ملخص الرحلة",
-        "outbound": "ذهاب",
-        "return": "عودة",
-        "total": "الإجمالي",
-        "seatSurcharge": "رسوم إضافية للمقعد {{label}}"
-      },
-      "trust": {
-        "secure": "دفع آمن 100%",
-        "instant": "تأكيد فوري",
-        "support": "دعم فني 24/7"
-      }
-    },
-    "confirmation": {
-      "notFound": "لم يتم العثور على الحجز",
-      "notFoundDesc": "تعذر العثور على تأكيد الحجز.",
-      "goHome": "العودة للرئيسية",
-      "successTitle": "تم تأكيد الحجز!",
-      "successSubtitle": "تم حجز رحلتك بنجاح",
-      "confNumber": "رقم التأكيد:",
-      "totalPaid": "إجمالي المدفوع",
-      "departureDate": "تاريخ المغادرة",
-      "flightDuration": "مدة الرحلة",
-      "passenger": "المسافر",
-      "boardingPass": "بطاقة الصعود",
-      "checkInNote": "يفتح تسجيل الوصول قبل 24 ساعة من المغادرة",
-      "baggageAllowance": "الأمتعة المسموح بها",
-      "emailSent": "تم إرسال بريد التأكيد",
-      "emailSentDesc": "لقد أرسلنا تأكيد الحجز والتذكرة الإلكترونية إلى <0>{{email}}</0>",
-      "downloadTicket": "تحميل التذكرة",
-      "printItinerary": "طباعة خط الرحلة",
-      "shareDetails": "مشاركة التفاصيل",
-      "bookAnother": "هل تحتاج إلى حجز رحلة أخرى؟",
-      "searchNew": "البحث عن رحلات جديدة",
-      "supportNote": "هل تحتاج للمساعدة؟ تواصل مع الدعم الفني 24/7 على <0>support@skyflowpro.com</0>",
-      "bookedOn": "تم الحجز في {{date}}"
-    },
-    "demand": {
-      "veryHigh": "مرتفع جداً",
-      "peak": "ذروة",
-      "high": "مرتفع"
-    },
-    "perks": {
-      "priority": "أولوية الصعود",
-      "baggage": "أمتعة إضافية",
-      "sleepKit": "طقم نوم",
-      "recline": "إمالة أفضل",
-      "legroom": "مساحة أرجل إضافية",
-      "meals": "وجبات ممتازة"
-    },
-    "sort": {
-      "price": "السعر",
-      "duration": "المدة",
-      "departure": "المغادرة"
-    },
-    "underPrice": "أقل من {{price}}",
-    "abovePrice": "أعلى من {{price}}",
-    "searchingFromTo": "جاري البحث من {{from}} إلى {{to}}",
-    "insights": {
-      "fareTitle": "ذكاء الأسعار",
-      "demandTitle": "تحليلات الطلب",
-      "cabinTitle": "ذكاء الكابينة",
-      "optimizationTitle": "التحسين",
-      "upgradeTitle": "نصيحة الترقية",
-      "priceAlert": "تنبيه سعر لـ {{from}} ← {{to}}",
-      "fareRise": "قد <span class=\"text-amber-400 font-bold\">ترتفع الأسعار بنسبة {{percentage}}%</span> خلال الـ {{timeframe}} القادمة.",
-      "bestWindow": "أفضل نافذة للحجز",
-      "savingDay": "السفر في يوم <span class=\"text-emerald-400 font-bold\">{{day}}</span> قد يوفر لك <span class=\"text-emerald-400 font-bold\">{{amount}}</span>.",
-      "occupancy": "إشغال الرحلة",
-      "popularity": "شعبية المسار",
-      "trend": "الاتجاه",
-      "intensity": "تم اكتشاف كثافة حجز عالية في آخر 12 ساعة.",
-      "value": "القيمة {{score}}%",
-      "upgradeOffer": "تقدم <span class=\"text-purple-400 font-bold\">{{type}}</span> <span class=\"font-bold text-slate-100\">مساحة أرجل أكبر بنسبة {{legroom}}</span> مقابل <span class=\"text-emerald-400 font-bold\">{{fareDiff}} إضافية فقط</span>.",
-      "viewMatrix": "عرض مصفوفة المقارنة",
-      "onTime": "الرحلة المختارة لديها أداء في الوقت المحدد بنسبة 94%.",
-      "worthUpgrade": "هل تستحق الترقية؟",
-      "upgradeReason": "{{reason}} الترقية تبدأ من <span class=\"text-emerald-400 font-bold\">{{price}}</span>.",
-      "match": "طابق بنسبة {{score}}%",
-      "showOptions": "عرض خيارات الترقية",
-      "routeInsight": "رؤية المسار",
-      "upgradeCorridor": "مخزون درجة الأعمال متاح حالياً لمسار {{from}}←{{to}}.",
-      "upgradeLongHaul": "تم اكتشاف رحلة طويلة المدى. توفر مقاعد السرير في درجة الأعمال راحة أكبر بـ 4 أضعاف.",
-      "upgradeBusiness": "طلب مرتفع من قطاع الأعمال. احجز ترقيتك الآن للدخول إلى صالات كبار الشخصيات في {{to}}.",
-      "upgradeFirst": "أجنحة الدرجة الأولى متاحة. جرب الخصوصية التامة وعشاء 5 نجوم فوق السحاب.",
-      "12h": "12 ساعة",
-      "48h": "48 ساعة",
-      "bookWithin6h": "احجز خلال 6 ساعات",
-      "timingBusiness": "الرحلات الصباحية المبكرة (6-8 صباحاً) لديها أعلى أداء في الوقت المحدد لرجال الأعمال.",
-      "timingLeisure": "المغادرة في فترة بعد الظهر على هذا المسار عادة ما تكون أقل ازدحاماً.",
-      "routeLongHaul": "الرحلات المباشرة توفر لك حوالي 4.5 ساعة من وقت السفر مقارنة بخيارات التوقف.",
-      "routeNearby": "المخزون المباشر ينفد بسرعة. المطارات البديلة القريبة قد توفر 10%.",
-      "upgradeTitleValue": "ترقية {{type}}"
     }
+  },
+  "booking": {
+    "title": "أكمل حجزك",
+    "subtitle": "دفع آمن · بياناتك مشفرة",
+    "airportMap": "خريطة المطار",
+    "noFlight": "لم يتم اختيار رحلة",
+    "noFlightDesc": "يرجى البحث عن رحلة واختيارها أولاً.",
+    "steps": {
+      "passenger": "تفاصيل المسافر",
+      "seats": "اختيار المقعد",
+      "payment": "الدفع",
+      "review": "المراجعة والتأكيد",
+      "step": "الخطوة {{number}}"
+    },
+    "passenger": {
+      "title": "معلومات المسافر",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "dob": "تاريخ الميلاد",
+      "passport": "رقم جواز السفر",
+      "continueSeats": "المتابعة لاختيار المقاعد"
+    },
+    "seats": {
+      "skip": "تخطي وتعيين تلقائي",
+      "continuePayment": "المتابعة للدفع"
+    },
+    "payment": {
+      "title": "تفاصيل الدفع",
+      "cardholder": "اسم صاحب البطاقة",
+      "cardNumber": "رقم البطاقة",
+      "expiry": "تاريخ الانتهاء",
+      "cvv": "رمز الأمان",
+      "secureInfo": "مدفوعاتك مؤمنة بتشفير SSL 256-بت",
+      "reviewBooking": "مراجعة الحجز"
+    },
+    "review": {
+      "title": "راجع حجزك",
+      "passenger": "المسافر",
+      "selectedSeat": "المقعد المختار",
+      "seatLabel": "المقعد {{label}} · {{position}}",
+      "freeSeat": "مجاني — لا توجد رسوم إضافية",
+      "paymentMethod": "طريقة الدفع",
+      "agreeTerms": "أوافق على <0>شروط الخدمة</0>، <1>سياسة الخصوصية</1>، و<2>قواعد السعر</2> الخاصة بشركة الطيران.",
+      "pay": "دفع {{price}}",
+      "processing": "جاري المعالجة..."
+    },
+    "summary": {
+      "title": "ملخص الحجز",
+      "outbound": "ذهاب",
+      "return": "عودة",
+      "total": "الإجمالي",
+      "seatSurcharge": "رسوم إضافية للمقعد {{label}}"
+    },
+    "trust": {
+      "secure": "دفع آمن 100%",
+      "instant": "تأكيد فوري",
+      "support": "دعم فني 24/7"
+    }
+  },
+  "confirmation": {
+    "notFound": "لم يتم العثور على الحجز",
+    "notFoundDesc": "تعذر العثور على تأكيد الحجز.",
+    "goHome": "العودة للرئيسية",
+    "successTitle": "تم تأكيد الحجز!",
+    "successSubtitle": "تم حجز رحلتك بنجاح",
+    "confNumber": "رقم التأكيد:",
+    "totalPaid": "إجمالي المدفوع",
+    "departureDate": "تاريخ المغادرة",
+    "flightDuration": "مدة الرحلة",
+    "passenger": "المسافر",
+    "boardingPass": "بطاقة الصعود",
+    "checkInNote": "يفتح تسجيل الوصول قبل 24 ساعة من المغادرة",
+    "baggageAllowance": "الأمتعة المسموح بها",
+    "emailSent": "تم إرسال بريد التأكيد",
+    "emailSentDesc": "لقد أرسلنا تأكيد الحجز والتذكرة الإلكترونية إلى <0>{{email}}</0>",
+    "downloadTicket": "تحميل التذكرة",
+    "printItinerary": "طباعة خط الرحلة",
+    "shareDetails": "مشاركة التفاصيل",
+    "bookAnother": "هل تحتاج إلى حجز رحلة أخرى؟",
+    "searchNew": "البحث عن رحلات جديدة",
+    "supportNote": "هل تحتاج للمساعدة؟ تواصل مع الدعم الفني 24/7 على <0>support@skyflowpro.com</0>",
+    "bookedOn": "تم الحجز في {{date}}"
+  },
+  "demand": {
+    "veryHigh": "مرتفع جداً",
+    "peak": "ذروة",
+    "high": "مرتفع"
+  },
+  "perks": {
+    "priority": "أولوية الصعود",
+    "baggage": "أمتعة إضافية",
+    "sleepKit": "طقم نوم",
+    "recline": "إمالة أفضل",
+    "legroom": "مساحة أرجل إضافية",
+    "meals": "وجبات ممتازة"
+  },
+  "sort": {
+    "price": "السعر",
+    "duration": "المدة",
+    "departure": "المغادرة"
+  },
+  "underPrice": "أقل من {{price}}",
+  "abovePrice": "أعلى من {{price}}",
+  "searchingFromTo": "جاري البحث من {{from}} إلى {{to}}",
+  "insights": {
+    "fareTitle": "ذكاء الأسعار",
+    "demandTitle": "تحليلات الطلب",
+    "cabinTitle": "ذكاء الكابينة",
+    "optimizationTitle": "التحسين",
+    "upgradeTitle": "نصيحة الترقية",
+    "priceAlert": "تنبيه سعر لـ {{from}} ← {{to}}",
+    "fareRise": "قد <span class=\"text-amber-400 font-bold\">ترتفع الأسعار بنسبة {{percentage}}%</span> خلال الـ {{timeframe}} القادمة.",
+    "bestWindow": "أفضل نافذة للحجز",
+    "savingDay": "السفر في يوم <span class=\"text-emerald-400 font-bold\">{{day}}</span> قد يوفر لك <span class=\"text-emerald-400 font-bold\">{{amount}}</span>.",
+    "occupancy": "إشغال الرحلة",
+    "popularity": "شعبية المسار",
+    "trend": "الاتجاه",
+    "intensity": "تم اكتشاف كثافة حجز عالية في آخر 12 ساعة.",
+    "value": "القيمة {{score}}%",
+    "upgradeOffer": "تقدم <span class=\"text-purple-400 font-bold\">{{type}}</span> <span class=\"font-bold text-slate-100\">مساحة أرجل أكبر بنسبة {{legroom}}</span> مقابل <span class=\"text-emerald-400 font-bold\">{{fareDiff}} إضافية فقط</span>.",
+    "viewMatrix": "عرض مصفوفة المقارنة",
+    "onTime": "الرحلة المختارة لديها أداء في الوقت المحدد بنسبة 94%.",
+    "worthUpgrade": "هل تستحق الترقية؟",
+    "upgradeReason": "{{reason}} الترقية تبدأ من <span class=\"text-emerald-400 font-bold\">{{price}}</span>.",
+    "match": "طابق بنسبة {{score}}%",
+    "showOptions": "عرض خيارات الترقية",
+    "routeInsight": "رؤية المسار",
+    "upgradeCorridor": "مخزون درجة الأعمال متاح حالياً لمسار {{from}}←{{to}}.",
+    "upgradeLongHaul": "تم اكتشاف رحلة طويلة المدى. توفر مقاعد السرير في درجة الأعمال راحة أكبر بـ 4 أضعاف.",
+    "upgradeBusiness": "طلب مرتفع من قطاع الأعمال. احجز ترقيتك الآن للدخول إلى صالات كبار الشخصيات في {{to}}.",
+    "upgradeFirst": "أجنحة الدرجة الأولى متاحة. جرب الخصوصية التامة وعشاء 5 نجوم فوق السحاب.",
+    "12h": "12 ساعة",
+    "48h": "48 ساعة",
+    "bookWithin6h": "احجز خلال 6 ساعات",
+    "timingBusiness": "الرحلات الصباحية المبكرة (6-8 صباحاً) لديها أعلى أداء في الوقت المحدد لرجال الأعمال.",
+    "timingLeisure": "المغادرة في فترة بعد الظهر على هذا المسار عادة ما تكون أقل ازدحاماً.",
+    "routeLongHaul": "الرحلات المباشرة توفر لك حوالي 4.5 ساعة من وقت السفر مقارنة بخيارات التوقف.",
+    "routeNearby": "المخزون المباشر ينفد بسرعة. المطارات البديلة القريبة قد توفر 10%.",
+    "upgradeTitleValue": "ترقية {{type}}"
   }
 }

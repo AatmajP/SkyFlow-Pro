@@ -18,7 +18,14 @@
       "friday": "Friday",
       "saturday": "Saturday",
       "sunday": "Sunday"
-    }
+    },
+    "positions": {
+      "window": "Window",
+      "aisle": "Aisle",
+      "middle": "Middle"
+    },
+    "back": "Back",
+    "backToResults": "Back to results"
   },
   "nav": {
     "toggleMenu": "Toggle menu"
@@ -214,92 +221,92 @@
         "business": "Biz",
         "first": "1st"
       }
+  },
+  "booking": {
+    "title": "Complete Your Booking",
+    "subtitle": "Review passenger details and confirm your itinerary",
+    "airportMap": "Interactive Airport Map",
+    "noFlight": "No flight selected",
+    "noFlightDesc": "Please search for and select a flight first.",
+    "steps": {
+      "passenger": "Passenger Details",
+      "seats": "Seat Selection",
+      "payment": "Payment",
+      "review": "Review & Confirm",
+      "step": "Step {{number}}"
     },
-    "booking": {
-      "title": "Complete Your Booking",
-      "subtitle": "Secure checkout · Your data is encrypted",
-      "airportMap": "Airport Map",
-      "noFlight": "No flight selected",
-      "noFlightDesc": "Please search for and select a flight first.",
-      "steps": {
-        "passenger": "Passenger Details",
-        "seats": "Seat Selection",
-        "payment": "Payment",
-        "review": "Review & Confirm",
-        "step": "Step {{number}}"
-      },
-      "passenger": {
-        "title": "Passenger Information",
-        "firstName": "First Name",
-        "lastName": "Last Name",
-        "email": "Email Address",
-        "phone": "Phone Number",
-        "dob": "Date of Birth",
-        "passport": "Passport Number",
-        "continueSeats": "Continue to Seat Selection"
-      },
-      "seats": {
-        "skip": "Skip & Auto-assign",
-        "continuePayment": "Continue to Payment"
-      },
-      "payment": {
-        "title": "Payment Details",
-        "cardholder": "Cardholder Name",
-        "cardNumber": "Card Number",
-        "expiry": "Expiry Date",
-        "cvv": "CVV",
-        "secureInfo": "Your payment is secured with 256-bit SSL encryption",
-        "reviewBooking": "Review Booking"
-      },
-      "review": {
-        "title": "Review Your Booking",
-        "passenger": "Passenger",
-        "selectedSeat": "Selected Seat",
-        "seatLabel": "Seat {{label}} · {{position}}",
-        "freeSeat": "Free — no extra charge",
-        "paymentMethod": "Payment Method",
-        "agreeTerms": "I agree to the <0>Terms of Service</0>, <1>Privacy Policy</1>, and the airline's <2>fare rules</2>.",
-        "pay": "Pay {{price}}",
-        "processing": "Processing..."
-      },
-      "summary": {
-        "title": "Flight Summary",
-        "outbound": "Outbound",
-        "return": "Return",
-        "total": "Total",
-        "seatSurcharge": "Seat {{label}} surcharge"
-      },
-      "trust": {
-        "secure": "100% Secure payment",
-        "instant": "Instant confirmation",
-        "support": "24/7 customer support"
-      }
+    "passenger": {
+      "title": "Passenger Information",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "dob": "Date of Birth",
+      "passport": "Passport Number",
+      "continueSeats": "Continue to Seat Selection"
     },
-    "confirmation": {
-      "notFound": "Booking not found",
-      "notFoundDesc": "The booking confirmation could not be found.",
-      "goHome": "Go Home",
-      "successTitle": "Booking Confirmed!",
-      "successSubtitle": "Your flight has been successfully booked",
-      "confNumber": "Confirmation Number:",
-      "totalPaid": "Total paid",
-      "departureDate": "Departure Date",
-      "flightDuration": "Flight Duration",
+    "seats": {
+      "skip": "Skip & Auto-assign",
+      "continuePayment": "Continue to Payment"
+    },
+    "payment": {
+      "title": "Payment Details",
+      "cardholder": "Cardholder Name",
+      "cardNumber": "Card Number",
+      "expiry": "Expiry Date",
+      "cvv": "CVV",
+      "secureInfo": "Your payment is secured with 256-bit SSL encryption",
+      "reviewBooking": "Review Booking"
+    },
+    "review": {
+      "title": "Review Your Booking",
       "passenger": "Passenger",
-      "boardingPass": "Boarding Pass",
-      "checkInNote": "Check-in opens 24 hours before departure",
-      "baggageAllowance": "Baggage Allowance",
-      "emailSent": "Confirmation email sent",
-      "emailSentDesc": "We've sent your booking confirmation and e-ticket to <0>{{email}}</0>",
-      "downloadTicket": "Download E-Ticket",
-      "printItinerary": "Print Itinerary",
-      "shareDetails": "Share Details",
-      "bookAnother": "Need to book another flight?",
-      "searchNew": "Search New Flights",
-      "supportNote": "Need help? Contact our 24/7 customer support at <0>support@skyflowpro.com</0>",
-      "bookedOn": "Booked on {{date}}"
+      "selectedSeat": "Selected Seat",
+      "seatLabel": "Seat {{label}} · {{position}}",
+      "freeSeat": "Free — no extra charge",
+      "paymentMethod": "Payment Method",
+      "agreeTerms": "I agree to the <0>Terms of Service</0>, <1>Privacy Policy</1>, and the airline's <2>fare rules</2>.",
+      "pay": "Pay {{price}}",
+      "processing": "Processing..."
     },
-    "demand": {
+    "summary": {
+      "title": "Booking Summary",
+      "outbound": "Outbound",
+      "return": "Return",
+      "total": "Total",
+      "seatSurcharge": "Seat {{label}} surcharge"
+    },
+    "trust": {
+      "secure": "100% Secure payment",
+      "instant": "Instant confirmation",
+      "support": "24/7 customer support"
+    }
+  },
+  "confirmation": {
+    "notFound": "Booking not found",
+    "notFoundDesc": "The booking confirmation could not be found.",
+    "goHome": "Go Home",
+    "successTitle": "Booking Confirmed!",
+    "successSubtitle": "Your flight has been successfully booked",
+    "confNumber": "Confirmation Number:",
+    "totalPaid": "Total paid",
+    "departureDate": "Departure Date",
+    "flightDuration": "Flight Duration",
+    "passenger": "Passenger",
+    "boardingPass": "Boarding Pass",
+    "checkInNote": "Check-in opens 24 hours before departure",
+    "baggageAllowance": "Baggage Allowance",
+    "emailSent": "Confirmation email sent",
+    "emailSentDesc": "We've sent your booking confirmation and e-ticket to <0>{{email}}</0>",
+    "downloadTicket": "Download E-Ticket",
+    "printItinerary": "Print Itinerary",
+    "shareDetails": "Share Details",
+    "bookAnother": "Need to book another flight?",
+    "searchNew": "Search New Flights",
+    "supportNote": "Need help? Contact our 24/7 customer support at <0>support@skyflowpro.com</0>",
+    "bookedOn": "Booked on {{date}}"
+  },
+  "demand": {
       "veryHigh": "Very High",
       "peak": "Peak",
       "high": "High"

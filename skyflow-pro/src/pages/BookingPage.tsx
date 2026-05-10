@@ -163,8 +163,8 @@ export function BookingPage() {
 
                 {/* Header */}
                 <div className="mb-8 animate-fade-in">
-                    <h1 className="text-3xl font-black text-slate-900 dark:text-slate-50">{t('booking.title')}</h1>
-                    <p className="text-slate-400 mt-1">{t('booking.subtitle')}</p>
+                    <h1 className="text-3xl font-black text-slate-900 dark:text-slate-50">{t('booking.title', 'Complete Your Booking')}</h1>
+                    <p className="text-slate-400 mt-1">{t('booking.subtitle', 'Review passenger details and confirm your itinerary')}</p>
                     <div className="flex items-center gap-3 mt-3">
                         <button
                             type="button"
@@ -172,7 +172,7 @@ export function BookingPage() {
                             className="btn-secondary text-xs flex items-center gap-1.5"
                         >
                             <MapPin className="h-3.5 w-3.5" />
-                            {t('booking.airportMap')}
+                            {t('booking.airportMap', 'Interactive Airport Map')}
                         </button>
                     </div>
                 </div>
@@ -209,7 +209,7 @@ export function BookingPage() {
                                     </div>
                                     <div className="hidden sm:block">
                                         <p className={`text-sm font-bold ${currentStep >= step.number ? 'text-slate-900 dark:text-slate-50' : 'text-slate-500'}`}>
-                                            {t('booking.steps.step', { number: step.number })}
+                                            {t('booking.steps.step', 'Step {{number}}', { number: step.number })}
                                         </p>
                                         <p className="text-xs font-bold text-slate-500">{step.title}</p>
                                     </div>
@@ -232,7 +232,7 @@ export function BookingPage() {
                             <div className="glass rounded-2xl p-6 animate-fade-in">
                                 <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2 mb-6">
                                     <User className="h-5 w-5 text-sky-400" />
-                                    {t('booking.passenger.title')}
+                                    {t('booking.passenger.title', 'Passenger Information')}
                                 </h2>
 
                                 <div className="grid gap-4 sm:grid-cols-2">
@@ -516,7 +516,7 @@ export function BookingPage() {
                     {/* Sidebar - Flight Summary */}
                     <div className="lg:col-span-1">
                         <div className="glass rounded-2xl p-5 sticky top-24 animate-fade-in">
-                            <h3 className="text-sm font-semibold text-slate-300 mb-4">{t('booking.summary.title')}</h3>
+                            <h3 className="text-sm font-semibold text-slate-300 mb-4">{t('booking.summary.title', 'Booking Summary')}</h3>
 
                             {/* Flight details */}
                             <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-transparent mb-4">

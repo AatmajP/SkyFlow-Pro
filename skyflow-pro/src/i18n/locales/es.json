@@ -221,147 +221,147 @@
         "business": "Neg",
         "first": "1ra"
       }
-    },
-    "booking": {
-      "title": "Completa tu Reserva",
-      "subtitle": "Pago seguro · Tus datos están encriptados",
-      "airportMap": "Mapa del Aeropuerto",
-      "noFlight": "No se seleccionó vuelo",
-      "noFlightDesc": "Por favor, busca y selecciona un vuelo primero.",
-      "steps": {
-        "passenger": "Datos del Pasajero",
-        "seats": "Selección de Asiento",
-        "payment": "Pago",
-        "review": "Revisar y Confirmar",
-        "step": "Paso {{number}}"
-      },
-      "passenger": {
-        "title": "Información del Pasajero",
-        "firstName": "Nombre",
-        "lastName": "Apellido",
-        "email": "Correo Electrónico",
-        "phone": "Teléfono",
-        "dob": "Fecha de Nacimiento",
-        "passport": "Número de Pasaporte",
-        "continueSeats": "Continuar a Selección de Asiento"
-      },
-      "seats": {
-        "skip": "Omitir y asignar auto",
-        "continuePayment": "Continuar al Pago"
-      },
-      "payment": {
-        "title": "Detalles de Pago",
-        "cardholder": "Nombre en la Tarjeta",
-        "cardNumber": "Número de Tarjeta",
-        "expiry": "Vencimiento",
-        "cvv": "CVV",
-        "secureInfo": "Tu pago está protegido con encriptación SSL de 256 bits",
-        "reviewBooking": "Revisar Reserva"
-      },
-      "review": {
-        "title": "Revisa tu Reserva",
-        "passenger": "Pasajero",
-        "selectedSeat": "Asiento Seleccionado",
-        "seatLabel": "Asiento {{label}} · {{position}}",
-        "freeSeat": "Gratis — sin cargo extra",
-        "paymentMethod": "Método de Pago",
-        "agreeTerms": "Acepto los <0>Términos de Servicio</0>, <1>Política de Privacidad</1> y <2>reglas de tarifa</2>.",
-        "pay": "Pagar {{price}}",
-        "processing": "Procesando..."
-      },
-      "summary": {
-        "title": "Resumen del Vuelo",
-        "outbound": "Salida",
-        "return": "Regreso",
-        "total": "Total",
-        "seatSurcharge": "Recargo asiento {{label}}"
-      },
-      "trust": {
-        "secure": "Pago 100% seguro",
-        "instant": "Confirmación instantánea",
-        "support": "Soporte 24/7"
-      }
-    },
-    "confirmation": {
-      "notFound": "Reserva no encontrada",
-      "notFoundDesc": "No se pudo encontrar la confirmación de la reserva.",
-      "goHome": "Ir al Inicio",
-      "successTitle": "¡Reserva Confirmada!",
-      "successSubtitle": "Tu vuelo ha sido reservado con éxito",
-      "confNumber": "Número de Confirmación:",
-      "totalPaid": "Total pagado",
-      "departureDate": "Fecha de Salida",
-      "flightDuration": "Duración del Vuelo",
-      "passenger": "Pasajero",
-      "boardingPass": "Tarjeta de Embarque",
-      "checkInNote": "El check-in abre 24 horas antes de la salida",
-      "baggageAllowance": "Equipaje Permitido",
-      "emailSent": "Correo de confirmación enviado",
-      "emailSentDesc": "Hemos enviado tu confirmación y e-ticket a <0>{{email}}</0>",
-      "downloadTicket": "Descargar E-Ticket",
-      "printItinerary": "Imprimir Itinerario",
-      "shareDetails": "Compartir Detalles",
-      "bookAnother": "¿Necesitas reservar otro vuelo?",
-      "searchNew": "Buscar Nuevos Vuelos",
-      "supportNote": "¿Necesitas ayuda? Contacta a soporte 24/7 en <0>support@skyflowpro.com</0>",
-      "bookedOn": "Reservado el {{date}}"
-    },
-    "demand": {
-      "veryHigh": "Muy Alta",
-      "peak": "Pico",
-      "high": "Alta"
-    },
-    "perks": {
-      "priority": "Embarque Prioritario",
-      "baggage": "Equipaje Extra",
-      "sleepKit": "Kit de Sueño",
-      "recline": "Mejor Reclinación",
-      "legroom": "Espacio Extra",
-      "meals": "Comidas Premium"
-    },
-    "sort": {
-      "price": "Precio",
-      "duration": "Duración",
-      "departure": "Salida"
-    },
-    "underPrice": "Menos de {{price}}",
-    "abovePrice": "Más de {{price}}",
-    "searchingFromTo": "Buscando de {{from}} a {{to}}",
-    "insights": {
-      "fareTitle": "Inteligencia de Tarifas",
-      "demandTitle": "Analítica de Demanda",
-      "cabinTitle": "Inteligencia de Cabina",
-      "optimizationTitle": "Optimización",
-      "upgradeTitle": "Aviso de Mejora",
-      "priceAlert": "Alerta de precio para {{from}} → {{to}}",
-      "fareRise": "Las tarifas podrían <span class=\"text-amber-400 font-bold\">subir un {{percentage}}%</span> en las próximas {{timeframe}}.",
-      "bestWindow": "Mejor Ventana de Reserva",
-      "savingDay": "Volar un <span class=\"text-emerald-400 font-bold\">{{day}}</span> podría ahorrarte <span class=\"text-emerald-400 font-bold\">{{amount}}</span>.",
-      "occupancy": "Ocupación del Vuelo",
-      "popularity": "Popularidad de la Ruta",
-      "trend": "Tendencia",
-      "intensity": "Alta intensidad de reservas detectada en las últimas 12 horas.",
-      "value": "Valor {{score}}%",
-      "upgradeOffer": "<span class=\"text-purple-400 font-bold\">{{type}}</span> ofrece <span class=\"font-bold text-slate-100\">{{legroom}} más de espacio</span> por solo <span class=\"text-emerald-400 font-bold\">{{fareDiff}} más</span>.",
-      "viewMatrix": "Ver Matriz de Comparación",
-      "onTime": "El vuelo seleccionado tiene un 94% de puntualidad.",
-      "worthUpgrade": "¿Vale la pena la mejora?",
-      "upgradeReason": "{{reason}} Mejoras desde <span class=\"text-emerald-400 font-bold\">{{price}}</span>.",
-      "match": "{{score}}% Coincidencia",
-      "showOptions": "Ver Opciones de Mejora",
-      "routeInsight": "Perspectiva de Ruta",
-      "upgradeCorridor": "El inventario de Business es favorable actualmente para el corredor {{from}}→{{to}}.",
-      "upgradeLongHaul": "Vuelo de larga distancia. Los asientos cama en Business ofrecen 4 veces más descanso.",
-      "upgradeBusiness": "Alta demanda corporativa. Asegura tu mejora ahora para acceder a salas VIP en {{to}}.",
-      "upgradeFirst": "Suites de Primera disponibles. Privacidad total y cena 5 estrellas.",
-      "12h": "12 horas",
-      "48h": "48 horas",
-      "bookWithin6h": "Reserva en 6 horas",
-      "timingBusiness": "Vuelos temprano (6-8 AM) tienen la mejor puntualidad para negocios.",
-      "timingLeisure": "Las salidas por la tarde suelen estar menos concurridas.",
-      "routeLongHaul": "Vuelos directos ahorran aprox. 4.5 horas vs opciones con escala.",
-      "routeNearby": "Vuelos directos se agotan rápido. Aeropuertos cercanos podrían ahorrar un 10%.",
-      "upgradeTitleValue": "Mejora {{type}}"
     }
+  },
+  "booking": {
+    "title": "Completa tu Reserva",
+    "subtitle": "Pago seguro · Tus datos están encriptados",
+    "airportMap": "Mapa del Aeropuerto",
+    "noFlight": "No se seleccionó vuelo",
+    "noFlightDesc": "Por favor, busca y selecciona un vuelo primero.",
+    "steps": {
+      "passenger": "Datos del Pasajero",
+      "seats": "Selección de Asiento",
+      "payment": "Pago",
+      "review": "Revisar y Confirmar",
+      "step": "Paso {{number}}"
+    },
+    "passenger": {
+      "title": "Información del Pasajero",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "email": "Correo Electrónico",
+      "phone": "Teléfono",
+      "dob": "Fecha de Nacimiento",
+      "passport": "Número de Pasaporte",
+      "continueSeats": "Continuar a Selección de Asiento"
+    },
+    "seats": {
+      "skip": "Omitir y asignar auto",
+      "continuePayment": "Continuar al Pago"
+    },
+    "payment": {
+      "title": "Detalles de Pago",
+      "cardholder": "Nombre en la Tarjeta",
+      "cardNumber": "Número de Tarjeta",
+      "expiry": "Vencimiento",
+      "cvv": "CVV",
+      "secureInfo": "Tu pago está protegido con encriptación SSL de 256 bits",
+      "reviewBooking": "Revisar Reserva"
+    },
+    "review": {
+      "title": "Revisa tu Reserva",
+      "passenger": "Pasajero",
+      "selectedSeat": "Asiento Seleccionado",
+      "seatLabel": "Asiento {{label}} · {{position}}",
+      "freeSeat": "Gratis — sin cargo extra",
+      "paymentMethod": "Método de Pago",
+      "agreeTerms": "Acepto los <0>Términos de Servicio</0>, <1>Política de Privacidad</1> y <2>reglas de tarifa</2>.",
+      "pay": "Pagar {{price}}",
+      "processing": "Procesando..."
+    },
+    "summary": {
+      "title": "Resumen de Reserva",
+      "outbound": "Salida",
+      "return": "Regreso",
+      "total": "Total",
+      "seatSurcharge": "Recargo asiento {{label}}"
+    },
+    "trust": {
+      "secure": "Pago 100% seguro",
+      "instant": "Confirmación instantánea",
+      "support": "Soporte 24/7"
+    }
+  },
+  "confirmation": {
+    "notFound": "Reserva no encontrada",
+    "notFoundDesc": "No se pudo encontrar la confirmación de la reserva.",
+    "goHome": "Ir al Inicio",
+    "successTitle": "¡Reserva Confirmada!",
+    "successSubtitle": "Tu vuelo ha sido reservado con éxito",
+    "confNumber": "Número de Confirmación:",
+    "totalPaid": "Total pagado",
+    "departureDate": "Fecha de Salida",
+    "flightDuration": "Duración del Vuelo",
+    "passenger": "Pasajero",
+    "boardingPass": "Tarjeta de Embarque",
+    "checkInNote": "El check-in abre 24 horas antes de la salida",
+    "baggageAllowance": "Equipaje Permitido",
+    "emailSent": "Correo de confirmación enviado",
+    "emailSentDesc": "Hemos enviado tu confirmación y e-ticket a <0>{{email}}</0>",
+    "downloadTicket": "Descargar E-Ticket",
+    "printItinerary": "Imprimir Itinerario",
+    "shareDetails": "Compartir Detalles",
+    "bookAnother": "¿Necesitas reservar otro vuelo?",
+    "searchNew": "Buscar Nuevos Vuelos",
+    "supportNote": "¿Necesitas ayuda? Contacta a soporte 24/7 en <0>support@skyflowpro.com</0>",
+    "bookedOn": "Reservado el {{date}}"
+  },
+  "demand": {
+    "veryHigh": "Muy Alta",
+    "peak": "Pico",
+    "high": "Alta"
+  },
+  "perks": {
+    "priority": "Embarque Prioritario",
+    "baggage": "Equipaje Extra",
+    "sleepKit": "Kit de Sueño",
+    "recline": "Mejor Reclinación",
+    "legroom": "Espacio Extra",
+    "meals": "Comidas Premium"
+  },
+  "sort": {
+    "price": "Precio",
+    "duration": "Duración",
+    "departure": "Salida"
+  },
+  "underPrice": "Menos de {{price}}",
+  "abovePrice": "Más de {{price}}",
+  "searchingFromTo": "Buscando de {{from}} a {{to}}",
+  "insights": {
+    "fareTitle": "Inteligencia de Tarifas",
+    "demandTitle": "Analítica de Demanda",
+    "cabinTitle": "Inteligencia de Cabina",
+    "optimizationTitle": "Optimización",
+    "upgradeTitle": "Aviso de Mejora",
+    "priceAlert": "Alerta de precio para {{from}} → {{to}}",
+    "fareRise": "Las tarifas podrían <span class=\"text-amber-400 font-bold\">subir un {{percentage}}%</span> en las próximas {{timeframe}}.",
+    "bestWindow": "Mejor Ventana de Reserva",
+    "savingDay": "Volar un <span class=\"text-emerald-400 font-bold\">{{day}}</span> podría ahorrarte <span class=\"text-emerald-400 font-bold\">{{amount}}</span>.",
+    "occupancy": "Ocupación del Vuelo",
+    "popularity": "Popularidad de la Ruta",
+    "trend": "Tendencia",
+    "intensity": "Alta intensidad de reservas detectada en las últimas 12 horas.",
+    "value": "Valor {{score}}%",
+    "upgradeOffer": "<span class=\"text-purple-400 font-bold\">{{type}}</span> ofrece <span class=\"font-bold text-slate-100\">{{legroom}} más de espacio</span> por solo <span class=\"text-emerald-400 font-bold\">{{fareDiff}} más</span>.",
+    "viewMatrix": "Ver Matriz de Comparación",
+    "onTime": "El vuelo seleccionado tiene un 94% de puntualidad.",
+    "worthUpgrade": "¿Vale la pena la mejora?",
+    "upgradeReason": "{{reason}} Mejoras desde <span class=\"text-emerald-400 font-bold\">{{price}}</span>.",
+    "match": "{{score}}% Coincidencia",
+    "showOptions": "Ver Opciones de Mejora",
+    "routeInsight": "Perspectiva de Ruta",
+    "upgradeCorridor": "El inventario de Business es favorable actualmente para el corredor {{from}}→{{to}}.",
+    "upgradeLongHaul": "Vuelo de larga distancia. Los asientos cama en Business ofrecen 4 veces más descanso.",
+    "upgradeBusiness": "Alta demanda corporativa. Asegura tu mejora ahora para acceder a salas VIP en {{to}}.",
+    "upgradeFirst": "Suites de Primera disponibles. Privacidad total y cena 5 estrellas.",
+    "12h": "12 horas",
+    "48h": "48 horas",
+    "bookWithin6h": "Reserva en 6 horas",
+    "timingBusiness": "Vuelos temprano (6-8 AM) tienen la mejor puntualidad para negocios.",
+    "timingLeisure": "Las salidas por la tarde suelen estar menos concurridas.",
+    "routeLongHaul": "Vuelos directos ahorran aprox. 4.5 horas vs opciones con escala.",
+    "routeNearby": "Vuelos directos se agotan rápido. Aeropuertos cercanos podrían ahorrar un 10%.",
+    "upgradeTitleValue": "Mejora {{type}}"
   }
 }
