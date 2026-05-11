@@ -1,20 +1,23 @@
-import { TrendingUp, Users, Award, Zap, Info, Clock, CheckCircle2, ChevronRight, Star, MapPin } from 'lucide-react'
+import { TrendingUp, Users, Award, Zap, Info, Clock, CheckCircle2, ChevronRight, Star, MapPin, Sparkles, Moon } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useCurrency } from '../../context/CurrencyContext'
 import { useTranslation, Trans } from 'react-i18next'
+import { AIRPORTS } from '../../mocks/mockSearchResults'
 
 interface SmartTravelInsightsProps {
   from: string
   to: string
   date: string
   cabin: string
-
   tripType: string
 }
 
 export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTravelInsightsProps) {
   const { t } = useTranslation()
   const { formatPrice } = useCurrency()
+
+  const destinationInfo = AIRPORTS.find(a => a.code === to)
+  const isSpiritual = destinationInfo?.type === 'spiritual' || destinationInfo?.type === 'pilgrimage'
 
   // Dynamic Intelligence Engine
   const generateInsights = () => {
@@ -79,11 +82,13 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
           impact: 'Positive'
         },
         {
-          title: t('results.insights.routeInsight'),
-          suggestion: isLongHaul
+          title: isSpiritual ? 'Peak Spiritual Season' : t('results.insights.routeInsight'),
+          suggestion: isSpiritual 
+            ? `High demand during upcoming festivals in ${destinationInfo.city}. Book early to secure temple-adjacent stays.`
+            : isLongHaul
             ? t('results.insights.routeLongHaul')
             : t('results.insights.routeNearby'),
-          impact: 'High'
+          impact: isSpiritual ? 'High' : 'High'
         }
       ],
       upgrade: {
@@ -91,7 +96,13 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
         reason: upgradeReason,
         valueScore: 88 + rnd(10),
         price: upgradePrice
-      }
+      },
+      spiritual: isSpiritual ? {
+        bestMonths: destinationInfo.bestMonths?.join(', ') || 'October to March',
+        highlights: destinationInfo.highlights || [],
+        crowdAlert: rnd(10) > 7 ? 'High festival demand' : 'Standard pilgrimage flow',
+        peaceScore: 85 + rnd(15)
+      } : null
     }
   }
 
@@ -188,48 +199,95 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
         </div>
       </div>
 
-      {/* Cabin Recommendation */}
-      <div className="glass rounded-2xl p-6 border border-slate-800/50 flex flex-col gap-4 lg:col-span-1 md:col-span-2 lg:row-span-1">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
-            <Award className="h-5 w-5" />
+      {/* Spiritual Intelligence (Conditional) */}
+      {insights.spiritual && (
+        <div className="glass rounded-2xl p-6 border border-purple-500/30 flex flex-col gap-4 bg-gradient-to-br from-purple-500/5 to-transparent relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10">
+            <Sparkles className="h-24 w-24 text-purple-400" />
           </div>
-          <h3 className="font-bold text-slate-900 dark:text-slate-100">{t('results.insights.cabinTitle')}</h3>
-        </div>
-
-        {insights.cabinComparison.map((comp, idx) => (
-          <div key={idx} className="space-y-4">
-            <div className="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-500/10 dark:to-pink-500/10 border border-purple-100 dark:border-purple-500/20">
-              <div className="flex justify-between items-start mb-3">
-                <p className="text-sm font-bold text-slate-900 dark:text-slate-100">{t('results.insights.upgradeTitleValue', { type: comp.type })}</p>
-                <div className="flex items-center gap-1 bg-purple-100 dark:bg-purple-500/20 px-2 py-0.5 rounded text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase">
-                  {t('results.insights.value', { score: comp.valueScore })}
-                </div>
-              </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                <Trans
-                  i18nKey="results.insights.upgradeOffer"
-                  values={{ type: comp.type, legroom: comp.extraLegroom, fareDiff: comp.fareDiff }}
-                  components={{ span: <span className="font-bold text-slate-900 dark:text-slate-100" />, pspan: <span className="text-purple-600 dark:text-purple-400 font-bold" />, espan: <span className="text-emerald-600 dark:text-emerald-400 font-bold" /> }}
-                />
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <h3 className="font-bold text-slate-900 dark:text-slate-100">Spiritual Intelligence</h3>
+          </div>
+          
+          <div className="space-y-4 relative z-10">
+            <div className="p-3 rounded-xl bg-purple-500/5 border border-purple-500/20">
+              <p className="text-xs text-purple-400 font-bold flex items-center gap-2 mb-1">
+                <Moon className="h-3.5 w-3.5" />
+                Best Months for Pilgrimage
               </p>
+              <p className="text-sm text-slate-200">{insights.spiritual.bestMonths}</p>
+            </div>
 
-              <div className="mt-4 flex flex-wrap gap-2">
-                {comp.perks.map(perk => (
-                  <span key={perk} className="text-[10px] px-2 py-1 rounded-md bg-slate-900/60 text-slate-400 border border-slate-800">
-                    {perk}
+            <div className="flex justify-between items-center text-xs">
+              <span className="text-slate-400">Peace Score</span>
+              <span className="text-cyan-400 font-bold">{insights.spiritual.peaceScore}/100</span>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Spiritual Highlights</p>
+              <div className="flex flex-wrap gap-2">
+                {insights.spiritual.highlights.map(h => (
+                  <span key={h} className="text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                    {h}
                   </span>
                 ))}
               </div>
             </div>
 
-            <button className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-100 dark:bg-slate-800/40 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50 transition-all group">
-              <span className="text-xs font-bold text-slate-600 dark:text-slate-300">{t('results.insights.viewMatrix')}</span>
-              <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform" />
-            </button>
+            <p className="text-[11px] text-amber-400/80 italic font-medium">
+              Note: {insights.spiritual.crowdAlert} during this period.
+            </p>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {/* Cabin Recommendation */}
+      {!insights.spiritual && (
+        <div className="glass rounded-2xl p-6 border border-slate-800/50 flex flex-col gap-4 lg:col-span-1 md:col-span-2 lg:row-span-1">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
+              <Award className="h-5 w-5" />
+            </div>
+            <h3 className="font-bold text-slate-900 dark:text-slate-100">{t('results.insights.cabinTitle')}</h3>
+          </div>
+
+          {insights.cabinComparison.map((comp, idx) => (
+            <div key={idx} className="space-y-4">
+              <div className="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-500/10 dark:to-pink-500/10 border border-purple-100 dark:border-purple-500/20">
+                <div className="flex justify-between items-start mb-3">
+                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100">{t('results.insights.upgradeTitleValue', { type: comp.type })}</p>
+                  <div className="flex items-center gap-1 bg-purple-100 dark:bg-purple-500/20 px-2 py-0.5 rounded text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase">
+                    {t('results.insights.value', { score: comp.valueScore })}
+                  </div>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <Trans
+                    i18nKey="results.insights.upgradeOffer"
+                    values={{ type: comp.type, legroom: comp.extraLegroom, fareDiff: comp.fareDiff }}
+                    components={{ span: <span className="font-bold text-slate-900 dark:text-slate-100" />, pspan: <span className="text-purple-600 dark:text-purple-400 font-bold" />, espan: <span className="text-emerald-600 dark:text-emerald-400 font-bold" /> }}
+                  />
+                </p>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {comp.perks.map(perk => (
+                    <span key={perk} className="text-[10px] px-2 py-1 rounded-md bg-slate-900/60 text-slate-400 border border-slate-800">
+                      {perk}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <button className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-100 dark:bg-slate-800/40 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50 transition-all group">
+                <span className="text-xs font-bold text-slate-600 dark:text-slate-300">{t('results.insights.viewMatrix')}</span>
+                <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Travel Optimization Suggestions */}
       <div className="glass rounded-2xl p-6 border border-slate-800/50 flex flex-col gap-4">

@@ -29,7 +29,10 @@ interface AirportInfo {
   code: string
   city: string
   country: string
-  type: 'metro' | 'beach' | 'tourism'
+  type: 'metro' | 'beach' | 'tourism' | 'spiritual' | 'pilgrimage'
+  highlights?: string[]
+  bestMonths?: string[]
+  priceRange?: 'budget' | 'mid' | 'premium'
 }
 
 const AIRPORTS: AirportInfo[] = [
@@ -47,26 +50,158 @@ const AIRPORTS: AirportInfo[] = [
   { code: 'LKO', city: 'Lucknow', country: 'India', type: 'tourism' },
   { code: 'COK', city: 'Kochi', country: 'India', type: 'beach' },
   { code: 'TRV', city: 'Thiruvananthapuram', country: 'India', type: 'beach' },
-  // India — Tier-2
-  { code: 'VNS', city: 'Varanasi', country: 'India', type: 'tourism' },
+
+  // India — Spiritual & Pilgrimage
+  { 
+    code: 'VNS', city: 'Varanasi', country: 'India', type: 'spiritual',
+    highlights: ['Ganga Aarti', 'Kashi Vishwanath Temple', 'Sarnath'],
+    bestMonths: ['October', 'November', 'December', 'January', 'February', 'March'],
+    priceRange: 'mid'
+  },
+  { 
+    code: 'TIR', city: 'Tirupati', country: 'India', type: 'pilgrimage',
+    highlights: ['Tirumala Venkateswara Temple', 'Akasaganga Teertham'],
+    bestMonths: ['September', 'October', 'November', 'December', 'January', 'February'],
+    priceRange: 'mid'
+  },
+  { 
+    code: 'IXM', city: 'Madurai', country: 'India', type: 'spiritual',
+    highlights: ['Meenakshi Amman Temple', 'Thirumalai Nayakkar Mahal'],
+    bestMonths: ['October', 'November', 'December', 'January', 'February'],
+    priceRange: 'mid'
+  },
+  { 
+    code: 'DED', city: 'Rishikesh', country: 'India', type: 'spiritual',
+    highlights: ['Yoga Retreats', 'Laxman Jhula', 'Ganga River Rafting'],
+    bestMonths: ['March', 'April', 'May', 'September', 'October', 'November'],
+    priceRange: 'budget'
+  },
+  { 
+    code: 'AYJ', city: 'Ayodhya', country: 'India', type: 'pilgrimage',
+    highlights: ['Ram Janmabhoomi', 'Hanuman Garhi', 'Sarayu River'],
+    bestMonths: ['October', 'November', 'December', 'January', 'February', 'March'],
+    priceRange: 'mid'
+  },
+  { 
+    code: 'BBI', city: 'Puri', country: 'India', type: 'pilgrimage',
+    highlights: ['Jagannath Temple', 'Golden Beach', 'Konark Sun Temple'],
+    bestMonths: ['October', 'November', 'December', 'January', 'February'],
+    priceRange: 'mid'
+  },
+  { 
+    code: 'SAG', city: 'Shirdi', country: 'India', type: 'pilgrimage',
+    highlights: ['Sai Baba Samadhi Mandir', 'Shani Shingnapur'],
+    bestMonths: ['June', 'July', 'August', 'September', 'October', 'November', 'December', 'January', 'February', 'March'],
+    priceRange: 'budget'
+  },
+  { 
+    code: 'GAY', city: 'Bodh Gaya', country: 'India', type: 'spiritual',
+    highlights: ['Mahabodhi Temple', 'Bodhi Tree', 'Great Buddha Statue'],
+    bestMonths: ['October', 'November', 'December', 'January', 'February', 'March'],
+    priceRange: 'mid'
+  },
+  { 
+    code: 'ATQ', city: 'Amritsar', country: 'India', type: 'spiritual',
+    highlights: ['Golden Temple', 'Wagah Border', 'Jallianwala Bagh'],
+    bestMonths: ['October', 'November', 'December', 'January', 'February', 'March'],
+    priceRange: 'mid'
+  },
+  { 
+    code: 'JGA', city: 'Dwarka', country: 'India', type: 'pilgrimage',
+    highlights: ['Dwarkadhish Temple', 'Bet Dwarka', 'Nageshwar Jyotirlinga'],
+    bestMonths: ['October', 'November', 'December', 'January', 'February', 'March'],
+    priceRange: 'mid'
+  },
+  { 
+    code: 'IDR', city: 'Ujjain', country: 'India', type: 'pilgrimage',
+    highlights: ['Mahakaleshwar Jyotirlinga', 'Kshipra River Ghats'],
+    bestMonths: ['October', 'November', 'December', 'January', 'February', 'March'],
+    priceRange: 'mid'
+  },
+  { 
+    code: 'ISK', city: 'Nashik', country: 'India', type: 'spiritual',
+    highlights: ['Trimbakeshwar Temple', 'Panchavati', 'Sula Vineyards'],
+    bestMonths: ['October', 'November', 'December', 'January', 'February', 'March'],
+    priceRange: 'mid'
+  },
+  { 
+    code: 'IXJ', city: 'Jammu', country: 'India', type: 'pilgrimage',
+    highlights: ['Vaishno Devi Temple', 'Raghunath Temple'],
+    bestMonths: ['March', 'April', 'May', 'June', 'September', 'October', 'November'],
+    priceRange: 'mid'
+  },
+
+  // International Spiritual
+  { 
+    code: 'MED', city: 'Medina', country: 'Saudi Arabia', type: 'pilgrimage',
+    highlights: ['Al-Masjid an-Nabawi', 'Quba Mosque'],
+    bestMonths: ['November', 'December', 'January', 'February'],
+    priceRange: 'premium'
+  },
+  { 
+    code: 'JRS', city: 'Jerusalem', country: 'Israel', type: 'spiritual',
+    highlights: ['Western Wall', 'Church of the Holy Sepulchre', 'Dome of the Rock'],
+    bestMonths: ['April', 'May', 'October', 'November'],
+    priceRange: 'premium'
+  },
+  { 
+    code: 'FCO', city: 'Vatican City', country: 'Italy', type: 'spiritual',
+    highlights: ['St. Peter\'s Basilica', 'Sistine Chapel', 'Vatican Museums'],
+    bestMonths: ['April', 'May', 'June', 'September', 'October'],
+    priceRange: 'premium'
+  },
+  { 
+    code: 'KTM', city: 'Kathmandu', country: 'Nepal', type: 'spiritual',
+    highlights: ['Pashupatinath Temple', 'Boudhanath Stupa', 'Swayambhunath'],
+    bestMonths: ['September', 'October', 'November', 'March', 'April', 'May'],
+    priceRange: 'budget'
+  },
+  { 
+    code: 'LXA', city: 'Lhasa', country: 'Tibet', type: 'spiritual',
+    highlights: ['Potala Palace', 'Jokhang Temple', 'Sera Monastery'],
+    bestMonths: ['May', 'June', 'July', 'August', 'September', 'October'],
+    priceRange: 'premium'
+  },
+  { 
+    code: 'DPS', city: 'Bali', country: 'Indonesia', type: 'spiritual',
+    highlights: ['Besakih Temple', 'Uluwatu Temple', 'Ubud Yoga'],
+    bestMonths: ['April', 'May', 'June', 'July', 'August', 'September'],
+    priceRange: 'mid'
+  },
+  { 
+    code: 'HND', city: 'Kyoto', country: 'Japan', type: 'spiritual',
+    highlights: ['Fushimi Inari-taisha', 'Kinkaku-ji', 'Arashiyama Bamboo Grove'],
+    bestMonths: ['March', 'April', 'May', 'October', 'November'],
+    priceRange: 'premium'
+  },
+  { 
+    code: 'CNX', city: 'Chiang Mai', country: 'Thailand', type: 'spiritual',
+    highlights: ['Wat Phra That Doi Suthep', 'Old City Temples'],
+    bestMonths: ['November', 'December', 'January', 'February'],
+    priceRange: 'budget'
+  },
+  { 
+    code: 'LPQ', city: 'Luang Prabang', country: 'Laos', type: 'spiritual',
+    highlights: ['Wat Xieng Thong', 'Morning Alms Giving'],
+    bestMonths: ['November', 'December', 'January', 'February'],
+    priceRange: 'budget'
+  },
+
+  // India — Tier-2 & Others
   { code: 'IXC', city: 'Chandigarh', country: 'India', type: 'metro' },
   { code: 'GAU', city: 'Guwahati', country: 'India', type: 'tourism' },
   { code: 'PAT', city: 'Patna', country: 'India', type: 'tourism' },
-  { code: 'BBI', city: 'Bhubaneswar', country: 'India', type: 'tourism' },
   { code: 'IXB', city: 'Bagdogra', country: 'India', type: 'tourism' },
   { code: 'SXR', city: 'Srinagar', country: 'India', type: 'tourism' },
   { code: 'VTZ', city: 'Visakhapatnam', country: 'India', type: 'beach' },
-  { code: 'IDR', city: 'Indore', country: 'India', type: 'metro' },
   { code: 'NAG', city: 'Nagpur', country: 'India', type: 'metro' },
   { code: 'UDR', city: 'Udaipur', country: 'India', type: 'tourism' },
   { code: 'JDH', city: 'Jodhpur', country: 'India', type: 'tourism' },
-  { code: 'DED', city: 'Dehradun', country: 'India', type: 'tourism' },
   { code: 'IXZ', city: 'Port Blair', country: 'India', type: 'beach' },
-  { code: 'ATQ', city: 'Amritsar', country: 'India', type: 'tourism' },
-  { code: 'TIR', city: 'Tirupati', country: 'India', type: 'tourism' },
   { code: 'RPR', city: 'Raipur', country: 'India', type: 'metro' },
   { code: 'IXR', city: 'Ranchi', country: 'India', type: 'tourism' },
-  // International
+
+  // International Metro
   { code: 'DXB', city: 'Dubai', country: 'UAE', type: 'metro' },
   { code: 'SIN', city: 'Singapore', country: 'Singapore', type: 'metro' },
   { code: 'BKK', city: 'Bangkok', country: 'Thailand', type: 'tourism' },
@@ -84,12 +219,10 @@ const AIRPORTS: AirportInfo[] = [
   { code: 'MIA', city: 'Miami', country: 'USA', type: 'beach' },
   { code: 'YYZ', city: 'Toronto', country: 'Canada', type: 'metro' },
   { code: 'ZRH', city: 'Zurich', country: 'Switzerland', type: 'tourism' },
-  { code: 'FCO', city: 'Rome', country: 'Italy', type: 'tourism' },
   { code: 'NBO', city: 'Nairobi', country: 'Kenya', type: 'tourism' },
   { code: 'AUH', city: 'Abu Dhabi', country: 'UAE', type: 'metro' },
   { code: 'AMS', city: 'Amsterdam', country: 'Netherlands', type: 'metro' },
   { code: 'IST', city: 'Istanbul', country: 'Turkey', type: 'tourism' },
-  { code: 'HND', city: 'Tokyo', country: 'Japan', type: 'metro' },
   { code: 'ICN', city: 'Seoul', country: 'South Korea', type: 'metro' },
   { code: 'DFW', city: 'Dallas', country: 'USA', type: 'metro' },
   { code: 'ATL', city: 'Atlanta', country: 'USA', type: 'metro' },
@@ -97,7 +230,6 @@ const AIRPORTS: AirportInfo[] = [
   { code: 'MAD', city: 'Madrid', country: 'Spain', type: 'metro' },
   { code: 'BCN', city: 'Barcelona', country: 'Spain', type: 'beach' },
   { code: 'MUC', city: 'Munich', country: 'Germany', type: 'metro' },
-  { code: 'DPS', city: 'Bali', country: 'Indonesia', type: 'beach' },
   { code: 'MLE', city: 'Male', country: 'Maldives', type: 'beach' },
   { code: 'HNL', city: 'Honolulu', country: 'USA', type: 'beach' },
 ]

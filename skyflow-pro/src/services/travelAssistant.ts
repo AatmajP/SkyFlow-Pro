@@ -5,7 +5,7 @@ export interface Suggestion {
   airportCode: string
   reason: string
   price: number
-  category: 'relaxing' | 'adventure' | 'luxury' | 'nightlife' | 'romantic' | 'family' | 'cold' | 'beach'
+  category: 'relaxing' | 'adventure' | 'luxury' | 'nightlife' | 'romantic' | 'family' | 'cold' | 'beach' | 'spiritual' | 'pilgrimage' | 'meditation'
 }
 
 export interface ChatResponse {
@@ -34,6 +34,9 @@ export const CATEGORY_CONFIG: Record<string, { label: string; emoji: string; col
   family: { label: 'Family', emoji: '👨‍👩‍👧‍👦', color: 'text-sky-400' },
   cold: { label: 'Snowy', emoji: '❄️', color: 'text-blue-200' },
   beach: { label: 'Beach', emoji: '🏖', color: 'text-amber-300' },
+  spiritual: { label: 'Spiritual', emoji: '✨', color: 'text-purple-300' },
+  pilgrimage: { label: 'Pilgrimage', emoji: '⛩️', color: 'text-amber-500' },
+  meditation: { label: 'Meditation', emoji: '🕉️', color: 'text-cyan-300' },
 }
 
 const DESTINATIONS: Record<string, string[]> = {
@@ -45,13 +48,16 @@ const DESTINATIONS: Record<string, string[]> = {
   family: ['SIN', 'DXB', 'LHR', 'JFK', 'MAA'],
   cold: ['ZRH', 'SXR', 'FRA', 'YYZ', 'NRT'],
   beach: ['GOI', 'MLE', 'DPS', 'MIA', 'SYD'],
+  spiritual: ['VNS', 'IXM', 'GAY', 'ATQ', 'KTM', 'HND', 'LXA'],
+  pilgrimage: ['TIR', 'AYJ', 'BBI', 'SAG', 'JGA', 'IDR', 'IXJ', 'MED'],
+  meditation: ['DED', 'ISK', 'DPS', 'CNX', 'LPQ'],
 }
 
 const RESPONSE_TEMPLATES: Record<string, string[]> = {
   welcome: [
-    "✨ Welcome to SkyFlow Intelligence! I'm your personal travel curator.\n\nTell me about your vibe—are you looking for a romantic escape, a high-energy city, or perhaps a snowy mountain retreat?",
-    "Hello! I'm SkyFlow AI. I can help you plan your next journey based on your mood or budget. Where's your mind wandering today?",
-    "Greetings traveler! Ready to explore the world? Tell me what kind of experience you're looking for—adventure, relaxation, or maybe some luxury?"
+    "✨ Welcome to SkyFlow Intelligence! I'm your personal travel curator.\n\nTell me about your vibe—are you looking for a romantic escape, a spiritual journey, or perhaps a snowy mountain retreat?",
+    "Hello! I'm SkyFlow AI. I can help you plan your next journey based on your mood or budget. Looking for peace, adventure, or luxury?",
+    "Greetings traveler! Ready to explore the world? Tell me what kind of experience you're looking for—meditation, relaxation, or maybe some adventure?"
   ],
   mood_understood: [
     "I love that choice! {mood} trips are exactly what I'm best at planning. Do you have a specific budget in mind, or should I show you the best options regardless of price?",
@@ -64,13 +70,13 @@ const RESPONSE_TEMPLATES: Record<string, string[]> = {
     "{budget} is a great budget for {mood} travel. Check out these top recommendations for you:"
   ],
   recommending: [
-    "Based on what you told me, I think you'll absolutely love these places:",
+    "Based on what you told me, I think you'll absolutely love these places for your {mood} experience:",
     "Here are my top-tier picks for your {mood} escape:",
     "I've curated a few destinations that match your vibe and budget:"
   ],
   generic_fallback: [
-    "That's interesting! Could you tell me a bit more about what you're looking for in your trip? Like the mood (beach, adventure, etc.) or your budget?",
-    "I'm here to help! To give you the best advice, let me know if you want something relaxing, adventurous, or maybe a city break?",
+    "That's interesting! Could you tell me a bit more about what you're looking for in your trip? Like the mood (spiritual, beach, adventure, etc.) or your budget?",
+    "I'm here to help! To give you the best advice, let me know if you want something spiritual, relaxing, or maybe a city break?",
     "I'm learning more every day, but I'm best at finding trips based on your 'vibe' or budget. What are you in the mood for today?"
   ]
 }
@@ -100,6 +106,9 @@ export async function processChat(input: string, state: ChatState): Promise<{ re
   else if (q.includes('family') || q.includes('kids') || q.includes('parent')) detectedMood = 'family'
   else if (q.includes('cold') || q.includes('snow') || q.includes('ski') || q.includes('winter')) detectedMood = 'cold'
   else if (q.includes('beach') || q.includes('ocean') || q.includes('sea') || q.includes('island')) detectedMood = 'beach'
+  else if (q.includes('peace') || q.includes('exhausted') || q.includes('inner') || q.includes('soul') || q.includes('spirit')) detectedMood = 'spiritual'
+  else if (q.includes('temple') || q.includes('pilgrim') || q.includes('religious') || q.includes('sacred')) detectedMood = 'pilgrimage'
+  else if (q.includes('meditation') || q.includes('yoga') || q.includes('retreat') || q.includes('zen')) detectedMood = 'meditation'
 
   if (detectedMood) newState.mood = detectedMood
 
@@ -143,6 +152,9 @@ export async function processChat(input: string, state: ChatState): Promise<{ re
         family: `Engaging activities and safe environments for all ages to enjoy.`,
         cold: `A winter wonderland perfect for cozy nights and snowy sports.`,
         beach: `Sun-soaked shores and crystal clear waters await your arrival.`,
+        spiritual: `Find inner peace and ancient wisdom in this profoundly spiritual sanctuary.`,
+        pilgrimage: `A sacred destination offering deep cultural heritage and spiritual fulfillment.`,
+        meditation: `Ideally suited for mindfulness, yoga, and a complete mental reset.`,
       }
 
       return {
