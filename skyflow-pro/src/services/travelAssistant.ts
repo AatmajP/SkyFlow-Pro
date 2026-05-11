@@ -49,7 +49,7 @@ const DESTINATIONS: Record<string, string[]> = {
   cold: ['ZRH', 'SXR', 'FRA', 'YYZ', 'NRT'],
   beach: ['GOI', 'MLE', 'DPS', 'MIA', 'SYD'],
   spiritual: ['VNS', 'IXM', 'GAY', 'ATQ', 'KTM', 'HND', 'LXA'],
-  pilgrimage: ['TIR', 'AYJ', 'BBI', 'SAG', 'JGA', 'IDR', 'IXJ', 'MED'],
+  pilgrimage: ['TIR', 'AYJ', 'BBI', 'SAG', 'JGA', 'IDR', 'IXJ', 'MED', 'JED'],
   meditation: ['DED', 'ISK', 'DPS', 'CNX', 'LPQ'],
 }
 

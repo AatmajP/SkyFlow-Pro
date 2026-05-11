@@ -133,6 +133,12 @@ const AIRPORTS: AirportInfo[] = [
 
   // International Spiritual
   { 
+    code: 'JED', city: 'Jeddah', country: 'Saudi Arabia', type: 'pilgrimage',
+    highlights: ['Mecca Gateway', 'King Fahd\'s Fountain', 'Al-Balad'],
+    bestMonths: ['November', 'December', 'January', 'February'],
+    priceRange: 'premium'
+  },
+  { 
     code: 'MED', city: 'Medina', country: 'Saudi Arabia', type: 'pilgrimage',
     highlights: ['Al-Masjid an-Nabawi', 'Quba Mosque'],
     bestMonths: ['November', 'December', 'January', 'February'],
@@ -445,6 +451,12 @@ export function generateFlights(
     if (rand() > 0.4) tags.push('baggage')
     if (refundInfo.score >= 68) tags.push('refundable')
     if (seatsLeft <= 30) tags.push('surge')
+    
+    // Auto-tag spiritual destinations
+    const dest = getAirportInfo(to)
+    if (dest?.type === 'spiritual') tags.push('spiritual')
+    if (dest?.type === 'pilgrimage') tags.push('pilgrimage')
+    if (dest?.highlights?.some(h => h.toLowerCase().includes('yoga') || h.toLowerCase().includes('meditation'))) tags.push('meditation')
 
     const segment: FlightSegment = {
       id: `seg-${i}-0`,

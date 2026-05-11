@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {
   ArrowRight, Clock3, Luggage, ChevronDown, Leaf, Shield, Info,
   Zap, TrendingDown, Award, Star, AlertTriangle, Utensils, Briefcase, RotateCcw,
+  Sparkles, Moon
 } from 'lucide-react'
 import type { FlightOption, CabinClass } from '../../types/flight'
 import type { FlightBadge } from '../../utils/flightIntelligence'
@@ -72,6 +73,9 @@ function getTagIcon(tag: string) {
     case 'baggage': return <Briefcase className="h-3 w-3" />
     case 'refundable': return <RotateCcw className="h-3 w-3" />
     case 'surge': return <AlertTriangle className="h-3 w-3" />
+    case 'spiritual': return <Sparkles className="h-3 w-3" />
+    case 'pilgrimage': return <Moon className="h-3 w-3" />
+    case 'meditation': return <div className="text-[10px]">🧘</div>
     default: return null
   }
 }
@@ -82,6 +86,9 @@ function getTagStyle(tag: string) {
     case 'baggage': return 'bg-sky-50 dark:bg-sky-950/50 text-sky-600 dark:text-sky-300 ring-sky-200 dark:ring-sky-500/30'
     case 'refundable': return 'bg-violet-50 dark:bg-violet-950/50 text-violet-600 dark:text-violet-300 ring-violet-200 dark:ring-violet-500/30'
     case 'surge': return 'bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-300 ring-amber-200 dark:ring-amber-500/30'
+    case 'spiritual': return 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-300 ring-purple-200 dark:ring-purple-500/30 shadow-sm shadow-purple-500/10'
+    case 'pilgrimage': return 'bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 ring-amber-200 dark:ring-amber-500/30'
+    case 'meditation': return 'bg-cyan-50 dark:bg-cyan-950/50 text-cyan-600 dark:text-cyan-300 ring-cyan-200 dark:ring-cyan-500/30'
     default: return 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 ring-slate-200 dark:ring-slate-700'
   }
 }

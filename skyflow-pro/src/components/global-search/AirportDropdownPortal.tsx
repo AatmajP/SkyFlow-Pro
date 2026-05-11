@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
-import { MapPin, SearchX, Waves, Building2 } from 'lucide-react'
+import { MapPin, SearchX, Waves, Building2, Sparkles, Moon } from 'lucide-react'
 import { AIRPORTS } from '../../mocks/mockSearchResults'
 
 interface AirportDropdownPortalProps {
@@ -13,24 +13,6 @@ interface AirportDropdownPortalProps {
 
 /**
  * Portal-based airport autocomplete dropdown.
- *
- * WHY PORTAL:
- *   Rendering into document.body completely detaches the dropdown from
- *   any parent stacking context, overflow:hidden, or transform that would
- *   clip it.
- *
- * WHY position:fixed (NOT absolute):
- *   `fixed` positions relative to the **viewport**, which is exactly what
- *   getBoundingClientRect() returns.  No scroll offsets needed.
- *   `absolute` would require the portal container to be `position:relative`,
- *   and document.body is not — so absolute would break.
- *
- * POSITIONING MATH:
- *   rect = anchorRef.getBoundingClientRect()   // viewport coords
- *   top  = rect.bottom + gap                   // directly below input
- *   left = rect.left                           // left-aligned with input
- *   width = rect.width                         // same width as input
- *   NO scrollY/scrollX — fixed already uses viewport coords.
  */
 export function AirportDropdownPortal({
   query,
@@ -49,15 +31,11 @@ export function AirportDropdownPortal({
   }, [query])
 
   // ── Position calculation ──────────────────────────────────────────
-  // position:fixed uses VIEWPORT coordinates.
-  // getBoundingClientRect() returns VIEWPORT coordinates.
-  // Therefore: top = rect.bottom, left = rect.left. No scroll offsets.
   const updatePosition = useCallback(() => {
     if (!anchorRef.current) return
     const rect = anchorRef.current.getBoundingClientRect()
     const GAP = 6
 
-    // Always position directly below the input
     setPosition({
       top: rect.bottom + GAP,
       left: rect.left,
@@ -68,18 +46,13 @@ export function AirportDropdownPortal({
   // Recalculate on open, scroll, and resize
   useEffect(() => {
     if (!isOpen || !anchorRef.current) return
-
-    // Initial position
     updatePosition()
-
-    // Use rAF-throttled scroll handler for 60fps tracking
     let rafId = 0
     const onScroll = () => {
       cancelAnimationFrame(rafId)
       rafId = requestAnimationFrame(updatePosition)
     }
-
-    window.addEventListener('scroll', onScroll, true) // capture phase for nested scrollers
+    window.addEventListener('scroll', onScroll, true)
     window.addEventListener('resize', updatePosition)
     return () => {
       window.removeEventListener('scroll', onScroll, true)
@@ -108,30 +81,30 @@ export function AirportDropdownPortal({
   const { groups, flatList, isSearching } = useMemo(() => {
     if (!query || query.length < 1) {
       // Default groups when input is empty/focused
+      const spiritual = AIRPORTS.filter(a => a.type === 'spiritual' || a.type === 'pilgrimage').slice(0, 4)
       const beach = AIRPORTS.filter(a => a.type === 'beach').slice(0, 4)
       const popularCodes = ['DXB', 'LHR', 'JFK', 'SIN', 'CDG', 'HND']
       const popular = AIRPORTS.filter(a => popularCodes.includes(a.code))
 
       return {
         groups: [
+          { label: '✨ Spiritual & Pilgrimage', icon: Sparkles, items: spiritual },
           { label: '🌴 Beach Destinations', icon: Waves, items: beach },
           { label: '🏙 Popular Cities', icon: Building2, items: popular },
         ],
-        flatList: [...beach, ...popular],
+        flatList: [...spiritual, ...beach, ...popular],
         isSearching: false,
       }
     }
 
     const q = query.toLowerCase().trim()
 
-    // Priority 1: prefix matches (code/city/country starts with query)
     const prefixMatches = AIRPORTS.filter(a =>
       a.code.toLowerCase().startsWith(q) ||
       a.city.toLowerCase().startsWith(q) ||
       a.country.toLowerCase().startsWith(q),
     )
 
-    // Priority 2: contains matches (excluding already-matched prefixes)
     const prefixSet = new Set(prefixMatches.map(a => a.code))
     const containsMatches = AIRPORTS.filter(a =>
       !prefixSet.has(a.code) && (
@@ -176,13 +149,10 @@ export function AirportDropdownPortal({
           break
       }
     }
-
-    // Capture phase so we intercept Enter before the <form> sees it
     window.addEventListener('keydown', handleKeyDown, true)
     return () => window.removeEventListener('keydown', handleKeyDown, true)
   }, [isOpen, flatList, selectedIndex, onSelect, onClose])
 
-  // ── Render ────────────────────────────────────────────────────────
   if (!isOpen) return null
 
   let globalIdx = -1
@@ -200,7 +170,6 @@ export function AirportDropdownPortal({
       }}
       className="rounded-2xl border border-slate-700/60 overflow-hidden flex flex-col shadow-2xl"
     >
-      {/* Opaque background — no backdrop-filter here to avoid creating stacking context */}
       <div
         className="absolute inset-0 rounded-2xl"
         style={{ background: 'rgba(15, 23, 42, 0.98)' }}
@@ -210,9 +179,8 @@ export function AirportDropdownPortal({
         {flatList.length > 0 ? (
           groups.map((group) => (
             <div key={group.label}>
-              {/* Group header */}
               <div
-                className="sticky top-0 px-4 py-2.5 border-b border-slate-800/80"
+                className="sticky top-0 px-4 py-2.5 border-b border-slate-800/80 z-20"
                 style={{ background: 'rgba(15, 23, 42, 0.95)' }}
               >
                 <h4 className="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
@@ -224,12 +192,13 @@ export function AirportDropdownPortal({
                 </h4>
               </div>
 
-              {/* Items */}
               <div className="p-1">
                 {group.items.map((airport) => {
                   globalIdx++
                   const isActive = globalIdx === selectedIndex
                   const capturedIdx = globalIdx
+                  const isSpiritualItem = airport.type === 'spiritual' || airport.type === 'pilgrimage'
+                  
                   return (
                     <button
                       key={airport.code}
@@ -249,14 +218,31 @@ export function AirportDropdownPortal({
                         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg font-bold text-xs ${
                           isActive
                             ? 'bg-sky-500 text-white'
-                            : 'bg-slate-800 text-sky-400 border border-slate-700/50'
+                            : isSpiritualItem 
+                              ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
+                              : 'bg-slate-800 text-sky-400 border border-slate-700/50'
                         }`}
                       >
                         {airport.code}
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <p className={`text-sm font-semibold truncate ${isActive ? 'text-sky-300' : 'text-slate-200'}`}>
-                          {airport.code} — {airport.city}, {airport.country}
+                      <div className="min-w-0 flex-1 flex flex-col">
+                        <div className="flex items-center justify-between">
+                          <p className={`text-sm font-semibold truncate ${isActive ? 'text-sky-300' : 'text-slate-200'}`}>
+                            {airport.city}, {airport.country}
+                          </p>
+                          {isSpiritualItem && (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 font-bold uppercase tracking-tighter">
+                              {airport.type}
+                            </span>
+                          )}
+                          {airport.type === 'beach' && (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold uppercase tracking-tighter">
+                              Beach
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-slate-500 font-medium">
+                          {airport.code} Airport
                         </p>
                       </div>
                     </button>
