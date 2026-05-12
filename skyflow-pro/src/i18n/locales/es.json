@@ -278,7 +278,12 @@
       "timingLeisure": "Las salidas por la tarde suelen estar menos concurridas.",
       "routeLongHaul": "Vuelos directos ahorran aprox. 4.5 horas vs opciones con escala.",
       "routeNearby": "Vuelos directos se agotan rápido. Aeropuertos cercanos podrían ahorrar un 10%.",
-      "upgradeTitleValue": "Mejora {{type}}"
+      "upgradeTitleValue": "Mejora {{type}}",
+      "spiritualTitle": "Inteligencia Espiritual",
+      "bestMonths": "Mejores meses para la peregrinación",
+      "peaceScore": "Puntuación de paz",
+      "spiritualHighlights": "Aspectos espirituales destacados",
+      "spiritualNote": "Nota: {{alert}} durante este período."
     }
   },
   "booking": {

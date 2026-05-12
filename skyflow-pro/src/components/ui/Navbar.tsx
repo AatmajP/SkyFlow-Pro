@@ -13,8 +13,8 @@ export function Navbar() {
     const location = useLocation()
 
     const navLinks = [
-        { path: '/', label: t('common.searchFlights') },
-        { path: '/results', label: t('common.results') },
+        { path: '/', label: t('common.searchFlights', 'Search Flights') },
+        { path: '/results', label: t('common.results', 'Flight Results') },
     ]
 
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
@@ -78,7 +78,7 @@ export function Navbar() {
                         <button
                             onClick={() => setIsNotificationsOpen(true)}
                             className="relative p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-all duration-300"
-                            aria-label={t('common.notifications')}
+                            aria-label={t('common.notifications', 'Notifications')}
                         >
                             <Bell className="h-5 w-5" />
                             <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-sky-500 animate-pulse" />
@@ -88,7 +88,7 @@ export function Navbar() {
                         <button
                             onClick={() => setIsSettingsOpen(true)}
                             className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-all duration-300"
-                            aria-label={t('common.settings')}
+                            aria-label={t('common.settings', 'Settings')}
                         >
                             <Settings className="h-5 w-5" />
                         </button>
@@ -101,14 +101,14 @@ export function Navbar() {
                                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-purple-600">
                                     <User className="h-4 w-4 text-white" />
                                 </div>
-                                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('common.guest')}</span>
+                                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('common.guest', 'Guest')}</span>
                             </button>
                         </div>
 
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             className="md:hidden p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-all duration-300"
-                            aria-label={t('nav.toggleMenu')}
+                            aria-label={t('nav.toggleMenu', 'Toggle Menu')}
                         >
                             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                         </button>
@@ -150,9 +150,9 @@ export function Navbar() {
                                             <Sun className="h-4 w-4" />
                                         </div>
                                     )}
-                                    <span>{theme === 'dark' ? t('settings.darkMode') : t('settings.lightMode')}</span>
+                                    <span>{theme === 'dark' ? t('settings.darkMode', 'Dark Mode') : t('settings.lightMode', 'Light Mode')}</span>
                                 </div>
-                                <div className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">{t('results.refresh')}</div>
+                                <div className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">{t('results.refresh', 'Refresh')}</div>
                             </button>
                         </div>
                     </div>

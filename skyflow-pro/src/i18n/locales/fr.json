@@ -278,7 +278,12 @@
       "timingLeisure": "Les départs d'après-midi sont typiquement moins encombrés.",
       "routeLongHaul": "Les vols directs font gagner env. 4,5h vs options avec escale.",
       "routeNearby": "Les vols directs partent vite. Des aéroports alternatifs peuvent économiser 10%.",
-      "upgradeTitleValue": "Surclassement {{type}}"
+      "upgradeTitleValue": "Surclassement {{type}}",
+      "spiritualTitle": "Intelligence Spirituelle",
+      "bestMonths": "Meilleurs mois pour le pèlerinage",
+      "peaceScore": "Score de paix",
+      "spiritualHighlights": "Points forts spirituels",
+      "spiritualNote": "Note : {{alert}} pendant cette période."
     }
   },
   "booking": {
