@@ -25,7 +25,20 @@
       "middle": "وسط"
     },
     "back": "رجوع",
-    "backToResults": "العودة للنتائج"
+    "backToResults": "العودة للنتائج",
+    "footer": {
+      "product": "المنتج",
+      "flightSearch": "البحث عن الرحلات",
+      "seatSelection": "اختيار المقاعد",
+      "legal": "قانوني",
+      "privacy": "سياسة الخصوصية",
+      "terms": "شروط الخدمة",
+      "support": "الدعم",
+      "contact": "اتصل بنا",
+      "faq": "الأسئلة الشائعة",
+      "copyright": "© 2026 سكاي فلو برو. بني للشفافية.",
+      "operational": "الأنظمة تعمل"
+    }
   },
   "nav": {
     "toggleMenu": "تبديل القائمة"
@@ -88,7 +101,29 @@
   "notifications": {
     "title": "الإشعارات",
     "markAllRead": "تحديد الكل كمقروء",
-    "noNotifications": "لا توجد إشعارات جديدة"
+    "noNotifications": "لا توجد إشعارات جديدة",
+    "unreadUpdate": "تحديث غير مقروء",
+    "unreadUpdates": "تحديثات غير مقروءة",
+    "tabs": {
+      "all": "الكل",
+      "trips": "الرحلات",
+      "price": "السعر",
+      "alerts": "التنبيهات"
+    },
+    "actions": {
+      "markAll": "تحديد الكل",
+      "clear": "مسح",
+      "close": "إغلاق اللوحة"
+    },
+    "empty": {
+      "title": "هدوء هنا...",
+      "desc": "سنقوم بإخطارك هنا بتحديثات البوابة، تسجيل الوصول، وانخفاض الأسعار."
+    },
+    "time": {
+      "justNow": "الآن",
+      "minsAgo": "منذ {{count}} دقيقة",
+      "hoursAgo": "منذ {{count}} ساعة"
+    }
   },
   "hero": {
     "badge": "أسعار شفافة. لا توجد رسوم خفية.",

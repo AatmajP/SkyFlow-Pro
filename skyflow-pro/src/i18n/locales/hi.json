@@ -25,7 +25,20 @@
       "middle": "बीच"
     },
     "back": "पीछे",
-    "backToResults": "परिणामों पर वापस जाएं"
+    "backToResults": "परिणामों पर वापस जाएं",
+    "footer": {
+      "product": "उत्पाद",
+      "flightSearch": "उड़ान खोज",
+      "seatSelection": "सीट चयन",
+      "legal": "कानूनी",
+      "privacy": "गोपनीयता नीति",
+      "terms": "सेवा की शर्तें",
+      "support": "सहायता",
+      "contact": "संपर्क करें",
+      "faq": "सामान्य प्रश्न",
+      "copyright": "© 2026 SkyFlow Pro. पारदर्शिता के लिए निर्मित।",
+      "operational": "प्रणालियाँ चालू हैं"
+    }
   },
   "nav": {
     "toggleMenu": "मेनू टॉगल करें"
@@ -87,8 +100,30 @@
   },
   "notifications": {
     "title": "सूचनाएं",
-    "markAllRead": "सभी को पढ़ा हुआ मार्क करें",
-    "noNotifications": "कोई नई सूचना नहीं"
+    "markAllRead": "सभी को पढ़ा हुआ चिह्नित करें",
+    "noNotifications": "कोई नई सूचना नहीं",
+    "unreadUpdate": "अपठيت अपडेट",
+    "unreadUpdates": "अपठित अपडेट",
+    "tabs": {
+      "all": "सभी",
+      "trips": "यात्राएं",
+      "price": "कीमत",
+      "alerts": "अलर्ट"
+    },
+    "actions": {
+      "markAll": "सभी चिह्नित करें",
+      "clear": "साफ़ करें",
+      "close": "पैनल बंद करें"
+    },
+    "empty": {
+      "title": "यहाँ शांति है...",
+      "desc": "हम आपको यहाँ गेट अपडेट, चेक-इन और कीमतों में गिरावट के लिए सूचित करेंगे।"
+    },
+    "time": {
+      "justNow": "अभी-अभी",
+      "minsAgo": "{{count}} मि पहले",
+      "hoursAgo": "{{count}} घंटे पहले"
+    }
   },
   "hero": {
     "badge": "सत्य-प्रथम किराए। कोई छिपा हुआ शुल्क नहीं।",

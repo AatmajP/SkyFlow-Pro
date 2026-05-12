@@ -25,7 +25,20 @@
       "middle": "Milieu"
     },
     "back": "Retour",
-    "backToResults": "Retour aux résultats"
+    "backToResults": "Retour aux résultats",
+    "footer": {
+      "product": "Produit",
+      "flightSearch": "Recherche de Vols",
+      "seatSelection": "Sélection de Sièges",
+      "legal": "Juridique",
+      "privacy": "Politique de Confidentialité",
+      "terms": "Conditions d'Utilisation",
+      "support": "Assistance",
+      "contact": "Contactez-nous",
+      "faq": "FAQ",
+      "copyright": "© 2026 SkyFlow Pro. Conçu pour la transparence.",
+      "operational": "Systèmes opérationnels"
+    }
   },
   "nav": {
     "toggleMenu": "Afficher le menu"
@@ -88,7 +101,29 @@
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Tout marquer comme lu",
-    "noNotifications": "Pas de nouvelles notifications"
+    "noNotifications": "Pas de nouvelles notifications",
+    "unreadUpdate": "MISE À JOUR NON LUE",
+    "unreadUpdates": "MISES À JOUR NON LUES",
+    "tabs": {
+      "all": "Toutes",
+      "trips": "Voyages",
+      "price": "Prix",
+      "alerts": "Alertes"
+    },
+    "actions": {
+      "markAll": "Tout marquer",
+      "clear": "Effacer",
+      "close": "Fermer le panneau"
+    },
+    "empty": {
+      "title": "Calme plat ici...",
+      "desc": "Nous vous informerons ici des mises à jour des portes, des enregistrements et des baisses de prix."
+    },
+    "time": {
+      "justNow": "À l'instant",
+      "minsAgo": "Il y a {{count}}m",
+      "hoursAgo": "Il y a {{count}}h"
+    }
   },
   "hero": {
     "badge": "Tarifs transparents. Aucun frais caché.",

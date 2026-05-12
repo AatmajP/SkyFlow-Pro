@@ -25,7 +25,20 @@
       "middle": "Middle"
     },
     "back": "Back",
-    "backToResults": "Back to results"
+    "backToResults": "Back to results",
+    "footer": {
+      "product": "Product",
+      "flightSearch": "Flight Search",
+      "seatSelection": "Seat Selection",
+      "legal": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "support": "Support",
+      "contact": "Contact Us",
+      "faq": "FAQ",
+      "copyright": "© 2026 SkyFlow Pro. Built for transparency.",
+      "operational": "Systems operational"
+    }
   },
   "nav": {
     "toggleMenu": "Toggle menu"
@@ -87,8 +100,30 @@
   },
   "notifications": {
     "title": "Notifications",
-    "markAllRead": "Mark all as read",
-    "noNotifications": "No new notifications"
+    "markAllRead": "Mark All as Read",
+    "noNotifications": "No new notifications",
+    "unreadUpdate": "UNREAD UPDATE",
+    "unreadUpdates": "UNREAD UPDATES",
+    "tabs": {
+      "all": "All",
+      "trips": "Trips",
+      "price": "Price",
+      "alerts": "Alerts"
+    },
+    "actions": {
+      "markAll": "Mark All",
+      "clear": "Clear",
+      "close": "Close Panel"
+    },
+    "empty": {
+      "title": "Quiet in here...",
+      "desc": "We'll notify you here for gate updates, check-ins, and price drops."
+    },
+    "time": {
+      "justNow": "Just now",
+      "minsAgo": "{{count}}m ago",
+      "hoursAgo": "{{count}}h ago"
+    }
   },
   "hero": {
     "badge": "Truth-first fares. No hidden fees.",

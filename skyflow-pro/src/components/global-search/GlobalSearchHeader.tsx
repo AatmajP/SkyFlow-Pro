@@ -117,7 +117,7 @@ export function GlobalSearchHeader() {
                   }`}
                 aria-pressed={form.tripType === type}
               >
-                {type === 'oneway' ? t('search.oneWay') : t('search.roundTrip')}
+                {type === 'oneway' ? t('search.oneWay', 'One Way') : t('search.roundTrip', 'Round Trip')}
               </button>
             ))}
           </div>
@@ -127,7 +127,7 @@ export function GlobalSearchHeader() {
             className="flex items-center gap-2 rounded-xl bg-sky-50 dark:bg-sky-500/10 px-3 py-2 text-xs text-sky-600 dark:text-sky-300 ring-1 ring-sky-200 dark:ring-sky-500/20"
           >
             <Info className="h-4 w-4" />
-            <span>{t('hero.badge')}</span>
+            <span>{t('hero.badge', 'Truth-first fares. No hidden fees.')}</span>
           </div>
         </div>
 
@@ -135,7 +135,7 @@ export function GlobalSearchHeader() {
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr,auto,1fr]">
           <div ref={fromInputRef} className="relative">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
-              {t('search.from')}
+              {t('search.from', 'From')}
             </label>
             <input
               required
@@ -145,7 +145,7 @@ export function GlobalSearchHeader() {
                 setFromDropdownOpen(true)
               }}
               onFocus={() => setFromDropdownOpen(true)}
-              placeholder={t('search.placeholderCity')}
+              placeholder={t('search.placeholderCity', 'City or airport code')}
               className="input-premium pr-12"
               autoComplete="off"
             />
@@ -179,7 +179,7 @@ export function GlobalSearchHeader() {
 
           <div ref={toInputRef} className="relative">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
-              {t('search.to')}
+              {t('search.to', 'To')}
             </label>
             <input
               required
@@ -189,7 +189,7 @@ export function GlobalSearchHeader() {
                 setToDropdownOpen(true)
               }}
               onFocus={() => setToDropdownOpen(true)}
-              placeholder={t('search.placeholderCity')}
+              placeholder={t('search.placeholderCity', 'City or airport code')}
               className="input-premium pr-12"
               autoComplete="off"
             />
@@ -214,7 +214,7 @@ export function GlobalSearchHeader() {
           <div className="relative">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
               <Calendar className="inline h-3 w-3 mr-1" />
-              {t('search.departure')}
+              {t('search.departure', 'Departure')}
             </label>
             <input
               type="date"
@@ -230,7 +230,7 @@ export function GlobalSearchHeader() {
             <div className="relative">
               <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
                 <Calendar className="inline h-3 w-3 mr-1" />
-                {t('search.return')}
+                {t('search.return', 'Return')}
               </label>
               <input
                 type="date"
@@ -245,7 +245,7 @@ export function GlobalSearchHeader() {
           <div className="relative">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
               <Users className="inline h-3 w-3 mr-1" />
-              {t('search.passengers')}
+              {t('search.passengers', 'Passengers')}
             </label>
             <input
               type="number"
@@ -254,13 +254,13 @@ export function GlobalSearchHeader() {
               value={form.passengers}
               onChange={(e) => handleChange('passengers', Number(e.target.value || 1))}
               className="input-premium"
-              aria-label={t('search.passengers')}
+              aria-label={t('search.passengers', 'Passengers')}
             />
           </div>
 
           <div className="relative">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
-              {t('search.cabinClass')}
+              {t('search.cabinClass', 'Cabin Class')}
             </label>
             <select
               value={form.cabin}
@@ -268,10 +268,10 @@ export function GlobalSearchHeader() {
               className="input-premium appearance-none cursor-pointer"
             >
               {[
-                { value: 'economy', label: t('search.economy') },
-                { value: 'premium', label: t('search.premiumEconomy') },
-                { value: 'business', label: t('search.business') },
-                { value: 'first', label: t('search.first') },
+                { value: 'economy', label: t('search.economy', 'Economy') },
+                { value: 'premium', label: t('search.premiumEconomy', 'Premium Economy') },
+                { value: 'business', label: t('search.business', 'Business') },
+                { value: 'first', label: t('search.first', 'First Class') },
               ].map(({ value, label }) => (
                 <option key={value} value={value} className="bg-white dark:bg-slate-900">
                   {label}
@@ -294,10 +294,10 @@ export function GlobalSearchHeader() {
           <div className="glass rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 bg-white/30 dark:bg-slate-900/30 p-6 text-center">
             <Calendar className="mx-auto h-10 w-10 text-slate-300 dark:text-slate-600 mb-3" />
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              {t('search.timelineHint')}
+              {t('search.timelineHint', 'Select a departure date to see the cheapest days nearby')}
             </p>
             <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-              {t('search.timelineDesc')}
+              {t('search.timelineDesc', 'We will show you prices ±3 days around your chosen date')}
             </p>
           </div>
         )}
@@ -317,12 +317,12 @@ export function GlobalSearchHeader() {
             {isSearching ? (
               <>
                 <div className="h-5 w-5 mr-2 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                {t('common.loading')}
+                {t('common.loading', 'Loading...')}
               </>
             ) : (
               <>
                 <Search className="mr-2 h-5 w-5" aria-hidden="true" />
-                {t('search.searchButton')}
+                {t('search.searchButton', 'Search Flights')}
               </>
             )}
           </button>

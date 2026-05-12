@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { MOCK_NOTIFICATIONS } from '../../mocks/mockNotifications'
 import type { SkyNotification } from '../../mocks/mockNotifications'
+import { useTranslation } from 'react-i18next'
 
 interface NotificationDrawerProps {
   isOpen: boolean
@@ -10,6 +11,7 @@ interface NotificationDrawerProps {
 }
 
 export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps) {
+  const { t } = useTranslation()
   const [notifications, setNotifications] = useState<SkyNotification[]>(MOCK_NOTIFICATIONS)
   const [activeTab, setActiveTab] = useState<'all' | 'booking' | 'fare' | 'alerts'>('all')
   const unreadCount = notifications.filter(n => !n.read).length
@@ -51,9 +53,9 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
     const diff = now.getTime() - date.getTime()
     const mins = Math.floor(diff / 60000)
     const hours = Math.floor(mins / 60)
-    if (mins < 1) return 'Just now'
-    if (mins < 60) return `${mins}m ago`
-    if (hours < 24) return `${hours}h ago`
+    if (mins < 1) return t('notifications.time.justNow', 'Just now')
+    if (mins < 60) return t('notifications.time.minsAgo', '{{count}}m ago', { count: mins })
+    if (hours < 24) return t('notifications.time.hoursAgo', '{{count}}h ago', { count: hours })
     return date.toLocaleDateString()
   }
 
@@ -66,10 +68,10 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
   })
 
   const tabs = [
-    { id: 'all', label: 'All' },
-    { id: 'booking', label: 'Trips' },
-    { id: 'fare', label: 'Price' },
-    { id: 'alerts', label: 'Alerts' }
+    { id: 'all', label: t('notifications.tabs.all', 'All') },
+    { id: 'booking', label: t('notifications.tabs.trips', 'Trips') },
+    { id: 'fare', label: t('notifications.tabs.price', 'Price') },
+    { id: 'alerts', label: t('notifications.tabs.alerts', 'Alerts') }
   ]
 
   return (
@@ -102,9 +104,9 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
                   )}
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 leading-none">Notifications</h2>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 leading-none">{t('notifications.title', 'Notifications')}</h2>
                   <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mt-1.5">
-                    {unreadCount} {unreadCount === 1 ? 'UNREAD UPDATE' : 'UNREAD UPDATES'}
+                    {unreadCount} {unreadCount === 1 ? t('notifications.unreadUpdate', 'UNREAD UPDATE') : t('notifications.unreadUpdates', 'UNREAD UPDATES')}
                   </p>
                 </div>
               </div>
@@ -134,16 +136,17 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
               
               <div className="ml-auto flex items-center gap-3">
                 <button
+                  onClick={markAllAsRead}
                   className="text-[10px] font-bold text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 uppercase tracking-tight"
                 >
-                  Mark All
+                  {t('notifications.actions.markAll', 'Mark All')}
                 </button>
                 <div className="h-3 w-[1px] bg-slate-200 dark:bg-slate-700" />
                 <button
                   onClick={clearAll}
                   className="text-[10px] font-bold text-slate-500 hover:text-red-400 uppercase tracking-tight"
                 >
-                  Clear
+                  {t('notifications.actions.clear', 'Clear')}
                 </button>
               </div>
             </div>
@@ -201,9 +204,9 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
                   <div className="h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 opacity-40">
                     <Bell className="h-8 w-8 text-slate-400 dark:text-slate-600" />
                   </div>
-                  <h3 className="text-slate-900 dark:text-slate-300 font-bold">Quiet in here...</h3>
+                  <h3 className="text-slate-900 dark:text-slate-300 font-bold">{t('notifications.empty.title', 'Quiet in here...')}</h3>
                   <p className="text-xs text-slate-500 dark:text-slate-500 mt-2 max-w-[200px] mx-auto leading-relaxed font-medium">
-                    We'll notify you here for gate updates, check-ins, and price drops.
+                    {t('notifications.empty.desc', "We'll notify you here for gate updates, check-ins, and price drops.")}
                   </p>
                 </div>
               )}
@@ -215,7 +218,7 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
                 onClick={onClose}
                 className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700"
               >
-                Close Panel
+                {t('notifications.actions.close', 'Close Panel')}
               </button>
             </div>
           </motion.div>

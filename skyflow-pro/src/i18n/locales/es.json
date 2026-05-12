@@ -25,7 +25,20 @@
       "middle": "Centro"
     },
     "back": "Volver",
-    "backToResults": "Volver a los resultados"
+    "backToResults": "Volver a los resultados",
+    "footer": {
+      "product": "Producto",
+      "flightSearch": "Búsqueda de Vuelos",
+      "seatSelection": "Selección de Asientos",
+      "legal": "Legal",
+      "privacy": "Política de Privacidad",
+      "terms": "Términos de Servicio",
+      "support": "Soporte",
+      "contact": "Contáctenos",
+      "faq": "Preguntas Frecuentes",
+      "copyright": "© 2026 SkyFlow Pro. Creado para la transparencia.",
+      "operational": "Sistemas operativos"
+    }
   },
   "nav": {
     "toggleMenu": "Alternar menú"
@@ -88,7 +101,29 @@
   "notifications": {
     "title": "Notificaciones",
     "markAllRead": "Marcar todo como leído",
-    "noNotifications": "No hay notificaciones nuevas"
+    "noNotifications": "No hay notificaciones nuevas",
+    "unreadUpdate": "ACTUALIZACIÓN NO LEÍDA",
+    "unreadUpdates": "ACTUALIZACIONES NO LEÍDAS",
+    "tabs": {
+      "all": "Todas",
+      "trips": "Viajes",
+      "price": "Precio",
+      "alerts": "Alertas"
+    },
+    "actions": {
+      "markAll": "Marcar todo",
+      "clear": "Borrar",
+      "close": "Cerrar panel"
+    },
+    "empty": {
+      "title": "Silencio por aquí...",
+      "desc": "Te notificaremos aquí sobre actualizaciones de puertas, registros y bajadas de precios."
+    },
+    "time": {
+      "justNow": "Recién",
+      "minsAgo": "Hace {{count}}m",
+      "hoursAgo": "Hace {{count}}h"
+    }
   },
   "hero": {
     "badge": "Tarifas honestas. Sin cargos ocultos.",
