@@ -39,7 +39,7 @@
     "regional": "क्षेत्रीय और मुद्रा",
     "defaultCurrency": "डिफ़ॉल्ट मुद्रा",
     "preferredLanguage": "पसंदीदा भाषा",
-    "systemAlerts": "सिस्टम और अलर्ट",
+    "systemAlerts": "सेटिंग्स और अलर्ट",
     "accessibilityMode": "एक्सेसिबिलिटी मोड",
     "accessibilityDesc": "बेहतर कंट्रास्ट और बड़े लक्ष्य",
     "smartNotifications": "स्मार्ट सूचनाएं",
@@ -221,6 +221,64 @@
         "business": "बिज़",
         "first": "1st"
       }
+    },
+    "demand": {
+      "veryHigh": "बहुत अधिक",
+      "peak": "पीक",
+      "high": "अधिक"
+    },
+    "perks": {
+      "priority": "प्राथमिकता बोर्डिंग",
+      "baggage": "अतिरिक्त सामान",
+      "sleepKit": "स्लीप किट",
+      "recline": "बेहतर रिक्लाइन",
+      "legroom": "अतिरिक्त लेगरूम",
+      "meals": "प्रीमियम भोजन"
+    },
+    "sort": {
+      "price": "कीमत",
+      "duration": "अवधि",
+      "departure": "प्रस्थान"
+    },
+    "underPrice": "{{price}} से कम",
+    "abovePrice": "{{price}} से ऊपर",
+    "searchingFromTo": "{{from}} से {{to}} खोज रहे हैं",
+    "insights": {
+      "fareTitle": "किराया इंटेलिजेंस",
+      "demandTitle": "डिमांड एनालिटिक्स",
+      "cabinTitle": "केबिन इंटेलिजेंस",
+      "optimizationTitle": "अनुकूलन",
+      "upgradeTitle": "अपग्रेड एडवाइजरी",
+      "priceAlert": "{{from}} → {{to}} के लिए मूल्य अलर्ट",
+      "fareRise": "किराया अगले {{timeframe}} के भीतर <span class=\"text-amber-400 font-bold\">{{percentage}}% बढ़</span> सकता है।",
+      "bestWindow": "सर्वोत्तम बुकिंग विंडो",
+      "savingDay": "<span class=\"text-emerald-400 font-bold\">{{day}}</span> को उड़ान भरने से आप <span class=\"text-emerald-400 font-bold\">{{amount}}</span> बचा सकते हैं।",
+      "occupancy": "फ्लाइट ऑक्यूपेंसी",
+      "popularity": "रूट लोकप्रियता",
+      "trend": "ट्रेंड",
+      "intensity": "पिछले 12 घंटों में उच्च तीव्रता वाली बुकिंग का पता चला है।",
+      "value": "मूल्य {{score}}%",
+      "upgradeOffer": "<span class=\"text-purple-400 font-bold\">{{type}}</span> केवल <span class=\"text-emerald-400 font-bold\">{{fareDiff}} अधिक किराए</span> में <span class=\"font-bold text-slate-100\">{{legroom}} अधिक लेगरूम</span> प्रदान करता है।",
+      "viewMatrix": "तुलना मैट्रिक्स देखें",
+      "onTime": "चुनी गई उड़ान का समय पर प्रदर्शन 94% है।",
+      "worthUpgrade": "क्या अपग्रेड करना सार्थक है?",
+      "upgradeReason": "{{reason}} अपग्रेड <span class=\"text-emerald-400 font-bold\">{{price}}</span> से शुरू हो रहे हैं।",
+      "match": "{{score}}% मैच",
+      "showOptions": "अपग्रेड विकल्प दिखाएं",
+      "routeInsight": "रूट अंतर्दृष्टि",
+      "upgradeCorridor": "बिजनेस क्लास इन्वेंट्री वर्तमान में {{from}}→{{to}} कॉरिडोर के लिए अनुकूल है।",
+      "upgradeLongHaul": "लंबी दूरी की उड़ान का पता चला। बिजनेस क्लास में फ्लैट-बेड सीटें आपके आगमन के लिए 4 गुना अधिक आराम प्रदान करती हैं।",
+      "upgradeBusiness": "उच्च व्यावसायिक मांग। {{to}} में प्रीमियम लाउंज का उपयोग करने के लिए अभी अपना अपग्रेड सुरक्षित करें।",
+      "upgradeFirst": "फर्स्ट क्लास सूट उपलब्ध हैं। बादलों के ऊपर परम गोपनीयता और 5-सितारा भोजन का अनुभव करें।",
+      "12h": "12 घंटे",
+      "48h": "48 घंटे",
+      "bookWithin6h": "6 घंटे के भीतर बुक करें",
+      "timingStrategy": "समय रणनीति",
+      "timingBusiness": "व्यावसायिक यात्रियों के लिए सुबह की उड़ानों (6-8 AM) का समय पर प्रदर्शन उच्चतम होता है।",
+      "timingLeisure": "इस मार्ग पर दोपहर के समय प्रस्थान आमतौर पर कम भीड़भाड़ वाले होते हैं।",
+      "routeLongHaul": "सीधी उड़ानें आपको लेओवर विकल्पों की तुलना में लगभग 4.5 घंटे की यात्रा के समय की बचत कराती।",
+      "routeNearby": "नॉन-स्टॉप इन्वेंट्री तेजी से बिक रही है। वैकल्पिक नजदीकी एयरपोर्ट 10% बचा सकते हैं।",
+      "upgradeTitleValue": "{{type}} अपग्रेड"
     }
   },
   "booking": {
@@ -272,9 +330,9 @@
     },
     "summary": {
       "title": "बुकिंग सारांश",
-      "outbound": "प्रस्थान",
-      "return": "वापसी",
-      "total": "कुल",
+      "outbound": "प्रस्थान उड़ान",
+      "return": "वापसी उड़ान",
+      "total": "कुल राशि",
       "seatSurcharge": "सीट {{label}} अधिभार"
     },
     "trust": {
@@ -306,62 +364,5 @@
     "searchNew": "नई उड़ानें खोजें",
     "supportNote": "मदद की ज़रूरत है? हमारे 24/7 ग्राहक सहायता से <0>support@skyflowpro.com</0> पर संपर्क करें",
     "bookedOn": "{{date}} को बुक किया गया"
-  },
-  "demand": {
-    "veryHigh": "बहुत अधिक",
-    "peak": "पीक",
-    "high": "अधिक"
-  },
-  "perks": {
-    "priority": "प्राथमिकता बोर्डिंग",
-    "baggage": "अतिरिक्त सामान",
-    "sleepKit": "स्लीप किट",
-    "recline": "बेहتر रिक्लाइन",
-    "legroom": "अतिरिक्त लेगरूम",
-    "meals": "प्रीमियम भोजन"
-  },
-  "sort": {
-    "price": "कीमत",
-    "duration": "अवधि",
-    "departure": "प्रस्थान"
-  },
-  "underPrice": "{{price}} से कम",
-  "abovePrice": "{{price}} से ऊपर",
-  "searchingFromTo": "{{from}} से {{to}} खोज रहे हैं",
-  "insights": {
-    "fareTitle": "किराया इंटेलिजेंस",
-    "demandTitle": "डिमांड एनालिटिक्स",
-    "cabinTitle": "केबिन इंटेलिजेंस",
-    "optimizationTitle": "अनुकूलन",
-    "upgradeTitle": "अपग्रेड एडवाइजरी",
-    "priceAlert": "{{from}} → {{to}} के लिए मूल्य अलर्ट",
-    "fareRise": "किराया अगले {{timeframe}} के भीतर <span class=\"text-amber-400 font-bold\">{{percentage}}% बढ़</span> सकता है।",
-    "bestWindow": "सर्वोत्तम बुकिंग विंडो",
-    "savingDay": "<span class=\"text-emerald-400 font-bold\">{{day}}</span> को उड़ान भरने से आप <span class=\"text-emerald-400 font-bold\">{{amount}}</span> बचा सकते हैं।",
-    "occupancy": "फ्लाइट ऑक्यूपेंसी",
-    "popularity": "रूट लोकप्रियता",
-    "trend": "ट्रेंड",
-    "intensity": "पिछले 12 घंटों में उच्च तीव्रता वाली बुकिंग का पता चला है।",
-    "value": "मूल्य {{score}}%",
-    "upgradeOffer": "<span class=\"text-purple-400 font-bold\">{{type}}</span> केवल <span class=\"text-emerald-400 font-bold\">{{fareDiff}} अधिक किराए</span> में <span class=\"font-bold text-slate-100\">{{legroom}} अधिक लेगरूम</span> प्रदान करता है।",
-    "viewMatrix": "तुलना मैट्रिक्स देखें",
-    "onTime": "चुनी गई उड़ान का समय पर प्रदर्शन 94% है।",
-    "worthUpgrade": "क्या अपग्रेड करना सार्थक है?",
-    "upgradeReason": "{{reason}} अपग्रेड <span class=\"text-emerald-400 font-bold\">{{price}}</span> से शुरू हो रहे हैं।",
-    "match": "{{score}}% मैच",
-    "showOptions": "अपग्रेड विकल्प दिखाएं",
-    "routeInsight": "रूट अंतर्दृष्टि",
-    "upgradeCorridor": "बिजनेस क्लास इन्वेंट्री वर्तमान में {{from}}→{{to}} कॉरिडोर के लिए अनुकूल है।",
-    "upgradeLongHaul": "लंबी दूरी की उड़ान का पता चला। बिजनेस क्लास में फ्लैट-बेड सीटें आपके आगमन के लिए 4 गुना अधिक आराम प्रदान करती हैं।",
-    "upgradeBusiness": "उच्च व्यावसायिक मांग। {{to}} में प्रीमियम लाउंज का उपयोग करने के लिए अभी अपना अपग्रेड सुरक्षित करें।",
-    "upgradeFirst": "फर्स्ट क्लास सूट उपलब्ध हैं। बादलों के ऊपर परम गोपनीयता और 5-सितारा भोजन का अनुभव करें।",
-    "12h": "12 घंटे",
-    "48h": "48 घंटे",
-    "bookWithin6h": "6 घंटे के भीतर बुक करें",
-    "timingBusiness": "व्यावसायिक यात्रियों के लिए सुबह की उड़ानों (6-8 AM) का समय पर प्रदर्शन उच्चतम होता है।",
-    "timingLeisure": "इस मार्ग पर दोपहर के समय प्रस्थान आमतौर पर कम भीड़भाड़ वाले होते हैं।",
-    "routeLongHaul": "सीधी उड़ानें आपको लेओवर विकल्पों की तुलना में लगभग 4.5 घंटे की यात्रा के समय की बचत कराती।",
-    "routeNearby": "नॉन-स्टॉप इन्वेंट्री तेजी से बिक रही है। वैकल्पिक नजदीकी एयरपोर्ट 10% बचा सकते हैं।",
-    "upgradeTitleValue": "{{type}} अपग्रेड"
   }
 }

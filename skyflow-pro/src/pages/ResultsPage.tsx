@@ -132,7 +132,7 @@ export function ResultsPage() {
   }, [rawResults, sortBy, stopsFilter, airlineFilter, timeFilter, priceFilter])
 
   const formatDate = (dateStr: string) => {
-    if (!dateStr) return t('search.flexible')
+    if (!dateStr) return t('search.flexible', 'Flexible Dates')
     const d = new Date(dateStr)
     return d.toLocaleDateString(i18n.language, { weekday: 'short', month: 'short', day: 'numeric' })
   }
@@ -176,7 +176,7 @@ export function ResultsPage() {
             className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-sky-400 transition-colors mb-4"
           >
             <ArrowLeft className="h-4 w-4" />
-            {t('results.newSearch')}
+            {t('results.newSearch', 'New Search')}
           </Link>
 
           <div className="flex flex-wrap items-start justify-between gap-4">
@@ -186,7 +186,7 @@ export function ResultsPage() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-500" />
                 </span>
-                {t('results.liveResults')} {isRoundTrip && `· ${t('results.roundTrip')}`}
+                {t('results.liveResults', 'Live Results')} {isRoundTrip && `· ${t('results.roundTrip', 'Round Trip')}`}
               </p>
               <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900 dark:text-slate-50 sm:text-4xl flex items-center gap-3">
                 {from}
@@ -216,7 +216,7 @@ export function ResultsPage() {
                 className="btn-secondary flex items-center gap-2"
               >
                 <RefreshCw className={`h-4 w-4 ${query.isLoading ? 'animate-spin' : ''}`} />
-                {t('results.refresh')}
+                {t('results.refresh', 'Refresh')}
               </button>
             </div>
           </div>
@@ -242,7 +242,7 @@ export function ResultsPage() {
         <div className="mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="h-5 w-5 text-sky-600 dark:text-sky-400" />
-            <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">{t('results.smartInsights')}</h2>
+            <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">{t('results.smartInsights', 'Smart Travel Insights')}</h2>
           </div>
           <SmartTravelInsights 
             from={from} 
@@ -277,7 +277,7 @@ export function ResultsPage() {
                     )}
                   </div>
                   <div className="text-left">
-                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('results.outbound')}</p>
+                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('results.outbound', 'Outbound')}</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-slate-200">
                       {from} → {to} · {formatDate(date)}
                     </p>
@@ -308,7 +308,7 @@ export function ResultsPage() {
                     )}
                   </div>
                   <div className="text-left">
-                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('results.return')}</p>
+                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('results.return', 'Return')}</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-slate-200">
                       {to} → {from} · {formatDate(returnDate)}
                     </p>
@@ -325,19 +325,19 @@ export function ResultsPage() {
               {selectedOutbound && selectedReturn && (
                 <div className="mt-4 pt-4 border-t border-slate-800/50 flex items-center justify-between animate-fade-in">
                   <div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">{t('results.total')}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">{t('results.total', 'Total Amount')}</p>
                     <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
                       {formatPrice(roundTripTotal)}
                     </p>
                     <p className="text-xs text-slate-500 mt-0.5">
-                      {formatPrice(selectedOutbound.price.total)} {t('results.outbound').toLowerCase()} + {formatPrice(selectedReturn.price.total)} {t('results.return').toLowerCase()}
+                      {formatPrice(selectedOutbound.price.total)} {t('results.outbound', 'Outbound').toLowerCase()} + {formatPrice(selectedReturn.price.total)} {t('results.return', 'Return').toLowerCase()}
                     </p>
                   </div>
                   <button 
                     onClick={handleProceedToBooking}
                     className="btn-primary flex items-center gap-2"
                   >
-                    {t('results.proceed')}
+                    {t('results.proceed', 'Proceed to Booking')}
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </div>
@@ -355,7 +355,7 @@ export function ResultsPage() {
                 className={`btn-secondary flex items-center gap-2 ${showFilters ? 'ring-1 ring-sky-500/50' : ''}`}
               >
                 <Filter className="h-4 w-4" />
-                {t('results.filters')}
+                {t('results.filters', 'Filters')}
                 {activeFilterCount > 0 && (
                   <span className="flex items-center justify-center h-5 w-5 rounded-full bg-sky-500 text-white text-[0.6rem] font-bold">
                     {activeFilterCount}
@@ -373,7 +373,7 @@ export function ResultsPage() {
                         : 'bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800'
                     }`}
                   >
-                    {t('results.nonStopOnly')}
+                    {t('results.nonStopOnly', 'Non-stop Only')}
                   </button>
                   <button
                     onClick={() => setTimeFilter(timeFilter === 'morning' ? 'any' : 'morning')}
@@ -383,13 +383,13 @@ export function ResultsPage() {
                         : 'bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800'
                     }`}
                   >
-                    {t('results.morningFlights')}
+                    {t('results.morningFlights', 'Morning Flights')}
                   </button>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500">{t('results.sortBy')}:</span>
+              <span className="text-xs text-slate-500">{t('results.sortBy', 'Sort by')}:</span>
               <div className="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-slate-900/80 p-1 ring-1 ring-slate-200 dark:ring-slate-800">
                 {(['price', 'duration', 'departure'] as SortOption[]).map((option) => (
                   <button
@@ -400,7 +400,7 @@ export function ResultsPage() {
                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                       }`}
                   >
-                    {t(`results.sort.${option}`)}
+                    {t(`results.sort.${option}`, option)}
                   </button>
                 ))}
               </div>
@@ -411,54 +411,54 @@ export function ResultsPage() {
           {showFilters && (
             <div className="mt-4 pt-4 border-t border-slate-800/50 grid grid-cols-2 sm:grid-cols-4 gap-4 animate-fade-in">
               <div>
-                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.stops')}</label>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.stops', 'Stops')}</label>
                 <select
                   value={stopsFilter}
                   onChange={(e) => setStopsFilter(e.target.value)}
                   className="input-premium text-sm py-2"
                 >
-                  <option value="any">{t('results.any')}</option>
-                  <option value="nonstop">{t('results.nonstop')}</option>
-                  <option value="1stop">{t('results.oneStop')}</option>
+                  <option value="any">{t('results.any', 'Any')}</option>
+                  <option value="nonstop">{t('results.nonstop', 'Non-stop')}</option>
+                  <option value="1stop">{t('results.oneStop', '1 Stop')}</option>
                 </select>
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.airlines')}</label>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.airlines', 'Airlines')}</label>
                 <select
                   value={airlineFilter}
                   onChange={(e) => setAirlineFilter(e.target.value)}
                   className="input-premium text-sm py-2"
                 >
-                  <option value="all">{t('results.allAirlines')}</option>
+                  <option value="all">{t('results.allAirlines', 'All Airlines')}</option>
                   {uniqueAirlines.map((airline) => (
                     <option key={airline} value={airline}>{airline}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.departureTime')}</label>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.departureTime', 'Departure Time')}</label>
                 <select
                   value={timeFilter}
                   onChange={(e) => setTimeFilter(e.target.value)}
                   className="input-premium text-sm py-2"
                 >
-                  <option value="any">{t('results.anyTime')}</option>
+                  <option value="any">{t('results.anyTime', 'Any time')}</option>
                   <option value="morning">Morning (6AM-12PM)</option>
                   <option value="afternoon">Afternoon (12PM-6PM)</option>
                   <option value="evening">Evening (6PM-6AM)</option>
                 </select>
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.priceRange')}</label>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2">{t('results.priceRange', 'Price Range')}</label>
                 <select
                   value={priceFilter}
                   onChange={(e) => setPriceFilter(e.target.value)}
                   className="input-premium text-sm py-2"
                 >
-                  <option value="any">{t('results.anyPrice')}</option>
-                  <option value="under5k">{t('results.underPrice', { price: formatPrice(5000) })}</option>
+                  <option value="any">{t('results.anyPrice', 'Any price')}</option>
+                  <option value="under5k">{t('results.underPrice', 'Under {{price}}', { price: formatPrice(5000) })}</option>
                   <option value="5k-10k">{formatPrice(5000)} – {formatPrice(10000)}</option>
-                  <option value="above10k">{t('results.abovePrice', { price: formatPrice(10000) })}</option>
+                  <option value="above10k">{t('results.abovePrice', 'Above {{price}}', { price: formatPrice(10000) })}</option>
                 </select>
               </div>
 
@@ -474,7 +474,7 @@ export function ResultsPage() {
                     }}
                     className="text-xs text-sky-400 hover:text-sky-300 transition-colors"
                   >
-                    {t('results.clearAll')}
+                    {t('results.clearAll', 'Clear all filters')}
                   </button>
                 </div>
               )}
@@ -489,9 +489,9 @@ export function ResultsPage() {
               <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-sky-50 dark:bg-sky-500/10 mb-4">
                 <Plane className="h-8 w-8 text-sky-600 dark:text-sky-400 animate-pulse" />
               </div>
-              <p className="text-lg font-black text-slate-900 dark:text-slate-50">{t('results.findingFlights')}</p>
+              <p className="text-lg font-black text-slate-900 dark:text-slate-50">{t('results.findingFlights', 'Finding the best flights...')}</p>
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
-                {t('results.searchingFromTo', { from: fromAirport?.city ?? from, to: toAirport?.city ?? to })}
+                {t('results.searchingFromTo', 'Searching from {{from}} to {{to}}', { from: fromAirport?.city ?? from, to: toAirport?.city ?? to })}
               </p>
               <div className="mt-6 max-w-xs mx-auto">
                 <div className="progress-bar">
@@ -505,16 +505,16 @@ export function ResultsPage() {
                 <RefreshCw className="h-8 w-8 text-amber-400" />
               </div>
               <p className="text-lg font-semibold text-amber-200">
-                {t('results.errorTitle')}
+                {t('results.errorTitle', 'We couldn\'t fetch fresh results right now')}
               </p>
               <p className="text-sm text-amber-300/70 mt-2 max-w-md mx-auto">
-                {t('results.errorDesc')}
+                {t('results.errorDesc', 'Try again in a moment. If this keeps happening, we\'ll fall back to cached results.')}
               </p>
               <button
                 onClick={() => query.refetch()}
                 className="mt-6 btn-primary"
               >
-                {t('results.tryAgain')}
+                {t('results.tryAgain', 'Try Again')}
               </button>
             </div>
           ) : (
@@ -533,7 +533,7 @@ export function ResultsPage() {
                   <span className="text-slate-500 dark:text-slate-400 font-medium">{formatDate(activeLeg === 'outbound' ? date : returnDate)}</span>
                   {isRoundTrip && (
                     <span className="ml-auto text-xs font-bold text-slate-500 uppercase tracking-tighter">
-                      {activeLeg === 'outbound' ? t('results.selectOutbound') : t('results.selectReturn')}
+                      {activeLeg === 'outbound' ? t('results.selectOutbound', 'Select a flight to continue to return leg') : t('results.selectReturn', 'Select a flight to see total price')}
                     </span>
                   )}
                 </div>
@@ -544,9 +544,9 @@ export function ResultsPage() {
                   <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-slate-800/50 mb-4">
                     <Filter className="h-8 w-8 text-slate-500" />
                   </div>
-                  <p className="text-lg font-semibold text-slate-200">{t('results.noMatch')}</p>
+                  <p className="text-lg font-semibold text-slate-200">{t('results.noMatch', 'No flights match your filters')}</p>
                   <p className="text-sm text-slate-400 mt-2">
-                    {t('results.availableCount', { count: rawResults.length })}
+                    {t('results.availableCount', '{{count}} flights available. Try adjusting your filters.', { count: rawResults.length })}
                   </p>
                   <button
                     onClick={() => {
@@ -557,7 +557,7 @@ export function ResultsPage() {
                     }}
                     className="mt-4 btn-secondary"
                   >
-                    {t('results.clearAll')}
+                    {t('results.clearAll', 'Clear all filters')}
                   </button>
                 </div>
               ) : (

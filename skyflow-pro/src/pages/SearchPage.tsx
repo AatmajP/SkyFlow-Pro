@@ -10,35 +10,35 @@ export function SearchPage() {
   const features = [
     {
       icon: Shield,
-      title: t('features.noHiddenFees.title'),
-      description: t('features.noHiddenFees.desc'),
+      title: t('features.noHiddenFees.title', 'No Hidden Fees'),
+      description: t('features.noHiddenFees.desc', 'Every charge itemized upfront.'),
       color: 'from-emerald-500 to-teal-500',
     },
     {
       icon: Tag,
-      title: t('features.priceGuarantee.title'),
-      description: t('features.priceGuarantee.desc'),
+      title: t('features.priceGuarantee.title', 'Best Price Guarantee'),
+      description: t('features.priceGuarantee.desc', 'We show you the lowest fares.'),
       color: 'from-sky-500 to-blue-500',
     },
     {
       icon: Clock,
-      title: t('features.realTime.title'),
-      description: t('features.realTime.desc'),
+      title: t('features.realTime.title', 'Real-time Pricing'),
+      description: t('features.realTime.desc', 'Live fare updates ensure you never miss a deal.'),
       color: 'from-purple-500 to-violet-500',
     },
     {
       icon: Zap,
-      title: t('features.instantBooking.title'),
-      description: t('features.instantBooking.desc'),
+      title: t('features.instantBooking.title', 'Instant Booking'),
+      description: t('features.instantBooking.desc', 'Secure your seats in seconds.'),
       color: 'from-amber-500 to-orange-500',
     },
   ]
 
   const stats = [
-    { value: '50+', label: t('stats.destinations'), icon: Plane },
-    { value: '6', label: t('stats.airlines'), icon: Users },
-    { value: '20+', label: t('stats.dailyFlights'), icon: Globe },
-    { value: '4.9', label: t('stats.userRating'), icon: Star },
+    { value: '50+', label: t('stats.destinations', 'Destinations'), icon: Plane },
+    { value: '6', label: t('stats.airlines', 'Airlines'), icon: Users },
+    { value: '20+', label: t('stats.dailyFlights', 'Daily Flights'), icon: Globe },
+    { value: '4.9', label: t('stats.userRating', 'User Rating'), icon: Star },
   ]
 
   const airlines = [
@@ -69,17 +69,17 @@ export function SearchPage() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-500" />
             </span>
-            {t('hero.badge')}
+            {t('hero.badge', 'Truth-first fares. No hidden fees.')}
           </div>
 
           <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-            <span className="gradient-text">{t('hero.titlePrefix')}</span>
+            <span className="gradient-text">{t('hero.titlePrefix', 'Find Your Perfect')}</span>
             <br />
-            <span className="text-slate-900 dark:text-slate-100">{t('hero.titleSuffix')}</span>
+            <span className="text-slate-900 dark:text-slate-100">{t('hero.titleSuffix', 'Flight Experience')}</span>
           </h1>
 
           <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600 dark:text-slate-400 sm:text-lg font-medium">
-            {t('hero.subtitle')}
+            {t('hero.subtitle', 'Search 50+ destinations across India and beyond. Every fee itemized, every seat guaranteed.')}
           </p>
         </header>
 
@@ -113,9 +113,9 @@ export function SearchPage() {
         <section className="mb-16" id="main">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-black text-slate-900 dark:text-slate-50 sm:text-3xl">
-              {t('features.title').split('SkyFlow Pro')[0]} <span className="gradient-text">SkyFlow Pro</span>
+              {t('features.title', 'Why Choose SkyFlow Pro').split('SkyFlow Pro')[0]} <span className="gradient-text">SkyFlow Pro</span>
             </h2>
-            <p className="mt-2 text-slate-600 dark:text-slate-400 font-medium">{t('features.subtitle')}</p>
+            <p className="mt-2 text-slate-600 dark:text-slate-400 font-medium">{t('features.subtitle', 'Experience the future of flight booking')}</p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -138,7 +138,7 @@ export function SearchPage() {
         {/* Trusted Airlines */}
         <section className="mb-16 glass rounded-2xl p-8 animate-fade-in border border-slate-200 dark:border-slate-800/50">
           <p className="text-center text-sm font-bold text-slate-500 dark:text-slate-400 mb-6">
-            {t('trusted.text')}
+            {t('trusted.text', 'Trusted by travelers worldwide · Fly with India\'s best airlines')}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6">
             {airlines.map((airline, idx) => (
