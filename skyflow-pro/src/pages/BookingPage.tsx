@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { ArrowLeft, User, CreditCard, Shield, Check, Plane, Clock, AlertCircle, ChevronRight, Lock, MapPin, Armchair } from 'lucide-react'
+import { MainFooter } from '../components/ui/MainFooter'
 import type { FlightOption } from '../types/flight'
 import type { Seat } from '../types/seat'
 import { AirportMap } from '../components/airport/AirportMap'
@@ -601,26 +602,28 @@ export function BookingPage() {
                                     <span className="font-bold text-slate-900 dark:text-slate-50">{t('booking.summary.total', 'Total Amount')}</span>
                                     <span className="text-xl font-black text-sky-600 dark:text-sky-400">{formatPrice(totalPrice)}</span>
                                 </div>
-                            </div>
-
-                                  <div className="mt-6 pt-4 border-t border-slate-800/50 space-y-2">
-                                <div className="flex items-center gap-2 text-xs text-slate-400">
-                                    <Shield className="h-4 w-4 text-emerald-500" />
-                                    <span>{t('booking.trust.secure', '100% Secure Payment')}</span>
+                                
+                                <div className="mt-6 pt-4 border-t border-slate-800/50 space-y-2">
+                                    <div className="flex items-center gap-2 text-xs text-slate-400">
+                                        <Shield className="h-4 w-4 text-emerald-500" />
+                                        <span>{t('booking.trust.secure', '100% Secure Payment')}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-slate-400">
+                                        <Check className="h-4 w-4 text-emerald-500" />
+                                        <span>{t('booking.trust.instant', 'Instant confirmation')}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-slate-400">
+                                        <Check className="h-4 w-4 text-emerald-500" />
+                                        <span>{t('booking.trust.support', '24/7 customer support')}</span>
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-2 text-xs text-slate-400">
-                                    <Check className="h-4 w-4 text-emerald-500" />
-                                    <span>{t('booking.trust.instant', 'Instant confirmation')}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-xs text-slate-400">
-                                    <Check className="h-4 w-4 text-emerald-500" />
-                                    <span>{t('booking.trust.support', '24/7 customer support')}</span>
-                                </div>
-                            </div>   </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {/* Footer */}
+                <MainFooter />
             </div>
         </div>
     )

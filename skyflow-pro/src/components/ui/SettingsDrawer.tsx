@@ -75,8 +75,8 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                   <Settings className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 leading-none">{t('settings.title')}</h2>
-                  <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest font-bold mt-1.5">{t('settings.subtitle')}</p>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 leading-none">{t('settings.title', 'Settings')}</h2>
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest font-bold mt-1.5">{t('settings.subtitle', 'Configuration Panel')}</p>
                 </div>
               </div>
               <button
@@ -93,7 +93,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
               <section>
                 <div className="flex items-center gap-2 mb-4">
                   <Sun className="h-4 w-4 text-amber-500 dark:text-amber-400" />
-                  <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{t('settings.appearance')}</h3>
+                  <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{t('settings.appearance', 'Appearance')}</h3>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <button
@@ -103,7 +103,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                     }`}
                   >
                     <Sun className="h-6 w-6" />
-                    <span className="text-sm font-semibold">{t('settings.lightMode')}</span>
+                    <span className="text-sm font-semibold">{t('settings.lightMode', 'Light Mode')}</span>
                   </button>
                   <button
                     onClick={() => setTheme('dark')}
@@ -112,7 +112,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                     }`}
                   >
                     <Moon className="h-6 w-6" />
-                    <span className="text-sm font-semibold">{t('settings.darkMode')}</span>
+                    <span className="text-sm font-semibold">{t('settings.darkMode', 'Dark Mode')}</span>
                   </button>
                 </div>
               </section>
@@ -121,12 +121,12 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
               <section className="space-y-6">
                 <div className="flex items-center gap-2 mb-2">
                   <Globe className="h-4 w-4 text-sky-500 dark:text-sky-400" />
-                  <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{t('settings.regional')}</h3>
+                  <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{t('settings.regional', 'Regional & Currency')}</h3>
                 </div>
                 
                 {/* Currency */}
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-slate-600 dark:text-slate-300">{t('settings.defaultCurrency')}</label>
+                  <label className="text-sm font-medium text-slate-600 dark:text-slate-300">{t('settings.defaultCurrency', 'Default Currency')}</label>
                   <div className="grid grid-cols-4 gap-2">
                     {currencies.map(c => (
                       <button
@@ -144,7 +144,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
 
                 {/* Language */}
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-slate-600 dark:text-slate-300">{t('settings.preferredLanguage')}</label>
+                  <label className="text-sm font-medium text-slate-600 dark:text-slate-300">{t('settings.preferredLanguage', 'Preferred Language')}</label>
                   <select
                     value={i18n.language}
                     onChange={(e) => i18n.changeLanguage(e.target.value)}
@@ -159,7 +159,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
               <section className="space-y-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Zap className="h-4 w-4 text-amber-500 dark:text-amber-400" />
-                  <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{t('settings.systemAlerts')}</h3>
+                  <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{t('settings.systemAlerts', 'System & Alerts')}</h3>
                 </div>
                 
                 {/* Accessibility Toggle */}
@@ -169,8 +169,8 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                       <Star className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{t('settings.accessibilityMode')}</p>
-                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">{t('settings.accessibilityDesc')}</p>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{t('settings.accessibilityMode', 'Accessibility Mode')}</p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">{t('settings.accessibilityDesc', 'Enhanced contrast & larger targets')}</p>
                     </div>
                   </div>
                   <button
@@ -191,8 +191,8 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                       <Bell className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{t('settings.smartNotifications')}</p>
-                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">{t('settings.notificationsDesc')}</p>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{t('settings.smartNotifications', 'Smart Notifications')}</p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">{t('settings.notificationsDesc', 'Price drops & booking updates')}</p>
                     </div>
                   </div>
                   <button
@@ -214,13 +214,13 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                 onClick={onClose}
                 className="flex-1 px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700"
               >
-                {t('common.cancel')}
+                {t('common.cancel', 'Cancel')}
               </button>
               <button
                 onClick={onClose}
                 className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-sky-600 text-white font-bold text-sm hover:shadow-lg hover:shadow-sky-500/20 transition-all"
               >
-                {t('common.applyChanges')}
+                {t('common.applyChanges', 'Apply Changes')}
               </button>
             </div>
           </motion.div>
