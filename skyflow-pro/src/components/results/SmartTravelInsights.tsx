@@ -83,11 +83,11 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
         },
         {
           title: isSpiritual ? t('results.insights.spiritualTitle', 'Spiritual Intelligence') : t('results.insights.routeInsight', 'Route Insight'),
-          suggestion: isSpiritual 
+          suggestion: isSpiritual
             ? `High demand during upcoming festivals in ${destinationInfo.city}. Book early to secure temple-adjacent stays.`
             : isLongHaul
-            ? t('results.insights.routeLongHaul', 'Direct flights save you approx. 4.5 hours of travel time compared to layover options.')
-            : t('results.insights.routeNearby', 'Non-stop inventory is selling fast. Alternative nearby airports could save 10%.'),
+              ? t('results.insights.routeLongHaul', 'Direct flights save you approx. 4.5 hours of travel time compared to layover options.')
+              : t('results.insights.routeNearby', 'Non-stop inventory is selling fast. Alternative nearby airports could save 10%.'),
           impact: isSpiritual ? 'High' : 'High'
         }
       ],
@@ -213,7 +213,7 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
             </div>
             <h3 className="font-bold text-slate-900 dark:text-slate-100">{t('results.insights.spiritualTitle', 'Spiritual Intelligence')}</h3>
           </div>
-          
+
           <div className="space-y-4 relative z-10">
             <div className="p-3 rounded-xl bg-purple-500/5 border border-purple-500/20">
               <p className="text-xs text-purple-400 font-bold flex items-center gap-2 mb-1">
@@ -222,12 +222,12 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
               </p>
               <p className="text-sm text-slate-200">{insights.spiritual.bestMonths}</p>
             </div>
- 
+
             <div className="flex justify-between items-center text-xs">
               <span className="text-slate-400">{t('results.insights.peaceScore', 'Peace Score')}</span>
               <span className="text-cyan-400 font-bold">{insights.spiritual.peaceScore}/100</span>
             </div>
- 
+
             <div className="space-y-2">
               <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">{t('results.insights.spiritualHighlights', 'Spiritual Highlights')}</p>
               <div className="flex flex-wrap gap-2">
@@ -236,123 +236,123 @@ export function SmartTravelInsights({ from, to, date, cabin, tripType }: SmartTr
                     {h}
                   </span>
                 ))}
+
               </div>
+
+              <p className="text-[11px] text-amber-400/80 italic font-medium">
+                {t('results.insights.spiritualNote', 'Note: {{alert}} during this period.', { alert: insights.spiritual.crowdAlert })}
+              </p>
             </div>
- 
-            <p className="text-[11px] text-amber-400/80 italic font-medium">
-              {t('results.insights.spiritualNote', 'Note: {{alert}} during this period.', { alert: insights.spiritual.crowdAlert })}
-            </p>
           </div>
-        </div>
       )}
 
-      {/* Cabin Recommendation */}
-      {!insights.spiritual && (
-        <div className="glass rounded-2xl p-6 border border-slate-800/50 flex flex-col gap-4 lg:col-span-1 md:col-span-2 lg:row-span-1">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
-              <Award className="h-5 w-5" />
-            </div>
-            <h3 className="font-bold text-slate-900 dark:text-slate-100">{t('results.insights.cabinTitle', 'Cabin Intelligence')}</h3>
-          </div>
+          {/* Cabin Recommendation */}
+          {!insights.spiritual && (
+            <div className="glass rounded-2xl p-6 border border-slate-800/50 flex flex-col gap-4 lg:col-span-1 md:col-span-2 lg:row-span-1">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                  <Award className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-slate-900 dark:text-slate-100">{t('results.insights.cabinTitle', 'Cabin Intelligence')}</h3>
+              </div>
 
-          {insights.cabinComparison.map((comp, idx) => (
-            <div key={idx} className="space-y-4">
-              <div className="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-500/10 dark:to-pink-500/10 border border-purple-100 dark:border-purple-500/20">
-                <div className="flex justify-between items-start mb-3">
-                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100">{t('results.insights.upgradeTitleValue', '{{type}} Upgrade', { type: comp.type })}</p>
-                  <div className="flex items-center gap-1 bg-purple-100 dark:bg-purple-500/20 px-2 py-0.5 rounded text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase">
-                    {t('results.insights.value', 'Value {{score}}%', { score: comp.valueScore })}
+              {insights.cabinComparison.map((comp, idx) => (
+                <div key={idx} className="space-y-4">
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-500/10 dark:to-pink-500/10 border border-purple-100 dark:border-purple-500/20">
+                    <div className="flex justify-between items-start mb-3">
+                      <p className="text-sm font-bold text-slate-900 dark:text-slate-100">{t('results.insights.upgradeTitleValue', '{{type}} Upgrade', { type: comp.type })}</p>
+                      <div className="flex items-center gap-1 bg-purple-100 dark:bg-purple-500/20 px-2 py-0.5 rounded text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase">
+                        {t('results.insights.value', 'Value {{score}}%', { score: comp.valueScore })}
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                      <Trans
+                        i18nKey="results.insights.upgradeOffer"
+                        defaults="<pspan>{{type}}</pspan> offers <pspan>{{legroom}} more space</pspan> for only <pspan>{{fareDiff}} more</pspan>."
+                        values={{ type: comp.type, legroom: comp.extraLegroom, fareDiff: comp.fareDiff }}
+                        components={{ span: <span className="font-bold text-slate-900 dark:text-slate-100" />, pspan: <span className="text-purple-600 dark:text-purple-400 font-bold" />, espan: <span className="text-emerald-600 dark:text-emerald-400 font-bold" /> }}
+                      />
+                    </p>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {comp.perks.map(perk => (
+                        <span key={perk} className="text-[10px] px-2 py-1 rounded-md bg-slate-900/60 text-slate-400 border border-slate-800">
+                          {perk}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-100 dark:bg-slate-800/40 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50 transition-all group">
+                    <span className="text-xs font-bold text-slate-600 dark:text-slate-300">{t('results.insights.viewMatrix', 'View Comparison Matrix')}</span>
+                    <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Travel Optimization Suggestions */}
+          <div className="glass rounded-2xl p-6 border border-slate-800/50 flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                <Clock className="h-5 w-5" />
+              </div>
+              <h3 className="font-bold text-slate-900 dark:text-slate-100">{t('results.insights.optimizationTitle', 'Optimization')}</h3>
+            </div>
+
+            <div className="space-y-3">
+              {insights.optimization.map((opt, idx) => (
+                <div key={idx} className="flex gap-3 p-3 rounded-xl bg-slate-100 dark:bg-slate-800/20 border border-slate-200 dark:border-slate-800/50">
+                  <div className={`mt-1 h-2 w-2 rounded-full shrink-0 ${opt.impact === 'High' ? 'bg-emerald-500' : 'bg-sky-500'}`} />
+                  <div>
+                    <p className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-0.5">{opt.title}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{opt.suggestion}</p>
                   </div>
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              ))}
+
+              <div className="mt-2 flex items-center gap-2 p-3 rounded-xl bg-sky-50 dark:bg-sky-500/5 border border-sky-100 dark:border-sky-500/10">
+                <CheckCircle2 className="h-4 w-4 text-sky-600 dark:text-sky-400" />
+                <p className="text-[11px] text-sky-700 dark:text-sky-300 font-bold">{t('results.insights.onTime', 'The selected flight has a 94% on-time performance.')}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Smart Upgrade */}
+          <div className="glass rounded-2xl p-6 border border-slate-800/50 flex flex-col gap-4 md:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                <Zap className="h-5 w-5" />
+              </div>
+              <h3 className="font-bold text-slate-900 dark:text-slate-100">{t('results.insights.upgradeTitle', 'Upgrade Advisory')}</h3>
+            </div>
+
+            <div className="flex-1 flex flex-col justify-between gap-4">
+              <div className="space-y-3">
+                <p className="text-sm font-bold text-slate-900 dark:text-slate-200">{t('results.insights.worthUpgrade', 'Is it worth upgrading?')}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                   <Trans
-                    i18nKey="results.insights.upgradeOffer"
-                    defaults="<pspan>{{type}}</pspan> offers <pspan>{{legroom}} more space</pspan> for only <pspan>{{fareDiff}} more</pspan>."
-                    values={{ type: comp.type, legroom: comp.extraLegroom, fareDiff: comp.fareDiff }}
-                    components={{ span: <span className="font-bold text-slate-900 dark:text-slate-100" />, pspan: <span className="text-purple-600 dark:text-purple-400 font-bold" />, espan: <span className="text-emerald-600 dark:text-emerald-400 font-bold" /> }}
+                    i18nKey="results.insights.upgradeReason"
+                    defaults="{{reason}} Upgrades starting from <span class='text-emerald-400 font-bold'>{{price}}</span>."
+                    values={{ reason: insights.upgrade.reason, price: formatPrice(insights.upgrade.price) }}
+                    components={{ span: <span className="text-emerald-600 dark:text-emerald-400 font-bold" /> }}
                   />
                 </p>
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {comp.perks.map(perk => (
-                    <span key={perk} className="text-[10px] px-2 py-1 rounded-md bg-slate-900/60 text-slate-400 border border-slate-800">
-                      {perk}
-                    </span>
-                  ))}
+                <div className="flex items-center gap-2 mt-4">
+                  <div className="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-amber-500" style={{ width: `${insights.upgrade.valueScore}%` }} />
+                  </div>
+                  <span className="text-[10px] font-bold text-amber-400">{t('results.insights.match', '{{score}}% Match', { score: insights.upgrade.valueScore })}</span>
                 </div>
               </div>
 
-              <button className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-100 dark:bg-slate-800/40 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50 transition-all group">
-                <span className="text-xs font-bold text-slate-600 dark:text-slate-300">{t('results.insights.viewMatrix', 'View Comparison Matrix')}</span>
-                <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform" />
+              <button className="btn-primary w-full py-2.5 text-xs">
+                {t('results.insights.showOptions', 'Show Upgrade Options')}
               </button>
             </div>
-          ))}
-        </div>
-      )}
-
-      {/* Travel Optimization Suggestions */}
-      <div className="glass rounded-2xl p-6 border border-slate-800/50 flex flex-col gap-4">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-            <Clock className="h-5 w-5" />
-          </div>
-          <h3 className="font-bold text-slate-900 dark:text-slate-100">{t('results.insights.optimizationTitle', 'Optimization')}</h3>
-        </div>
-
-        <div className="space-y-3">
-          {insights.optimization.map((opt, idx) => (
-            <div key={idx} className="flex gap-3 p-3 rounded-xl bg-slate-100 dark:bg-slate-800/20 border border-slate-200 dark:border-slate-800/50">
-              <div className={`mt-1 h-2 w-2 rounded-full shrink-0 ${opt.impact === 'High' ? 'bg-emerald-500' : 'bg-sky-500'}`} />
-              <div>
-                <p className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-0.5">{opt.title}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{opt.suggestion}</p>
-              </div>
-            </div>
-          ))}
-
-          <div className="mt-2 flex items-center gap-2 p-3 rounded-xl bg-sky-50 dark:bg-sky-500/5 border border-sky-100 dark:border-sky-500/10">
-            <CheckCircle2 className="h-4 w-4 text-sky-600 dark:text-sky-400" />
-            <p className="text-[11px] text-sky-700 dark:text-sky-300 font-bold">{t('results.insights.onTime', 'The selected flight has a 94% on-time performance.')}</p>
           </div>
         </div>
-      </div>
-
-      {/* Smart Upgrade */}
-      <div className="glass rounded-2xl p-6 border border-slate-800/50 flex flex-col gap-4 md:col-span-2 lg:col-span-1">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400">
-            <Zap className="h-5 w-5" />
-          </div>
-          <h3 className="font-bold text-slate-900 dark:text-slate-100">{t('results.insights.upgradeTitle', 'Upgrade Advisory')}</h3>
-        </div>
-
-        <div className="flex-1 flex flex-col justify-between gap-4">
-          <div className="space-y-3">
-            <p className="text-sm font-bold text-slate-900 dark:text-slate-200">{t('results.insights.worthUpgrade', 'Is it worth upgrading?')}</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              <Trans
-                i18nKey="results.insights.upgradeReason"
-                defaults="{{reason}} Upgrades starting from <span class='text-emerald-400 font-bold'>{{price}}</span>."
-                values={{ reason: insights.upgrade.reason, price: formatPrice(insights.upgrade.price) }}
-                components={{ span: <span className="text-emerald-600 dark:text-emerald-400 font-bold" /> }}
-              />
-            </p>
-
-            <div className="flex items-center gap-2 mt-4">
-              <div className="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                <div className="h-full bg-amber-500" style={{ width: `${insights.upgrade.valueScore}%` }} />
-              </div>
-              <span className="text-[10px] font-bold text-amber-400">{t('results.insights.match', '{{score}}% Match', { score: insights.upgrade.valueScore })}</span>
-            </div>
-          </div>
-
-          <button className="btn-primary w-full py-2.5 text-xs">
-            {t('results.insights.showOptions', 'Show Upgrade Options')}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
+      )
+      }
